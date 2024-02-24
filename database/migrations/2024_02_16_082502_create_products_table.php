@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('categories_id');
+            $table->string('image');
+            $table->string('name', 255);
+            $table->text('description');
+            $table->enum('unit', ['box', 'pcs']);
+            $table->integer('purchase_price');
+            $table->integer('selling_price');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
