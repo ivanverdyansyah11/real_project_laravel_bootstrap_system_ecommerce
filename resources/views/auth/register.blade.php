@@ -7,49 +7,84 @@
     <div class="col-lg-6 card-auth">
         <p class="auth-title">Daftar Sebagai Reseller</p>
         <p class="auth-caption">Mari sukses bersama kami!</p>
-        <form action="{{ route('register.store') }}" method="POST">
+        <form action="{{ route('register.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-2">
                 <label class="form-label">Daftar sebagai</label>
                 <div class="wrapper d-flex gap-4">
                     <div class="form-check m-0">
-                        <input class="form-check-input" type="radio" name="role" id="customer">
+                        <input required class="form-check-input" type="radio" name="role" id="customer" value="customer">
                         <label class="form-check-label" for="customer">Customer</label>
                     </div>
                     <div class="form-check m-0">
-                        <input class="form-check-input" type="radio" name="role" id="reseller">
+                        <input required class="form-check-input" type="radio" name="role" id="reseller" value="reseller">
                         <label class="form-check-label" for="reseller">Reseller</label>
                     </div>
                 </div>
+                @error('role')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-2">
                 <label for="name" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="name">
+                <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
+                @error('name')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-2">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email">
+                <input required type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
+                @error('email')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-2">
-                <label for="whatsapp" class="form-label">Whatsapp</label>
-                <input type="number" class="form-control" id="whatsapp">
+                <label for="number_phone" class="form-label">Whatsapp</label>
+                <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ old('number_phone') }}">
+                @error('number_phone')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-2">
-                <label for="formFile" class="form-label">Foto KTP</label>
-                <input class="form-control input-file" type="file" id="formFile">
-                <div class="wrapper-ktp d-flex gap-3 align-items-center p-2">
-                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="KTP Image" class="img-fluid rounded img-preview" width="52" height="52" style="object-fit: cover;">
+                <label for="photo_ktp" class="form-label">Foto KTP</label>
+                <div class="wrapper-ktp d-flex gap-3 align-items-center p-2 mb-2">
+                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="KTP Image" class="rounded img-preview" width="52" height="52" style="object-fit: cover;">
                     <p class="content-other">Pastikan seluruh bagian  KTP kamu berada dalam bingkai foto</p>
                 </div>
+                <input required class="form-control input-file @error('photo_ktp') is-invalid @enderror" type="file" id="photo_ktp" name="photo_ktp">
+                @error('photo_ktp')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="wrapper mb-2 d-flex gap-3">
                 <div class="wrapper w-100">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password">
+                    <input required type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                    @error('password')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="wrapper w-100">
                     <label for="confirmation_password" class="form-label">Konfirmasi Password</label>
-                    <input type="password" class="form-control" id="confirmation_password">
+                    <input required type="password" class="form-control {{ session()->has('failed-password') ? 'is-invalid' : '' }}" id="confirmation_password" name="confirmation_password">
+                    @if (session()->has('failed-password'))
+                        <div class="invalid-feedback">
+                            {{ session('failed-password') }}
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="form-text" id="basic-addon4">Gunakan minimal 8 karakter dengan campuran huruf, angka & simbol</div>
