@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index() : View {
         return view('product.index', [
-            'title' => 'Product Page',
+            'title' => 'Halaman Produk',
         ]);
     }
 }
