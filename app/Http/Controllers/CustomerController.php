@@ -9,7 +9,7 @@ class CustomerController extends Controller
 {
     public function index() : View {
         return view('customer.index', [
-            'title' => 'Customer Page',
+            'title' => 'Halaman Pelanggan',
         ]);
     }
 }
