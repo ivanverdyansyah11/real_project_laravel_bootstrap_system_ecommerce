@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportRewardController;
 use App\Http\Controllers\ReportTransactionController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransactionRewardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +28,6 @@ use Illuminate\Support\Facades\Route;
 Route::fallback(function() {
     return redirect('/');
 });
-
 Route::redirect('/', '/login');
 
 Route::middleware(['guest'])->group(function() {
@@ -37,36 +39,20 @@ Route::middleware(['guest'])->group(function() {
     });
 });
 
-Route::middleware(['guest'])->group(function() {
-    Route::controller(DashboardController::class)->group(function() {
-        Route::get('/dashboard', 'index')->name('dashboard');
+Route::middleware(['auth'])->group(function() {
+    Route::controller(UserController::class)->group(function() {
+        Route::post('/logout', 'logout')->name('logout');
     });
-
-    Route::controller(ResellerController::class)->group(function() {
-        Route::get('/reseller', 'index')->name('reseller');
-    });
-
-    Route::controller(CustomerController::class)->group(function() {
-        Route::get('/customer', 'index')->name('customer');
-    });
-
-    Route::controller(ProductController::class)->group(function() {
-        Route::get('/product', 'index')->name('product');
-    });
-
-    Route::controller(RewardController::class)->group(function() {
-        Route::get('/reward', 'index')->name('reward');
-    });
-
-    Route::controller(TransactionController::class)->group(function() {
-        Route::get('/transaction', 'index')->name('transaction');
-    });
-
-    Route::controller(ReportRewardController::class)->group(function() {
-        Route::get('/report-reward', 'index')->name('report-reward');
-    });
-
-    Route::controller(ReportTransactionController::class)->group(function() {
-        Route::get('/report-transaction', 'index')->name('report-transaction');
-    });
+    Route::resource('/dashboard', DashboardController::class);
+    Route::resource('/profile', ProfileController::class);
+    Route::resource('/reseller', ResellerController::class);
+    Route::resource('/customer', CustomerController::class);
+    Route::resource('/cashier', CashierController::class);
+    Route::resource('/product', ProductController::class);
+    Route::resource('/reward', RewardController::class);
+    Route::resource('/transaction', TransactionController::class);
+    Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending');
+    Route::get('/transaction-finish', [TransactionController::class, 'index'])->name('transaction-finish');
+    Route::resource('/report-reward', TransactionRewardController::class);
+    Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction');
 });
