@@ -7,15 +7,34 @@
     <div class="col-lg-6 card-auth">
         <p class="auth-title">Selamat Datang Kembali</p>
         <p class="auth-caption">Hallo sahabat sehat, silahkan untuk Login dulu!</p>
+        @if (session()->has('success'))
+            <div class="alert alert-success w-100 mb-3" role="alert">
+                {{ session('success') }}
+            </div>
+        @elseif(session()->has('failed'))
+            <div class="alert alert-danger w-100 mb-3" role="alert">
+                {{ session('failed') }}
+            </div>
+        @endif
         <form action="{{ route('login.authentication') }}" method="POST">
             @csrf
             <div class="mb-2">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
+                @error('email')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="mb-2">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                @error('password')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="open_password" onclick="openPassword()">
