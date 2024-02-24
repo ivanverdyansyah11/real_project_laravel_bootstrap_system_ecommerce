@@ -51,7 +51,8 @@ class UserController extends Controller
             }
             $this->authRepository->createUser($request);
             return redirect(route('login'))->with('success', "Berhasil membuat akun baru!");
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
+            logger($e->getMessage());
             return redirect(route('register'))->with('failed', "Gagal membuat akun baru!");
         }
     }
@@ -61,6 +62,7 @@ class UserController extends Controller
             $this->authRepository->logout($request);
             return redirect()->route("login")->with('success', 'Berhasil logout akun!');
         } catch (\Exception $e) {
+            logger($e->getMessage());
             return redirect()->route("dashboard.index")->with('error', 'Gagal logout akun!');
         }
     }
