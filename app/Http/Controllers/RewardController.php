@@ -9,7 +9,7 @@ class RewardController extends Controller
 {
     public function index() : View {
         return view('reward.index', [
-            'title' => 'Reward Page',
+            'title' => 'Halaman Penghargaan',
         ]);
     }
 }
