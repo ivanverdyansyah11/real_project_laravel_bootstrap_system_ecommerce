@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('products_id');
+            $table->bigInteger('customers_id');
+            $table->bigInteger('resellers_id');
+            $table->integer('invois');
+            $table->integer('quantity');
+            $table->integer('total');
+            $table->integer('total_payment');
+            $table->integer('status')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
