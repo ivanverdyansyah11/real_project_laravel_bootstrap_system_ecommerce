@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index() : View {
         return view('dashboard.index', [
-            'title' => 'Dashboard Page',
+            'title' => 'Halaman Dashboard',
         ]);
     }
 }
