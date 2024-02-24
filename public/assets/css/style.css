@@ -21,6 +21,9 @@
 :root {
     --primary-color: 136, 184, 0;
     --blur-primary-color: 247, 255, 225;
+    --info-color: 0, 96, 184;
+    --warning-color: 255, 182, 0;
+    --danger-color: 192, 50, 33;
     --dark-color: 33, 33, 33;
     --light-color: 255, 255, 255;
     --urbanist-medium: 'urbanist-medium', Arial, Helvetica, sans-serif;
@@ -82,6 +85,137 @@ a {
     margin: 6px 0 12px 0 !important;
     font-size: 0.813rem;
 }
+
+.button-small-default {
+    padding: 8px 12px;
+    background-color: rgba(var(--primary-color), 0.12);
+    border: 1px solid rgba(var(--primary-color), 0.24);
+    font-size: 0.875rem;
+    color: rgba(var(--primary-color), 1);
+    gap: 6px;
+    border-radius: 3px;
+}
+
+.button-small-default:hover {
+    border: 1px solid rgba(var(--primary-color), 0.42);
+}
+
+canvas {
+    position: relative;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    transition: 0 !important;
+    opacity: 1;
+}
+
+canvas.hide {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -9999;
+    opacity: 0;
+}
+
+.input-search {
+    display: inline-block;
+    width: 240px;
+    padding: 12px;
+    background-color: rgba(var(--dark-color), 0.03);
+    border: 1px solid rgba(var(--dark-color), 0.12);
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+    outline: none;
+    border-radius: 4px;
+}
+
+.input-search:hover {
+    border-color: rgba(var(--dark-color), 0.24);
+}
+
+.button-primary,
+.button-dark {
+    width: fit-content;
+    padding: 12px;
+    border-radius: 4px;
+    background-color: rgba(var(--primary-color), 1);
+    font-size: 0.875rem;
+    color: rgba(var(--light-color), 1);
+    display: inline-block;
+    outline: none;
+    stroke: none;
+    border: none;
+}
+
+.button-dark {
+    background-color: rgba(var(--dark-color), 1);
+}
+
+.button-approved,
+.button-detail,
+.button-edit,
+.button-delete {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(var(--danger-color), 0.16);
+    border-radius: 3px;
+}
+
+.button-delete:hover {
+    background-color: rgba(var(--danger-color), 0.24);
+}
+
+.button-approved {
+    background-color: rgba(var(--primary-color), 0.16);
+}
+
+.button-approved:hover {
+    background-color: rgba(var(--primary-color), 0.24);
+}
+
+.button-detail {
+    background-color: rgba(var(--info-color), 0.16);
+}
+
+.button-detail:hover {
+    background-color: rgba(var(--info-color), 0.24);
+}
+
+.button-edit {
+    background-color: rgba(var(--warning-color), 0.16);
+}
+
+.button-edit:hover {
+    background-color: rgba(var(--warning-color), 0.24);
+}
+
+.button-primary:hover {
+    filter: contrast(110%);
+}
+
+table {
+    border-radius: 6px !important;
+    overflow: hidden;
+}
+
+table > * {
+    font-size: 0.913rem;
+    font-family: var(--urbanist-medium) !important;
+}
+
+table td {
+    padding: 12px !important;
+}
+
+.wrapper-table {
+    overflow-x: auto;
+}
+
+.form-label {
+    font-size: 0.875rem !important;
+}
 /* END GENERAL */
 
 /* CONTENT AUTH */
@@ -138,7 +272,7 @@ a {
 /* SIDEBAR */
 .sidebar {
     min-height: 100vh;
-    height: fit-content;
+    height: 100% !important;
     border-right: 1px solid rgba(var(--dark-color), 0.12);
     padding: 42px 24px;
 }
@@ -212,7 +346,21 @@ a {
     font-size: 1.625rem;
     font-family: var(--urbanist-bold);
 }
+
+.hamburger {
+    width: 46px;
+    height: 46px;
+    border-radius: 9999px;
+    background-color: rgba(var(--primary-color), 0.12);
+    border: 1px solid rgba(var(--primary-color), 0.42);
+}
 /* END TOPBAR */
+
+/* ALERT */
+.alert {
+    font-size: 0.913rem;
+}
+/* END ALERT */
 
 /* DASHBOARD */
 .dashboard-menu {
@@ -238,10 +386,46 @@ a {
     border-radius: 9999px;
 }
 
+.dashboard-menu .child-menu {
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(var(--dark-color), 0.12);
+}
+
+.dashboard-menu .child-title {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+    margin-bottom: 0px;
+}
+
+.dashboard-menu .child-value {
+    font-size: 1.5rem;
+    font-family: var(--urbanist-bold);
+    color: rgba(var(--primary-color), 1);
+}
+
+.dashboard-menu .child-category {
+    margin-top: 24px;
+}
+
+.dashboard-menu .card-category {
+    border: 1px solid rgba(var(--dark-color), 0.12);
+}
+
+.dashboard-menu .card-category .category-title {
+    font-size: 0.913rem;
+    font-family: var(--urbanist-semibold);
+}
+
 .card-chart {
     background-color: rgba(var(--light-color), 1);
     border: 1px solid rgba(var(--dark-color), 0.12);
     border-radius: 12px;
+}
+
+.card-chart .chart-title {
+    font-size: 1.125rem;
+    font-family: var(--urbanist-semibold);
 }
 /* END DASHBOARD */
 
@@ -254,7 +438,22 @@ a {
 @media (max-width: 991.98px) {
     .content-auth .card-auth {
         padding: 32px 122px;
-    }   
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 300px;
+        background-color: rgba(var(--light-color), 1);
+        height: 100vh;
+        z-index: 99999 !important;
+        transition: 500ms !important;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
 }
 
 @media (max-width: 767.98px) {
