@@ -25,7 +25,7 @@ class StoreResellerRequest extends FormRequest
             'name' => 'required|string|max:255',
             'number_phone' => 'required|string|max:15',
             'photo_ktp' => 'required|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
-            'email' => 'required|email:dns|string',
+            'email' => 'required|email:dns|unique:users,email|string',
             'password' => 'required|string|min:3',
             'image' => 'required|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
             'status' => 'required|integer',
