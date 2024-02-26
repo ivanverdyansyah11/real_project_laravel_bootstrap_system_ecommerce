@@ -23,7 +23,6 @@ class UpdateResellerRequest extends FormRequest
     {
         return [
             'email' => 'required|email:dns|string',
-            'password' => 'nullable|string|min:3',
             'image' => 'nullable|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
             'name' => 'required|string|max:255',
             'number_phone' => 'required|string|max:15',
