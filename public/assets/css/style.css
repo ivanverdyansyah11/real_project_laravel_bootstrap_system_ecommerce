@@ -161,6 +161,8 @@ canvas.hide {
     height: 32px;
     background-color: rgba(var(--danger-color), 0.16);
     border-radius: 3px;
+    outline: none;
+    border: none;
 }
 
 .button-delete:hover {
@@ -215,6 +217,16 @@ table td {
 
 .form-label {
     font-size: 0.875rem !important;
+}
+
+.modal-header,
+.modal-footer {
+    border: none !important;
+}
+
+.modal-body p {
+    font-size: 0.913rem;
+    color: rgba(var(--dark-color), 0.62);
 }
 /* END GENERAL */
 
@@ -432,7 +444,7 @@ table td {
 @media (max-width: 1199.98px) {
     .content-auth .card-auth {
         padding: 32px 72px;
-    }   
+    }
 }
 
 @media (max-width: 991.98px) {
@@ -459,5 +471,5 @@ table td {
 @media (max-width: 767.98px) {
     .content-auth .card-auth {
         padding: 32px 32px;
-    }   
+    }
 }
