@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RegisterResellerRequest;
 use App\Models\User;
 use App\Repositories\AuthRepository;
@@ -14,7 +15,7 @@ class UserController extends Controller
     public function __construct(
         private readonly AuthRepository $authRepository
     ) {}
-    
+
     public function login() : View {
         return view('auth.login', [
             'title' => 'Login Page',
@@ -28,7 +29,7 @@ class UserController extends Controller
                 if ($user->status == 0) {
                     auth()->logout();
                     return redirect()->back()->with('failed', 'Akun belum diaktifkan!');
-                } else { 
+                } else {
                     return redirect()->route("dashboard.index")->with('success', 'Berhasil login akun!');
                 }
             }
@@ -44,12 +45,12 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(RegisterResellerRequest $request) : RedirectResponse {
+    public function store(RegisterRequest $request) : RedirectResponse {
         try {
             if ($request->password !== $request->confirmation_password) {
                 return redirect(route('register'))->with('failed-password', "Password tidak sesuai!");
             }
-            $this->authRepository->createUser($request);
+            $this->authRepository->createUser($request->validated());
             return redirect(route('login'))->with('success', "Berhasil membuat akun baru!");
         } catch (\Exception $e) {
             logger($e->getMessage());
