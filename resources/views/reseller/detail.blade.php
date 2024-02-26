@@ -13,7 +13,7 @@
                     <div class="row row-cols-1 row-cols-md-2">
                         <div class="col d-flex flex-column">
                             <label for="image" class="form-label">Foto Profil</label>
-                            <img src="{{ $reseller->user->image ? asset('assets/images/reseller/' . $reseller->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
+                            <img src="{{ $reseller->user->image ? asset('assets/images/profile/' . $reseller->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
                         </div>
                         <div class="col d-flex flex-column">
                             <label for="photo_ktp" class="form-label">Foto KTP</label>
@@ -43,15 +43,4 @@
             </form>
         </div>
     </div>
-
-    @push('js')
-        <script>
-            const tagImage = document.querySelector('.img-preview');
-            const inputImage = document.querySelector('.input-file');
-
-            inputImage.addEventListener('change', function() {
-                tagImage.src = URL.createObjectURL(inputImage.files[0]);
-            });
-        </script>
-    @endpush
 @endsection
