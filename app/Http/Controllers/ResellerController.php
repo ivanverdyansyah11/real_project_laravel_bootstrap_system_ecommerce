@@ -7,8 +7,6 @@ use App\Http\Requests\UpdateResellerRequest;
 use App\Models\Reseller;
 use App\Repositories\ResellerRepositories;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class ResellerController extends Controller
 {
@@ -36,13 +34,12 @@ class ResellerController extends Controller
         ]);
     }
 
-    public function store(Request $request) {
-        // dd($request->all());
+    public function store(StoreResellerRequest $request) {
         try {
             $this->reseller->store($request->validated());
-            return redirect()->route('reseller.index')->with('success', 'Successfully create new reseller');
-        } catch (\Exception $e) {            
-            return redirect()->route('reseller.index')->with('error', 'Failed create new reseller');
+            return redirect()->route('reseller.index')->with('success', 'Berhasil membuat karyawan baru');
+        } catch (\Exception $e) {
+            return redirect()->route('reseller.create')->with('error', 'Gagal membuat karyawan baru');
         }
     }
 
@@ -53,11 +50,21 @@ class ResellerController extends Controller
         ]);
     }
 
-    public function update(UpdateResellerRequest $request) {
-        dd($request->all());
+    public function update(UpdateResellerRequest $request, Reseller $reseller) {
+        try {
+            $this->reseller->update($request->validated(), $reseller);
+            return redirect()->route('reseller.index')->with('success', 'Berhasil edit karyawan');
+        } catch (\Exception $e) {
+            return redirect()->route('reseller.edit')->with('error', 'Gagal edit karyawan');
+        }
     }
 
-    public function destroy($id) {
-        dd($id);
+    public function destroy(Reseller $reseller) {
+        try {
+            $this->reseller->delete($reseller);
+            return redirect(route('reseller.index'))->with('success', 'Berhasil hapus karyawan!');
+        } catch (\Exception $e) {
+            return redirect(route('reseller.index'))->with('failed', 'Gagal hapus karyawan!');
+        }
     }
 }
