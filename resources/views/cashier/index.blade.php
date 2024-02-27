@@ -1,129 +1,164 @@
 @extends('layouts.main')
 
 @section('content-dashboard')
-    <div class="row me-lg-4 pb-4 border-bottom d-none d-md-inline-block" style="margin-top: 32px;">
+    <div class="row me-lg-4 pb-4 d-none d-md-inline-block" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
-            <form class="row row-cols-1 row-cols-md-2">
+            @if(session()->has('failed'))
+                <div class="alert alert-danger w-100 mb-4" role="alert">
+                    {{ session('failed') }}
+                </div>
+            @endif
+        </div>
+        <div class="col-12 pe-lg-0">
+            <form class="row row-cols-1 row-cols-md-2" action="{{ route('transaction.store') }}" method="POST">
+                @csrf
+                <input type="hidden" value="1" name="status">
                 <div class="col mb-3">
-                    <label for="no_invois" class="form-label">Nomor Invois</label>
-                    <input type="number" class="form-control" id="no_invois">
+                    <label for="customers_id" class="form-label">Nama Pelanggan</label>
+                    <select required class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
+                        <option value="">Pilih pelanggan</option>
+                        @foreach ($customers as $customer)
+                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('customers_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="col mb-3">
-                    <label for="name" class="form-label">Nama</label>
-                    <input type="text" class="form-control" id="name">
+                    <label for="resellers_id" class="form-label">Nama Karyawan</label>
+                    <select required class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
+                        <option value="">Pilih karyawan</option>
+                        @foreach ($resellers as $reseller)
+                            <option value="{{ $reseller->id }}">{{ $reseller->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('resellers_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="products_id" class="form-label">Nama Produk</label>
+                    <select required class="form-control @error('products_id') is-invalid @enderror" id="products_id" name="products_id">
+                        <option value="">Pilih produk</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('products_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="stock" class="form-label">Sisa Stock</label>
+                    <input readonly type="number" class="form-control" id="stock" data-value="stock">
+                </div>
+                <div class="col mb-3">
+                    <label for="quantity" class="form-label">Kuantitas Dibeli</label>
+                    <select required class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity">
+                        <option value="">Pilih produk terlebih dahulu</option>
+                    </select>
+                    @error('quantity')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="price_per_unit" class="form-label">Harga Satuan</label>
+                    <input readonly type="number" class="form-control" id="price_per_unit" data-value="price_per_unit">
                 </div>
                 <div class="col mb-3">
                     <label for="total" class="form-label">Total</label>
-                    <input type="number" class="form-control" id="total">
+                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}">
+                    @error('total')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="col mb-3">
-                    <label for="product_name" class="form-label">Nama Barang</label>
-                    <input type="text" class="form-control" id="product_name">
-                </div>
-                <div class="col mb-3">
-                    <label for="stock" class="form-label">Sisa Stok</label>
-                    <input type="number" class="form-control" id="stock">
-                </div>
-                <div class="col mb-3">
-                    <label for="unit_price" class="form-label">Harga Satuan</label>
-                    <input type="number" class="form-control" id="unit_price">
-                </div>
-                <div class="col mb-3">
-                    <label for="selling_quantity" class="form-label">Jumlah Jual</label>
-                    <input type="number" class="form-control" id="selling_quantity">
-                </div>
-                <div class="col mb-3">
-                    <label for="total_payment" class="form-label">Total Pembayaran</label>
-                    <input type="number" class="form-control" id="total_payment">
+                    <label for="total_payment" class="form-label">Total Bayar</label>
+                    <input required type="number" class="form-control @error('total_payment') is-invalid @enderror" id="total_payment" name="total_payment" value="{{ old('total_payment') }}">
+                    @error('total_payment')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="col">
-                    <button type="button" class="button-primary">Tambah Transaksi</button>
+                    <button type="submit" class="button-primary">Tambah Transaksi</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="row me-lg-4 mt-4">
-        <div class="col-12 pe-lg-0">
-            <a href="#" class="d-none d-md-inline-block button-primary mb-2">Cetak Invois</a>
-            <div class="wrapper-table">
-                <table id="table_reseller" class="table display responsive nowrap table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Nama Barang</th>
-                            <th>Harga Satuan</th>
-                            <th>Jumlah Barang</th>
-                            <th>Total Harga</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Minyak Dewantari</td>
-                            <td>Rp. 135.000</td>
-                            <td>10</td>
-                            <td>Rp. 1.350.000</td>
-                            <td class="wrapper d-flex gap-2">
-                                <a href="#" class="button-detail d-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-delete d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon" class="img-fluid" width="16">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Ramuan Diksa</td>
-                            <td>Rp. 275.000</td>
-                            <td>2</td>
-                            <td>Rp. 550.000</td>
-                            <td class="wrapper d-flex gap-2">
-                                <a href="#" class="button-detail d-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-delete d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon" class="img-fluid" width="16">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Barang Lain</td>
-                            <td>Rp. 1.000.000</td>
-                            <td>10</td>
-                            <td>Rp. 100.000.000</td>
-                            <td class="wrapper d-flex gap-2">
-                                <a href="#" class="button-detail d-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon" class="img-fluid" width="16">
-                                </a>
-                                <a href="#" class="button-delete d-none d-md-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon" class="img-fluid" width="16">
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     @push('js')
         <script>
-            $('#table_reseller').DataTable( {
-                responsive: true
-            } );
+            $(document).on('change', '#products_id', function() {
+                let id = $(this).val();
+                $('#quantity option').remove();
+                $('#total').val('');
+                if (id != '') {
+                    $.ajax({
+                        type: 'get',
+                        url: '/transaction/get_product/' + id,
+                        success: function(product) {
+                            if (product.status == 'success') {
+                                $('#stock').val(product.data.stock);
+                                $('#price_per_unit').val(product.data.selling_price);
+                                if (product.data.stock == 0) {
+                                    $('#quantity').append(
+                                        `<option value="">Stok pada produk ini telah habis!</option>`
+                                    );
+                                    } else {
+                                    $('#quantity').append(
+                                        `<option value="">Pilih jumlah produk dibeli</option>`
+                                    );
+                                    for (let i = 1; i <= product.data.stock; i++) {
+                                        $('#quantity').append(
+                                            `<option value="${i}">${i}</option>`
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    $('#stock').val('');
+                    $('#price_per_unit').val('');
+                    $('#quantity').append(
+                        `<option value="">Pilih produk terlebih dahulu!</option>`
+                        );
+                }
+            });
+
+            $(document).on('change', '#quantity', function() {
+                let quantity = $(this).val();
+                let productsId = $('#products_id').val();
+                if (quantity != '') {
+                    $.ajax({
+                        type: 'get',
+                        url: '/transaction/get_package/' + quantity + '/' + productsId,
+                        success: function(package) {
+                            if (package.status == 'success') {
+                                if (package.data != null) {
+                                    $('#price_per_unit').val(package.data.selling_price);
+                                }
+                                $('#total').val(quantity * $('#price_per_unit').val());
+                            }
+                        }
+                    });
+                } else {
+                    $('#total').val('');
+                }
+            });
         </script>
     @endpush
 @endsection
