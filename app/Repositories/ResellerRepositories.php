@@ -23,7 +23,7 @@ class ResellerRepositories
 
     public function findAllPaginate()
     {
-        return $this->reseller->with(['user'])->latest()->paginate(10);
+        return $this->reseller->with(['user'])->latest()->get();
     }
 
     public function findById(int $reseller_id): reseller
