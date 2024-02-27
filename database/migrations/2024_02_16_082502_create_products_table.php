@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->text('description');
             $table->enum('unit', ['box', 'pcs']);
+            $table->integer('stock');
             $table->integer('purchase_price');
             $table->integer('selling_price');
             $table->timestamps();
