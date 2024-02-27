@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('resellers', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('users_id');
+            $table->string('photo_ktp');
             $table->string('name', 255);
             $table->string('number_phone', 15);
-            $table->string('photo_ktp');
+            $table->string('origin', 50)->nullable();
+            $table->string('place_of_birth', 50)->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('gender', 10)->nullable();
+            $table->text('address')->nullable();
             $table->integer('poin')->default(0);
             $table->timestamps();
             $table->softDeletes();
