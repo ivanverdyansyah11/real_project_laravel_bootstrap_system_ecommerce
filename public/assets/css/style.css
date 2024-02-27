@@ -90,10 +90,13 @@ a {
     padding: 8px 12px;
     background-color: rgba(var(--primary-color), 0.12);
     border: 1px solid rgba(var(--primary-color), 0.24);
-    font-size: 0.875rem;
-    color: rgba(var(--primary-color), 1);
     gap: 6px;
     border-radius: 3px;
+}
+
+.button-small-default span {
+    font-size: 0.875rem;
+    color: rgba(var(--primary-color), 1);
 }
 
 .button-small-default:hover {
@@ -227,6 +230,14 @@ table td {
 .modal-body p {
     font-size: 0.913rem;
     color: rgba(var(--dark-color), 0.62);
+}
+
+.data-hide {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+    opacity: 0;
+    z-index: -9999;
 }
 /* END GENERAL */
 
