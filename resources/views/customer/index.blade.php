@@ -27,12 +27,16 @@
                     <tbody>
                         @if ($customers->count() == 0)
                             <tr>
-                                <td colspan="6">Data pelanggan tidak ditemukan!</td>
+                                <td>Data pelanggan tidak ditemukan!</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         @else
-                            @foreach ($customers as $customer)
+                            @foreach ($customers as $i => $customer)
                                 <tr>
-                                    <td>{{ $customer->id }}</td>
+                                    <td>{{ $i + 1 }}</td>
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->user->email }}</td>
                                     <td>{{ $customer->number_phone }}</td>
@@ -56,28 +60,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Modal Hapus Pelanggan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="buttonDeleteCustomer" method="POST" class="d-inline-block w-100">
-                    @csrf
-                    @method("DELETE")
-                    <div class="modal-body">
-                        <p>Apakah kamu yakin untuk menghapus pelanggan ini?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel Delete</button>
-                        <button type="submit" class="btn btn-primary">Hapus Pelanggan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    @include('partials.customer')
     @push('js')
         <script>
             $('#table_customer').DataTable( {
