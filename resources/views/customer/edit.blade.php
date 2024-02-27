@@ -37,7 +37,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="name" class="form-label">Nama</label>
-                    <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $customer->name) }}" value="{{ $customer->name }}">
+                    <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ $customer->name }}">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -46,7 +46,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input required type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $customer->user->email) }}" value="{{ $customer->user->email }}">
+                    <input required type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $customer->user->email }}">
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="number_phone" class="form-label">Nomor Telepon</label>
-                    <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ old('number_phone', $customer->number_phone) }}" value="{{ $customer->number_phone }}">
+                    <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ $customer->number_phone }}">
                     @error('number_phone')
                         <div class="invalid-feedback">
                             {{ $message }}
