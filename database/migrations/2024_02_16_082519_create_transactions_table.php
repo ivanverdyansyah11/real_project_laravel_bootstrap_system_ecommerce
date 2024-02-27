@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('products_id');
             $table->bigInteger('customers_id');
-            $table->bigInteger('resellers_id');
-            $table->integer('invois');
+            $table->bigInteger('resellers_id')->nullable();
+            $table->string('invois');
             $table->integer('quantity');
             $table->integer('total');
             $table->integer('total_payment');
