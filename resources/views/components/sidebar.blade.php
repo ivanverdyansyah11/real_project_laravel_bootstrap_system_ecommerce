@@ -21,9 +21,17 @@
             <img src="{{ asset('assets/images/sidebar/cashier.png') }}" alt="Sidebar Icon" class="img-fluid">
             <span>Kasir</span>
         </a>
+        <a href="{{ route('category.index') }}" class="link-item d-flex align-items-center {{ Route::is('category.index') ? 'active' : '' }}">
+            <img src="{{ asset('assets/images/sidebar/category.png') }}" alt="Sidebar Icon" class="img-fluid">
+            <span>Kategori</span>
+        </a>
         <a href="{{ route('product.index') }}" class="link-item d-flex align-items-center {{ Route::is('product.index') ? 'active' : '' }}">
             <img src="{{ asset('assets/images/sidebar/product.png') }}" alt="Sidebar Icon" class="img-fluid">
             <span>Produk</span>
+        </a>
+        <a href="{{ route('package.index') }}" class="link-item d-flex align-items-center {{ Route::is('package.index') ? 'active' : '' }}">
+            <img src="{{ asset('assets/images/sidebar/package.png') }}" alt="Sidebar Icon" class="img-fluid">
+            <span>Paket</span>
         </a>
         <a href="{{ route('reward.index') }}" class="link-item d-flex align-items-center {{ Route::is('reward.index') ? 'active' : '' }}">
             <img src="{{ asset('assets/images/sidebar/reward.png') }}" alt="Sidebar Icon" class="img-fluid">
@@ -34,7 +42,7 @@
             <span>Penjualan</span>
         </button>
         <div id="child_data_transaction" class="item-child {{ Route::is('transaction-pending') || Route::is('transaction-finish') ? 'active' : '' }}">
-            <a href="{{ route('transaction-pending') }}" class="{{ Route::is('transaction-pending') ? 'active' : '' }}">Transaksi Pesanan</a>
+            <a href="{{ route('transaction-pending') }}" class="{{ Route::is('transaction-pending') ? 'active' : '' }}">Transaksi Tertunda</a>
             <a href="{{ route('transaction-finish') }}" class="{{ Route::is('transaction-finish') ? 'active' : '' }}">Transaksi Selesai</a>
         </div>
         <button id="data_report" type="button" class="link-item d-flex align-items-center {{ Route::is('report-reward.index') || Route::is('report-transaction') ? 'active' : '' }}">
