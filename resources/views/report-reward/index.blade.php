@@ -3,6 +3,15 @@
 @section('content-dashboard')
     <div class="row me-lg-4" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
+            @if (session()->has('success'))
+                <div class="alert alert-success w-100 mb-4" role="alert">
+                    {{ session('success') }}
+                </div>
+            @elseif(session()->has('failed'))
+                <div class="alert alert-danger w-100 mb-4" role="alert">
+                    {{ session('failed') }}
+                </div>
+            @endif
             <div class="wrapper-table">
                 <table id="table_report" class="table display responsive nowrap table-striped" style="width:100%">
                     <thead>
