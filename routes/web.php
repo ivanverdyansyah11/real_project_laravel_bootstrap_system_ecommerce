@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportRewardController;
@@ -48,9 +50,14 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('/reseller', ResellerController::class);
     Route::resource('/customer', CustomerController::class);
     Route::resource('/cashier', CashierController::class);
+    Route::resource('/category', CategoryController::class);
     Route::resource('/product', ProductController::class);
+    Route::resource('/package', PackageController::class);
     Route::resource('/reward', RewardController::class);
     Route::resource('/transaction', TransactionController::class);
+    Route::get('/transaction/get_product/{id}', [TransactionController::class, 'getProduct']);
+    Route::get('/transaction/get_package/{quantity}/{id}', [TransactionController::class, 'getPackage']);
+    Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending');
     Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending');
     Route::get('/transaction-finish', [TransactionController::class, 'index'])->name('transaction-finish');
     Route::resource('/report-reward', TransactionRewardController::class);
