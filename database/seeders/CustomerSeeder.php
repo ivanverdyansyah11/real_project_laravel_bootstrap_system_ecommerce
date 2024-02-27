@@ -15,16 +15,26 @@ class CustomerSeeder extends Seeder
     {
         Customer::create([
             'users_id' => 5,
+            'photo_ktp' => 'photo_ktp_5.jpg',
             'name' => 'Andi Prayoga',
             'number_phone' => '08975312468',
-            'photo_ktp' => 'photo_ktp_3.jpg',
+            'origin' => 'Gianyar',
+            'place_of_birth' => 'Karangasem',
+            'date_of_birth' => '2002-08-26',
+            'gender' => 'L',
+            'address' => 'Jl. Ahmad Yani',
         ]);
 
         Customer::create([
             'users_id' => 6,
+            'photo_ktp' => 'photo_ktp_6.jpg',
             'name' => 'Devina Putri',
             'number_phone' => '082468975431',
-            'photo_ktp' => 'photo_ktp_4.jpg',
+            'origin' => 'Karangasem',
+            'place_of_birth' => 'Denpasar',
+            'date_of_birth' => '2005-10-29',
+            'gender' => 'P',
+            'address' => 'Jl. Dalung Permai',
         ]);
     }
 }
