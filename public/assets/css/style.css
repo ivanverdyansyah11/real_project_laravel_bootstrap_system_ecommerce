@@ -239,6 +239,11 @@ table td {
     opacity: 0;
     z-index: -9999;
 }
+
+.card-body-title {
+    font-size: 1.125rem;
+    font-family: var(--urbanist-semibold);
+}
 /* END GENERAL */
 
 /* CONTENT AUTH */
