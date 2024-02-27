@@ -24,7 +24,7 @@ class CustomerRepositories
 
     public function findAllPaginate()
     {
-        return $this->customer->with(['user'])->latest()->paginate(10);
+        return $this->customer->with(['user'])->latest()->get();
     }
 
     public function findById(int $customer_id): customer
