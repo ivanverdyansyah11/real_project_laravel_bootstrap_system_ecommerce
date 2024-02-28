@@ -21,7 +21,8 @@ class StoreRewardRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [       
+        return [
+            'image' => 'required|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'points_required' => 'required|integer',
