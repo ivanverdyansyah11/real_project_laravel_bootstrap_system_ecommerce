@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Transaction;
+use App\Utils\UploadFile;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
@@ -12,6 +13,7 @@ class TransactionRepositories
         protected readonly Transaction $transaction,
         protected readonly ProductRepositories $product,
         protected readonly ResellerRepositories $reseller,
+        protected readonly UploadFile $uploadFile,
     ) {}
 
     public function findAll()
@@ -127,13 +129,18 @@ class TransactionRepositories
 
     public function store($request): Transaction
     {
+        if(isset($request['proof_of_payment'])) {
+            $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+        }
         $product = $this->product->findById($request['products_id']);
-        $reseller = $this->reseller->findById($request['resellers_id']);
         $request['invois'] = strtoupper(substr($product->name, 0, 3)) . '-' . rand();
         $request['stock'] = $product->stock - $request['quantity'];
-        $request['poin'] = $reseller->poin + $request['quantity'];
+        if ($request['resellers_id']) {
+            $reseller = $this->reseller->findById($request['resellers_id']);
+            $request['poin'] = $reseller->poin + $request['quantity'];
+            $reseller->update(Arr::only($request, 'poin'));
+        }
         $product->update(Arr::only($request, 'stock'));
-        $reseller->update(Arr::only($request, 'poin'));
         return $this->transaction->create(Arr::except($request, 'stock'));
     }
 
