@@ -28,6 +28,15 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function approved(int $id) {
+        try {
+            $this->customer->approved($id);
+            return redirect()->route('customer.index')->with('success', 'Berhasil menyetujui pelanggan');
+        } catch (\Exception $e) {
+            return redirect()->route('customer.create')->with('error', 'Gagal menyetujui pelanggan');
+        }
+    }
+
     public function create() : View {
         return view('customer.add', [
             'title' => 'Halaman Tambah Pelanggan',
