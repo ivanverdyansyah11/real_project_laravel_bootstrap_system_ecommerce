@@ -43,6 +43,9 @@
                                     <td>{{ $transaction->product->name }}</td>
                                     <td>Rp. {{ number_format($transaction->total_payment, 2, ",", ".") }}</td>
                                     <td class="wrapper d-flex gap-2">
+                                        <button type="button" class="button-approved d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ $transaction->id }}">
+                                            <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon" class="img-fluid" width="16">
+                                        </button>
                                         <a href="{{ route('transaction.show', $transaction->id) }}" class="button-detail d-flex align-items-center justify-content-center">
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
                                         </a>
@@ -61,11 +64,17 @@
         </div>
     </div>
 
+    @include('partials.transaction-pending')
     @push('js')
         <script>
             $('#table_transaction').DataTable( {
                 responsive: true
             } );
+
+            $(document).on('click', '[data-bs-target="#approveModal"]', function() {
+                let id = $(this).data('id');
+                $('#buttonApprovedTransaction').attr('action', '/transaction/approved/' + id);
+            });
         </script>
     @endpush
 @endsection
