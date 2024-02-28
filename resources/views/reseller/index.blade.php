@@ -44,6 +44,11 @@
                                     <td>{{ $reseller->number_phone }}</td>
                                     <td>{{ $reseller->poin }}</td>
                                     <td class="wrapper d-flex gap-2">
+                                        @if ($reseller->user->status == 0)
+                                            <button type="button" class="button-approved d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ $reseller->user->id }}">
+                                                <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon" class="img-fluid" width="16">
+                                            </button>
+                                        @endif
                                         <a href="{{ route('reseller.show', $reseller->id) }}" class="button-detail d-flex align-items-center justify-content-center">
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
                                         </a>
@@ -73,6 +78,11 @@
             $(document).on('click', '[data-bs-target="#deleteModal"]', function() {
                 let id = $(this).data('id');
                 $('#buttonDeleteReseller').attr('action', '/reseller/' + id);
+            });
+
+            $(document).on('click', '[data-bs-target="#approveModal"]', function() {
+                let id = $(this).data('id');
+                $('#buttonApprovedReseller').attr('action', '/reseller/approved/' + id);
             });
         </script>
     @endpush
