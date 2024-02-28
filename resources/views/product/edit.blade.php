@@ -13,7 +13,7 @@
                 @method("PUT")
                 <div class="col mb-3 d-flex flex-column">
                     <label for="image" class="form-label">Foto Produk</label>
-                    <img src="{{ $product->image ? asset('assets/images/product/' . $product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                    <img src="{{ file_exists('assets/images/product/' . $product->image) && $product->image ? asset('assets/images/product/' . $product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
                     <input type="file" class="form-control input-file @error('image') is-invalid @enderror" name="image" id="image">
                     @error('image')
                         <div class="invalid-feedback">
