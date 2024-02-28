@@ -13,11 +13,11 @@
                     <div class="row row-cols-1 row-cols-md-2">
                         <div class="col d-flex flex-column">
                             <label for="image" class="form-label">Foto Profil</label>
-                            <img src="{{ $customer->user->image ? asset('assets/images/profile/' . $customer->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
+                            <img src="{{ file_exists('assets/images/profile/' . $customer->user->image) && $customer->user->image ? asset('assets/images/profile/' . $customer->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
                         </div>
                         <div class="col d-flex flex-column">
                             <label for="photo_ktp" class="form-label">Foto KTP</label>
-                            <img src="{{ $customer->photo_ktp ? asset('assets/images/customer/' . $customer->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
+                            <img src="{{ file_exists('assets/images/customer/' . $customer->photo_ktp) && $customer->photo_ktp ? asset('assets/images/customer/' . $customer->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
                         </div>
                     </div>
                 </div>
