@@ -5,9 +5,19 @@
                 <h1 class="modal-title fs-5" id="addModalLabel">Modal Tambah Penghargaan</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('reward.store') }}" method="POST" class="d-inline-block w-100">
+            <form action="{{ route('reward.store') }}" method="POST" class="d-inline-block w-100" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="image" class="form-label">Foto Penghargaan</label>
+                        <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                        <input required type="file" class="form-control input-file @error('image') is-invalid @enderror" name="image" id="image">
+                        @error('image')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
@@ -54,6 +64,10 @@
             </div>
             <form class="d-inline-block w-100">
                 <div class="modal-body">
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="image" class="form-label">Foto Penghargaan</label>
+                        <img src="" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;" data-value="image">
+                    </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input readonly type="text" class="form-control" id="name" data-value="name">
@@ -82,10 +96,20 @@
                 <h1 class="modal-title fs-5" id="editModalLabel">Modal Edit Penghargaan</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="buttonEditReward" method="POST" class="d-inline-block w-100">
+            <form id="buttonEditReward" method="POST" class="d-inline-block w-100" enctype="multipart/form-data">
                 @csrf
                 @method("PUT")
                 <div class="modal-body">
+                    <div class="mb-3 d-flex flex-column">
+                        <label for="image" class="form-label">Foto Penghargaan</label>
+                        <img src="" alt="Image Not Found" class="rounded mb-2 img-preview-edit" width="100" height="100" style="object-fit: cover;" data-value="image">
+                        <input type="file" class="form-control input-file-edit @error('image') is-invalid @enderror" name="image" id="image">
+                        @error('image')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" data-value="name">
