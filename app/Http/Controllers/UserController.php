@@ -30,7 +30,11 @@ class UserController extends Controller
                     auth()->logout();
                     return redirect()->back()->with('failed', 'Akun belum diaktifkan!');
                 } else {
-                    return redirect()->route("dashboard.index")->with('success', 'Berhasil login akun!');
+                    if (auth()->user()->role == 'customer') {
+                        return redirect()->route("homepage")->with('success', 'Berhasil login akun!');
+                    } else {
+                        return redirect()->route("dashboard.index")->with('success', 'Berhasil login akun!');
+                    }
                 }
             }
         } catch (\Exception $e) {
