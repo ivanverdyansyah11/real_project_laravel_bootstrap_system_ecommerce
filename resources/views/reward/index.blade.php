@@ -67,6 +67,19 @@
                 responsive: true
             } );
 
+            const tagImage = document.querySelector('.img-preview');
+            const inputImage = document.querySelector('.input-file');
+            const tagImageEdit = document.querySelector('.img-preview-edit');
+            const inputImageEdit = document.querySelector('.input-file-edit');
+
+            inputImage.addEventListener('change', function() {
+                tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            });
+
+            inputImageEdit.addEventListener('change', function() {
+                tagImageEdit.src = URL.createObjectURL(inputImageEdit.files[0]);
+            });
+
             $(document).on('click', '[data-bs-target="#detailModal"]', function() {
                 let id = $(this).data('id');
                 $.ajax({
@@ -74,6 +87,7 @@
                     url: '/reward/' + id,
                     success: function(reward) {
                         if (reward.status == 'success') {
+                            $('[data-value="image"]').attr('src', reward.data.image ? window.location.origin + '/assets/images/reward/' + reward.data.image : window.location.origin + '/assets/images/other/img-not-found.jpg');
                             $('[data-value="name"]').val(reward.data.name);
                             $('[data-value="points_required"]').val(reward.data.points_required);
                             $('[data-value="description"]').html(reward.data.description);
@@ -90,6 +104,7 @@
                     url: '/reward/' + id,
                     success: function(reward) {
                         if (reward.status == 'success') {
+                            $('[data-value="image"]').attr('src', reward.data.image ? window.location.origin + '/assets/images/reward/' + reward.data.image : window.location.origin + '/assets/images/other/img-not-found.jpg');
                             $('[data-value="name"]').val(reward.data.name);
                             $('[data-value="points_required"]').val(reward.data.points_required);
                             $('[data-value="description"]').html(reward.data.description);
