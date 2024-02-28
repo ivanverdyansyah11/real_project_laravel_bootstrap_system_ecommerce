@@ -32,9 +32,21 @@ class CustomerRepositories
         return $this->customer->with(['user'])->where('id', $customer_id)->first();
     }
 
+    public function findByUserId(int $customer_id)
+    {
+        return $this->customer->with(['user'])->where('users_id', $customer_id)->first();
+    }
+
     public function findLastData()
     {
         return $this->user->latest()->first();
+    }
+
+    public function approved(int $id)
+    {
+        $customer = $this->findByUserId($id);
+        $request['status'] = 1;
+        return $customer->user->update($request);
     }
 
     public function store($request)
