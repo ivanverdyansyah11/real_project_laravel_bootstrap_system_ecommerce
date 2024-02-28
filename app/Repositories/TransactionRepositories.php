@@ -33,9 +33,21 @@ class TransactionRepositories
         return $this->transaction->where('status', 0)->latest()->get();
     }
 
+    public function findAllWherePendingByReseller(int $users_id)
+    {
+        $reseller = $this->reseller->findByUserId($users_id);
+        return $this->transaction->where('resellers_id', $reseller->id)->where('status', 0)->latest()->get();
+    }
+
     public function findAllWhereFinish()
     {
         return $this->transaction->where('status', 1)->latest()->get();
+    }
+
+    public function findAllWhereFinishByReseller(int $users_id)
+    {
+        $reseller = $this->reseller->findByUserId($users_id);
+        return $this->transaction->where('resellers_id', $reseller->id)->where('status', 1)->latest()->get();
     }
 
     public function findTotalProductSold()
@@ -245,6 +257,13 @@ class TransactionRepositories
         if (isset($request["proof_of_payment"])) {
             $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], 'assets/images/transaction');
         }
+        return $transaction->update($request);
+    }
+
+    public function approved(int $id): bool
+    {
+        $transaction = $this->findById($id);
+        $request['status'] = 1;
         return $transaction->update($request);
     }
 }
