@@ -2,7 +2,7 @@
     <p class="topbar-title">{{ $title }}</p>
     <div class="topbar-profile d-flex align-items-center gap-2">
         <a href="{{ route('profile.index') }}" class="d-none d-lg-inline-block">
-            <img src="{{ auth()->user()->image ? asset('assets/images/profile/' . auth()->user()->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Profile Image" class="img-fluid" width="46" height="46" style="border-radius: 9999px; object-fit: cover;">
+            <img src="{{ file_exists('assets/images/profile/' . auth()->user()->image) && auth()->user()->image ? asset('assets/images/profile/' . auth()->user()->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Profile Image" width="46" height="46" style="border-radius: 9999px; object-fit: cover;">
         </a>
         <div class="hamburger d-lg-none d-flex align-items-center justify-content-center">
             <img src="{{ asset('assets/images/icons/hamburger-list.png') }}" alt="Hamburger List" class="img-fluid" width="19">
