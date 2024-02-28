@@ -33,7 +33,7 @@ class ProfileController extends Controller
         } else {
             return view('profile.index', [
                 'title' => 'Halaman Profil',
-                'profile' => $this->reseller->findById(auth()->user()->reseller->id),
+                'profile' => $this->reseller->findByUserId(auth()->user()->id),
             ]);
         }
     }
