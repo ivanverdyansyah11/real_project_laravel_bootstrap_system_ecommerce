@@ -26,6 +26,11 @@ class ResellerRepositories
         return $this->reseller->with(['user'])->latest()->get();
     }
 
+    public function findByUserId(int $reseller_id): reseller
+    {
+        return $this->reseller->with(['user'])->where('users_id', $reseller_id)->first();
+    }
+
     public function findById(int $reseller_id): reseller
     {
         return $this->reseller->with(['user'])->where('id', $reseller_id)->first();
