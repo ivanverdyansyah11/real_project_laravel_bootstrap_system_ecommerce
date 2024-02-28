@@ -21,21 +21,30 @@ class TransactionController extends Controller
         protected readonly PackageRepositories $package,
     ) {}
 
-    public function index() : View {
-        if (FacadesRoute::is('transaction-pending')) {
-            return view('transaction-pending.index', [
-                'title' => 'Halaman Transaksi Pesanan',
-                'transactions' => $this->transaction->findAllWherePending(),
-            ]);
-        } elseif(FacadesRoute::is('transaction-finish')) {
-            return view('transaction-finish.index', [
-                'title' => 'Halaman Transaksi Selesai',
-                'transactions' => $this->transaction->findAllWhereFinish(),
-            ]);
+    public function index() {
+        if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
+            if (FacadesRoute::is('transaction-pending')) {
+                return view('transaction-pending.index', [
+                    'title' => 'Halaman Transaksi Pesanan',
+                    'transactions' => $this->transaction->findAllWherePending(),
+                ]);
+            } elseif(FacadesRoute::is('transaction-finish')) {
+                return view('transaction-finish.index', [
+                    'title' => 'Halaman Transaksi Selesai',
+                    'transactions' => $this->transaction->findAllWhereFinish(),
+                ]);
+            } elseif(FacadesRoute::is('report-transaction')) {
+                return view('report-transaction.index', [
+                    'title' => 'Halaman Rekap Transaksi',
+                    'transactions' => $this->transaction->findAll(),
+                ]);
+            }
         } else {
-            return view('report-transaction.index', [
+            return view('report-transaction.index-reseller', [
                 'title' => 'Halaman Rekap Transaksi',
-                'transactions' => $this->transaction->findAll(),
+                'transactionAll' => $this->transaction->findAllByReseller(auth()->user()->id),
+                'transactionPending' => $this->transaction->findAllWherePendingByReseller(auth()->user()->id),
+                'transactionFinish' => $this->transaction->findAllWhereFinishByReseller(auth()->user()->id),
             ]);
         }
     }
@@ -83,7 +92,7 @@ class TransactionController extends Controller
             if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
                 return redirect(route('transaction-finish'))->with('success', 'Berhasil menambahkan transaksi baru!');
             } else {
-                return redirect(route('transaction.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
+                return redirect(route('report-transaction'))->with('success', 'Berhasil menambahkan transaksi baru!');
             }
         } catch (\Exception $e) {
             logger($e->getMessage());
@@ -101,9 +110,18 @@ class TransactionController extends Controller
     public function update(UpdateTransactionRequest $request, Transaction $transaction) : RedirectResponse {
         try {
             $this->transaction->update($request->validated(), $transaction);
-            return redirect(route('transaction.index'))->with('success', 'Berhasil edit transaksi baru!');
+            return redirect(route('report-transaction'))->with('success', 'Berhasil edit transaksi baru!');
         } catch (\Exception $e) {
-            return redirect(route('transaction.index'))->with('failed', 'Gagal edit transaksi baru!');
+            return redirect(route('report-transaction'))->with('failed', 'Gagal edit transaksi baru!');
+        }
+    }
+
+    public function approved($id) : RedirectResponse {
+        try {
+            $this->transaction->approved($id);
+            return redirect(route('report-transaction'))->with('success', 'Berhasil menyetujui transaksi!');
+        } catch (\Exception $e) {
+            return redirect(route('report-transaction'))->with('failed', 'Gagal menyetujui transaksi!');
         }
     }
 }
