@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Transaction;
-use App\Repositories\CustomerRepositories;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
-use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
