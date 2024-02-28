@@ -139,6 +139,7 @@ canvas.hide {
 }
 
 .button-primary,
+.button-primary-reverse,
 .button-dark {
     width: fit-content;
     padding: 12px;
@@ -150,6 +151,16 @@ canvas.hide {
     outline: none;
     stroke: none;
     border: none;
+}
+
+.button-primary-reverse {
+    color: rgba(var(--primary-color), 1);
+    border: 1px solid rgba(var(--primary-color), 0.24);
+    background-color: rgba(var(--primary-color), 0.12);
+}
+
+.button-primary-reverse:hover {
+    background-color: rgba(var(--primary-color), 0.16);
 }
 
 .button-dark {
@@ -243,6 +254,78 @@ table td {
 .card-body-title {
     font-size: 1.125rem;
     font-family: var(--urbanist-semibold);
+}
+
+.card-body-text {
+    font-size: 0.913rem;
+    color: rgba(var(--dark-color), 0.62);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+            line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.badge-primary {
+    all: unset;
+    color: rgba(var(--light-color), 1);
+    background-color: rgba(var(--primary-color), 1);
+    font-size: 0.813rem;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: text !important;
+}
+
+.card-reward {
+    cursor: pointer;
+}
+
+.card-body-reward {
+    margin-top: -20px;
+    background-color: rgba(var(--light-color), 1);
+}
+
+.link-badge {
+    all: unset;
+    padding: 6px 14px;
+    font-size: 0.913rem;
+    color: rgba(var(--dark-color), 0.62);
+    border-bottom: 1px solid rgba(var(--dark-color), 0.12);
+}
+
+.link-badge.active,
+.link-badge:hover {
+    color: rgba(var(--primary-color), 1);
+    border-color: rgba(var(--primary-color), 1);
+}
+
+.card-body-subtitle {
+    font-size: 1rem;
+    font-family: var(--urbanist-semibold);
+}
+
+.card-body-caption {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+}
+
+.col-card-all,
+.col-card-pending,
+.col-card-finish {
+    position: absolute;
+    z-index: -9999;
+    opacity: 0;
+    transition: opacity 0 !important;
+}
+
+.col-card-all.active,
+.col-card-pending.active,
+.col-card-finish.active {
+    position: relative;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0 !important;
 }
 /* END GENERAL */
 
