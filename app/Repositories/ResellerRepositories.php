@@ -26,12 +26,12 @@ class ResellerRepositories
         return $this->reseller->with(['user'])->latest()->get();
     }
 
-    public function findByUserId(int $reseller_id): reseller
+    public function findByUserId(int $reseller_id)
     {
         return $this->reseller->with(['user'])->where('users_id', $reseller_id)->first();
     }
 
-    public function findById(int $reseller_id): reseller
+    public function findById(int $reseller_id)
     {
         return $this->reseller->with(['user'])->where('id', $reseller_id)->first();
     }
@@ -39,6 +39,13 @@ class ResellerRepositories
     public function findLastData()
     {
         return $this->user->latest()->first();
+    }
+
+    public function approved(int $id)
+    {
+        $reseller = $this->findByUserId($id);
+        $request['status'] = 1;
+        return $reseller->user->update($request);
     }
 
     public function store($request)
