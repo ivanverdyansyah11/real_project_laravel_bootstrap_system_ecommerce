@@ -13,7 +13,7 @@
             <form class="row">
                 <div class="col-12 mb-3 d-flex flex-column">
                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
-                    <img src="{{ $transaction->proof_of_payment ? asset('assets/images/transaction/' . $transaction->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                    <img src="{{ file_exists('assets/images/transaction/' . $transaction->proof_of_payment) && $transaction->proof_of_payment ? asset('assets/images/transaction/' . $transaction->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="customers_id" class="form-label">Nama Pelanggan</label>
