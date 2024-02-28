@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\UpdateTransactionRequest;
 use App\Models\Transaction;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
@@ -87,6 +88,22 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             logger($e->getMessage());
             return redirect(route('cashier.index'))->with('failed', 'Gagal menambahkan transaksi baru!');
+        }
+    }
+
+    public function edit(Transaction $transaction) : View {
+        return view('report-transaction.edit', [
+            'title' => 'Halaman Edit Transaksi',
+            'transaction' => $this->transaction->findById($transaction->id),
+        ]);
+    }
+
+    public function update(UpdateTransactionRequest $request, Transaction $transaction) : RedirectResponse {
+        try {
+            $this->transaction->update($request->validated(), $transaction);
+            return redirect(route('transaction.index'))->with('success', 'Berhasil edit transaksi baru!');
+        } catch (\Exception $e) {
+            return redirect(route('transaction.index'))->with('failed', 'Gagal edit transaksi baru!');
         }
     }
 }
