@@ -20,7 +20,7 @@
                         @method("PUT")
                         <div class="col mb-3 d-flex flex-column">
                             <label for="image" class="form-label">Foto Profil</label>
-                            <img src="{{ $profile->user->image ? asset('assets/images/profile/' . $profile->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                            <img src="{{ file_exists('assets/images/profile/' . $profile->user->image) && $profile->user->image ? asset('assets/images/profile/' . $profile->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
                             <input type="file" class="form-control input-file @error('image') is-invalid @enderror" name="image" id="image">
                             @error('image')
                                 <div class="invalid-feedback">
@@ -31,11 +31,11 @@
                         <div class="col mb-3 d-flex flex-column">
                             <label for="photo_ktp" class="form-label">Foto KTP</label>
                             @if ($profile->user->role == 'super_admin' || $profile->user->role == 'admin')
-                                <img src="{{ $profile->photo_ktp ? asset('assets/images/admin/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
+                                <img src="{{ file_exists('assets/images/admin/' . $profile->photo_ktp) && $profile->photo_ktp ? asset('assets/images/admin/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
                             @elseif ($profile->user->role == 'reseller')
-                                <img src="{{ $profile->photo_ktp ? asset('assets/images/reseller/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
+                                <img src="{{ file_exists('assets/images/reseller/' . $profile->photo_ktp) && $profile->photo_ktp ? asset('assets/images/reseller/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
                             @else
-                                <img src="{{ $profile->photo_ktp ? asset('assets/images/customer/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
+                                <img src="{{ file_exists('assets/images/customer/' . $profile->photo_ktp) && $profile->photo_ktp ? asset('assets/images/customer/' . $profile->photo_ktp) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-ktp" width="100" height="100" style="object-fit: cover;">
                             @endif
                             <input type="file" class="form-control input-file-ktp @error('photo_ktp') is-invalid @enderror" name="photo_ktp" id="photo_ktp">
                             @error('photo_ktp')
