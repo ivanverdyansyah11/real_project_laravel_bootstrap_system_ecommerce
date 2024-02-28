@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('rewards', function (Blueprint $table) {
             $table->id();
+            $table->string('image')->nullable();
             $table->string('name', 255);
             $table->text('description');
             $table->integer('points_required');
