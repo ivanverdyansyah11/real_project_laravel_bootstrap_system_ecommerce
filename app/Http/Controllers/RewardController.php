@@ -17,10 +17,17 @@ class RewardController extends Controller
     ) {}
 
     public function index() : View {
-        return view('reward.index', [
-            'title' => 'Halaman Penghargaan',
-            'rewards' => $this->reward->findAllPaginate(),
-        ]);
+        if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
+            return view('reward.index', [
+                'title' => 'Halaman Penghargaan',
+                'rewards' => $this->reward->findAllPaginate(),
+            ]);
+        } elseif(auth()->user()->role == 'reseller') {
+            return view('reward.index-reseller', [
+                'title' => 'Halaman Penghargaan',
+                'rewards' => $this->reward->findAllPaginate(),
+            ]);
+        }
     }
 
     public function show(Reward $reward) : JsonResponse {
