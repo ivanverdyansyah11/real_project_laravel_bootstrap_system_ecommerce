@@ -41,7 +41,7 @@
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
                                     <td>{{ $transaction->customer->name }}</td>
-                                    <td>{{ $transaction->reseller->name }}</td>
+                                    <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
                                     <td>{{ $transaction->product->name }}</td>
                                     <td>Rp. {{ number_format($transaction->total_payment, 2, ",", ".") }}</td>
                                     <td class="wrapper d-flex gap-2">
