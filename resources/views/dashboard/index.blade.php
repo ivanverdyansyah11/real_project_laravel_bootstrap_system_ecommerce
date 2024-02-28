@@ -2,28 +2,53 @@
 
 @section('content-dashboard')
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 me-lg-5" style="margin-top: 32px;">
-        <div class="col">
-            <div class="dashboard-menu d-flex justify-content-between p-3">
-                <div class="wrapper">
-                    <p class="menu-title mb-2">Total Produk</p>
-                    <p class="menu-value mb-0">{{ $total_product }}</p>
-                </div>
-                <div class="menu-icon d-flex justify-content-center align-items-center">
-                    <img src="{{ asset('assets/images/dashboard/product.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
-                </div>
-            </div>
-        </div>
-        <div class="col mt-4 mt-md-0">
-            <div class="dashboard-menu d-flex justify-content-between p-3">
-                <div class="wrapper">
-                    <p class="menu-title mb-2">Total Paket</p>
-                    <p class="menu-value mb-0">{{ $total_package }}</p>
-                </div>
-                <div class="menu-icon d-flex justify-content-center align-items-center">
-                    <img src="{{ asset('assets/images/dashboard/package.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
+        @if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin')
+            <div class="col">
+                <div class="dashboard-menu d-flex justify-content-between p-3">
+                    <div class="wrapper">
+                        <p class="menu-title mb-2">Total Produk</p>
+                        <p class="menu-value mb-0">{{ $total_product }}</p>
+                    </div>
+                    <div class="menu-icon d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('assets/images/dashboard/product.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col mt-4 mt-md-0">
+                <div class="dashboard-menu d-flex justify-content-between p-3">
+                    <div class="wrapper">
+                        <p class="menu-title mb-2">Total Paket</p>
+                        <p class="menu-value mb-0">{{ $total_package }}</p>
+                    </div>
+                    <div class="menu-icon d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('assets/images/dashboard/package.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
+                    </div>
+                </div>
+            </div>
+        @elseif(auth()->user()->role == 'reseller')
+            <div class="col">
+                <div class="dashboard-menu d-flex justify-content-between p-3">
+                    <div class="wrapper">
+                        <p class="menu-title mb-2">Total Poin</p>
+                        <p class="menu-value mb-0">{{ $total_poin }}</p>
+                    </div>
+                    <div class="menu-icon d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('assets/images/dashboard/product.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
+                    </div>
+                </div>
+            </div>
+            <div class="col mt-4 mt-md-0">
+                <div class="dashboard-menu d-flex justify-content-between p-3">
+                    <div class="wrapper">
+                        <p class="menu-title mb-2">Total Transaksi</p>
+                        <p class="menu-value mb-0">{{ $total_transaction }}</p>
+                    </div>
+                    <div class="menu-icon d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('assets/images/dashboard/package.png') }}" alt="Dashboard Icon" class="img-fluid" height="20" width="20">
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="col mt-4 mt-xl-0">
             <div class="dashboard-menu d-flex justify-content-between p-3">
                 <div class="wrapper">
