@@ -28,6 +28,15 @@ class ResellerController extends Controller
         ]);
     }
 
+    public function approved(int $id) {
+        try {
+            $this->reseller->approved($id);
+            return redirect()->route('reseller.index')->with('success', 'Berhasil menyetujui karyawan');
+        } catch (\Exception $e) {
+            return redirect()->route('reseller.create')->with('error', 'Gagal menyetujui karyawan');
+        }
+    }
+
     public function create() : View {
         return view('reseller.add', [
             'title' => 'Halaman Tambah Karyawan',
