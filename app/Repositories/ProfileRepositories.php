@@ -16,7 +16,7 @@ class ProfileRepositories
         protected readonly User $user,
         protected readonly Admin $admin,
         protected readonly ResellerRepositories $reseller,
-        protected readonly Customer $customer,
+        protected readonly CustomerRepositories $customer,
         protected readonly UploadFile $uploadFile,
     ) {}
 
@@ -27,7 +27,10 @@ class ProfileRepositories
             $user = $this->user->where('email', $request['email'])->first();
             if ($user['role'] == 'reseller') {
                 $reseller = $this->reseller->findByUserId($user->id);
+            } elseif($user['role'] == 'customer') {
+                $customer = $this->customer->findByUserId($user->id);
             }
+
             if ($user['role'] == 'super_admin' || $user['role'] == 'admin') {
                 if (isset($request["photo_ktp"])) {
                     $this->uploadFile->deleteExistFile("assets/images/admin/" . $user->admin->photo_ktp);
@@ -46,11 +49,11 @@ class ProfileRepositories
                 }
             } else {
                 if (isset($request["photo_ktp"])) {
-                    $this->uploadFile->deleteExistFile("assets/images/customer/" . $user->customer->photo_ktp);
+                    $this->uploadFile->deleteExistFile("assets/images/customer/" . $customer->photo_ktp);
                     $filename = $this->uploadFile->uploadSingleFile($request['photo_ktp'], 'assets/images/customer');
                     $request['photo_ktp'] = $filename;
                 } else {
-                    $request['photo_ktp'] = $user->customer->photo_ktp;
+                    $request['photo_ktp'] = $customer->photo_ktp;
                 }
             }
             if (isset($request["image"])) {
@@ -65,7 +68,7 @@ class ProfileRepositories
             } elseif($user['role'] == 'reseller') {
                 $reseller->update(Arr::except($request, ['email', 'image', 'password', 'confirmation_password']));
             } else {
-                $user->customer->update(Arr::except($request, ['email', 'image', 'password', 'confirmation_password']));
+                $customer->update(Arr::except($request, ['email', 'image', 'password', 'confirmation_password']));
             }
             DB::commit();
             if ($request['password'] != null) {
