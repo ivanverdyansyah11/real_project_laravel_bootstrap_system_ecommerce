@@ -18,6 +18,11 @@
     src: url('../font/Urbanist-ExtraBold.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'berkshireswash-regular';
+    src: url('../font/BerkshireSwash-Regular.ttf') format('truetype');
+}
+
 :root {
     --primary-color: 136, 184, 0;
     --blur-primary-color: 247, 255, 225;
@@ -30,6 +35,7 @@
     --urbanist-semibold: 'urbanist-semibold', Arial, Helvetica, sans-serif;
     --urbanist-bold: 'urbanist-bold', Arial, Helvetica, sans-serif;
     --urbanist-extrabold: 'urbanist-extrabold', Arial, Helvetica, sans-serif;
+    --berkshireswash-regular: 'berkshireswash-regular', Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -326,6 +332,129 @@ table td {
     z-index: 100;
     opacity: 1;
     transition: opacity 0 !important;
+}
+
+nav.navbar {
+    background-color: rgba(var(--light-color), 1) !important;
+    border-bottom: 1px solid    rgba(var(--dark-color), 0.12);
+}
+
+nav.navbar .nav-link {
+    color: rgba(var(--dark-color), 0.62);
+    font-size: 0.95rem;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+
+nav.navbar .nav-link:hover,
+nav.navbar .nav-link.active {
+    color: rgba(var(--primary-color), 1) !important;
+}
+
+section.about {
+    background-image: url('../images/homepage/background-homepage.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 100px 0;
+}
+
+section.about .title {
+    font-size: 1.875rem;
+    font-family: var(--berkshireswash-regular);
+    color: rgba(var(--light-color), 1);
+}
+
+section.about .paragraph {
+    color: rgba(var(--light-color), 1);
+    font-size: 0.913rem;
+}
+
+.paragraph {
+    color: rgba(var(--dark-color), 0.62);
+    font-size: 0.913rem;
+}
+
+.paragraph-title {
+    font-size: 1.125rem;
+    font-family: var(--urbanist-semibold);
+}
+
+.paragraph-small {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+}
+
+.link-redirect {
+    font-size: 0.913rem;
+    color: rgba(var(--dark-color), 0.62);
+}
+
+.link-redirect:hover {
+    color: rgba(var(--dark-color), 1);
+}
+
+.footer {
+    padding-top: 80px;
+    padding-bottom: 42px;
+    border-top: 1px solid rgba(var(--dark-color), 0.12);
+}
+
+.copyright {
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid rgba(var(--dark-color), 0.12);
+}
+
+.copyright p {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+}
+
+.title-product {
+    font-size: 1.875rem;
+    font-family: var(--urbanist-bold);
+}
+
+.frame-testimonial {
+    width: 100%;
+    height: 500px;
+    border: 10px solid rgba(var(--primary-color), 1);
+    border-radius: 8px;
+}
+
+@media (max-width: 1199.98px) {
+    .frame-testimonial {
+        height: 400px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .frame-testimonial {
+        height: 340px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .frame-testimonial {
+        height: 240px;
+        border: 6px solid rgba(var(--primary-color), 1);
+    }
+}
+
+.title-product {
+    font-size: 2rem;
+    font-family: var(--urbanist-bold);
+}
+
+.title-price {
+    font-size: 1.125rem;
+    /* font-family: var(--urbanist-semibold); */
+    color: rgba(var(--light-color), 1);
+    background-color: rgba(var(--primary-color), 1);
+    padding: 6px 8px;
+    border-radius: 4px;
+    width: fit-content;
 }
 /* END GENERAL */
 
