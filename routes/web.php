@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -46,7 +48,7 @@ Route::middleware(['auth'])->group(function() {
         Route::post('/logout', 'logout')->name('logout');
     });
     Route::resource('/dashboard', DashboardController::class)->middleware('isAdminReseller');
-    Route::resource('/profile', ProfileController::class)->middleware('isAdminReseller');
+    Route::resource('/profile', ProfileController::class);
     Route::resource('/reseller', ResellerController::class)->middleware('isAdmin');
     Route::put('/reseller/approved/{id}', [ResellerController::class, 'approved'])->middleware('isAdmin');
     Route::resource('/customer', CustomerController::class)->middleware('isAdmin');
@@ -58,11 +60,19 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('/reward', RewardController::class)->middleware('isAdminReseller');
     Route::resource('/transaction', TransactionController::class)->middleware('isAdminReseller');
     Route::get('/transaction/get_product/{id}', [TransactionController::class, 'getProduct'])->middleware('isAdmin');
-    Route::get('/transaction/get_package/{quantity}/{id}', [TransactionController::class, 'getPackage'])->middleware('isAdmin');
+    Route::get('/transaction/get_package/{quantity}/{id}', [TransactionController::class, 'getPackage']);
     Route::put('/transaction/approved/{id}', [TransactionController::class, 'approved'])->middleware('isAdminReseller');
     Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending')->middleware('isAdmin');
     Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending')->middleware('isAdmin');
     Route::get('/transaction-finish', [TransactionController::class, 'index'])->name('transaction-finish')->middleware('isAdmin');
     Route::resource('/report-reward', TransactionRewardController::class)->middleware('isAdminReseller');
     Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction')->middleware('isAdminReseller');
+
+    Route::get('/homepage', [HomepageController::class, 'index'])->name('homepage');
+    Route::get('/homepage/product', [HomepageController::class, 'products'])->name('products');
+    Route::get('/homepage/product/{id}', [HomepageController::class, 'product'])->name('product');
+    Route::resource('/homepage/cart', CartController::class);
+    Route::get('/homepage/testimonial', [HomepageController::class, 'testimonial'])->name('testimonial');
+    Route::get('/homepage/contact', [HomepageController::class, 'contact'])->name('contact');
+    Route::get('/homepage/profile', [HomepageController::class, 'profile'])->name('profile');
 });
