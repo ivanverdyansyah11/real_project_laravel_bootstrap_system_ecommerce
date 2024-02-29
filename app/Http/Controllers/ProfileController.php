@@ -25,11 +25,6 @@ class ProfileController extends Controller
                 'title' => 'Halaman Profil',
                 'profile' => $this->admin->findById(auth()->user()->admin->id),
             ]);
-        } elseif(auth()->user()->role == 'customer') {
-            return view('profile.index', [
-                'title' => 'Halaman Profil',
-                'profile' => $this->customer->findById(auth()->user()->customer->id),
-            ]);
         } else {
             return view('profile.index', [
                 'title' => 'Halaman Profil',
@@ -44,7 +39,11 @@ class ProfileController extends Controller
                 return redirect(route('profile.index'))->with('failed-password', "Password tidak sesuai!");
             }
             $this->profile->update($request->validated());
-            return redirect(route('profile.index'))->with('success', "Berhasil edit profil anda!");
+            if (auth()->user()->role == 'customer') {
+                return redirect(route('profile'))->with('success', "Berhasil edit profil anda!");
+            } else {
+                return redirect(route('profile.index'))->with('success', "Berhasil edit profil anda!");
+            }
         } catch (\Exception $e) {
             logger($e->getMessage());
             return redirect(route('profile.index'))->with('failed', "Gagal edit profil anda!");
