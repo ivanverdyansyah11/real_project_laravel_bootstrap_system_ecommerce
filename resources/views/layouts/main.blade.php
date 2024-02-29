@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }} | Adigoeroe Ecommerce</title>
-    
+
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
@@ -19,6 +19,10 @@
                 @yield('content-auth')
             </div>
         </div>
+    @elseif (Route::is('homepage') || Route::is('products') || Route::is('product') || Route::is('testimonial') || Route::is('contact') || Route::is('cart*') || Route::is('profile'))
+        @include('components.navbar')
+        @yield('content-homepage')
+        @include('components.footer')
     @else
         <div class="container-fluid">
             <div class="row">
