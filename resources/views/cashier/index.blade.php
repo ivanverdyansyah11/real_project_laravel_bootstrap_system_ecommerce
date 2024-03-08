@@ -69,11 +69,12 @@
                     <label for="stock" class="form-label">Sisa Stock</label>
                     <input readonly type="number" class="form-control" id="stock" data-value="stock">
                 </div>
+                <div class="col-12">
+                    <p class="text-mention"></p>
+                </div>
                 <div class="col-md-6 mb-3">
                     <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                    <select required class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity">
-                        <option value="">Pilih produk terlebih dahulu</option>
-                    </select>
+                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity') }}" min="1">
                     @error('quantity')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -118,9 +119,9 @@
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
 
+            let productPrice;
             $(document).on('change', '#products_id', function() {
                 let id = $(this).val();
-                $('#quantity option').remove();
                 $('#total').val('');
                 if (id != '') {
                     $.ajax({
@@ -130,19 +131,15 @@
                             if (product.status == 'success') {
                                 $('#stock').val(product.data.stock);
                                 $('#price_per_unit').val(product.data.selling_price);
+                                productPrice = product.data.selling_price;
                                 if (product.data.stock == 0) {
-                                    $('#quantity').append(
-                                        `<option value="">Stok pada produk ini telah habis!</option>`
-                                    );
-                                    } else {
-                                    $('#quantity').append(
-                                        `<option value="">Pilih jumlah produk dibeli</option>`
-                                    );
-                                    for (let i = 1; i <= product.data.stock; i++) {
-                                        $('#quantity').append(
-                                            `<option value="${i}">${i}</option>`
-                                        );
-                                    }
+                                    $('.text-mention').html('Stok pada produk ini telah habis!');
+                                    $('#quantity').val('');
+                                    $('#quantity').attr('readonly', 'readonly');
+                                } else {
+                                    $('.text-mention').html('');
+                                    $('#quantity').removeAttr('readonly', 'readonly');
+                                    $('#quantity').attr('max', product.data.stock);
                                 }
                             }
                         }
@@ -150,9 +147,7 @@
                 } else {
                     $('#stock').val('');
                     $('#price_per_unit').val('');
-                    $('#quantity').append(
-                        `<option value="">Pilih produk terlebih dahulu!</option>`
-                        );
+                    $('#quantity').val('');
                 }
             });
 
@@ -167,6 +162,10 @@
                             if (package.status == 'success') {
                                 if (package.data != null) {
                                     $('#price_per_unit').val(package.data.selling_price);
+                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
+                                } else {
+                                    $('#price_per_unit').val(productPrice);
+                                    $('.text-mention').html('');
                                 }
                                 $('#total').val(quantity * $('#price_per_unit').val());
                             }
