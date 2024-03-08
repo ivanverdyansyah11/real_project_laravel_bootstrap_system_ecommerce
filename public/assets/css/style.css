@@ -456,6 +456,11 @@ section.about .paragraph {
     border-radius: 4px;
     width: fit-content;
 }
+
+.text-mention {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+}
 /* END GENERAL */
 
 /* CONTENT AUTH */
