@@ -40,19 +40,5 @@ class UserSeeder extends Seeder
             'role' => 'reseller',
             'status' => 1,
         ]);
-
-        User::create([
-            'email' => 'andiprayoga@gmail.com',
-            'password' => bcrypt('andi123'),
-            'role' => 'customer',
-            'status' => 1,
-        ]);
-
-        User::create([
-            'email' => 'devinaputri@gmail.com',
-            'password' => bcrypt('devina123'),
-            'role' => 'customer',
-            'status' => 1,
-        ]);
     }
 }
