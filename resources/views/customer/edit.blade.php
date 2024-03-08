@@ -15,7 +15,7 @@
                     <div class="row row-cols-1 row-cols-md-2">
                         <div class="col d-flex flex-column">
                             <label for="image" class="form-label">Foto Profil</label>
-                            <img src="{{ file_exists('assets/images/profile/' . $customer->user->image) && $customer->user->image ? asset('assets/images/profile/' . $customer->user->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
+                            <img src="{{ file_exists('assets/images/profile/' . $customer->image) && $customer->image ? asset('assets/images/profile/' . $customer->image) : asset('assets/images/profile/profile-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview-profile" width="100" height="100" style="object-fit: cover;">
                             <input type="file" class="form-control input-file-profile @error('image') is-invalid @enderror" name="image" id="image">
                             @error('image')
                                 <div class="invalid-feedback">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input required type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $customer->user->email }}">
+                    <input required type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $customer->email }}">
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -57,6 +57,55 @@
                     <label for="number_phone" class="form-label">Nomor Telepon</label>
                     <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ $customer->number_phone }}">
                     @error('number_phone')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="origin" class="form-label">Kota Domisili</label>
+                    <input required type="text" class="form-control @error('origin') is-invalid @enderror" id="origin" name="origin" value="{{ $customer->origin }}">
+                    @error('origin')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="place_of_birth" class="form-label">Tempat Lahir</label>
+                    <input required type="text" class="form-control @error('place_of_birth') is-invalid @enderror" id="place_of_birth" name="place_of_birth" value="{{ $customer->place_of_birth }}">
+                    @error('place_of_birth')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="date_of_birth" class="form-label">Tanggal Lahir</label>
+                    <input required type="date" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ $customer->date_of_birth }}">
+                    @error('date_of_birth')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="gender" class="form-label">Jenis Kelamin</label>
+                    <select required class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
+                        <option value="">Pilih jenis kelamin</option>
+                        <option {{ $customer->gender == 'L' ? 'selected' : '' }} value="L">Laki Laki</option>
+                        <option {{ $customer->gender == 'P' ? 'selected' : '' }} value="P">Perempuan</option>
+                    </select>
+                    @error('gender')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="address" class="form-label">Alamat</label>
+                    <input required type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ $customer->address }}">
+                    @error('address')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
