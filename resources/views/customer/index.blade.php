@@ -38,14 +38,9 @@
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $customer->name }}</td>
-                                    <td>{{ $customer->user->email }}</td>
+                                    <td>{{ $customer->email }}</td>
                                     <td>{{ $customer->number_phone }}</td>
                                     <td class="wrapper d-flex gap-2">
-                                        @if ($customer->user->status == 0)
-                                            <button type="button" class="button-approved d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ $customer->user->id }}">
-                                                <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon" class="img-fluid" width="16">
-                                            </button>
-                                        @endif
                                         <a href="{{ route('customer.show', $customer->id) }}" class="button-detail d-flex align-items-center justify-content-center">
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
                                         </a>
