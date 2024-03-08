@@ -28,11 +28,7 @@ class AuthRepository
             $userValidation = $this->user->create(Arr::only($request, ['email', 'password', 'role']));
             $userLastId = $this->user->latest()->first();
             $request['users_id'] = $userLastId->id;
-            if ($request['role'] == 'reseller') {
-                $this->reseller->create(Arr::only($request, ['users_id', 'name', 'number_phone', 'photo_ktp']));
-            } else {
-                $this->customer->create(Arr::only($request, ['users_id', 'name', 'number_phone', 'photo_ktp']));
-            }
+            $this->reseller->create(Arr::only($request, ['users_id', 'name', 'number_phone', 'photo_ktp']));
             DB::commit();
             return $userValidation;
         } catch (\Exception $e) {
