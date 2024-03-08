@@ -27,6 +27,11 @@ class UpdateCustomerRequest extends FormRequest
             'name' => 'required|string|max:255',
             'number_phone' => 'required|string|max:15',
             'photo_ktp' => 'nullable|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
+            'origin' => 'required|string|max:50',
+            'place_of_birth' => 'required|string|max:50',
+            'date_of_birth' => 'required|string',
+            'gender' => 'required|string|max:10',
+            'address' => 'required|string',
         ];
     }
 }
