@@ -14,43 +14,43 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'ivanverdyansyah@gmail.com',
-            'password' => bcrypt('ivan123'),
+            'email' => 'super.admin@gmail.com',
+            'password' => bcrypt('admin'),
             'role' => 'super_admin',
             'status' => 1,
         ]);
 
         User::create([
-            'email' => 'adityaprayatna@gmail.com',
-            'password' => bcrypt('aditya123'),
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin'),
             'role' => 'admin',
             'status' => 1,
         ]);
 
         User::create([
-            'email' => 'aguswartawan@gmail.com',
-            'password' => bcrypt('agus123'),
+            'email' => 'reseller2@gmail.com',
+            'password' => bcrypt('reseller2'),
             'role' => 'reseller',
             'status' => 1,
         ]);
 
         User::create([
-            'email' => 'ayuputri@gmail.com',
-            'password' => bcrypt('ayu123'),
+            'email' => 'reseller1@gmail.com',
+            'password' => bcrypt('reseller1'),
             'role' => 'reseller',
             'status' => 1,
         ]);
 
         User::create([
-            'email' => 'andiprayoga@gmail.com',
-            'password' => bcrypt('andi123'),
+            'email' => 'customer2@gmail.com',
+            'password' => bcrypt('customer2'),
             'role' => 'customer',
             'status' => 1,
         ]);
 
         User::create([
-            'email' => 'devinaputri@gmail.com',
-            'password' => bcrypt('devina123'),
+            'email' => 'customer1@gmail.com',
+            'password' => bcrypt('customer1'),
             'role' => 'customer',
             'status' => 1,
         ]);
