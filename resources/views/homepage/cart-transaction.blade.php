@@ -16,6 +16,7 @@
                 <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="w-100" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
+                    <input type="hidden" value="{{ $cart->id }}" id="cart_id">
                     <div class="card">
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Ringkasan Produk</h6>
@@ -41,6 +42,15 @@
                                     <label for="selling_price" class="form-label">Harga Jual</label>
                                     <input readonly type="text" class="form-control" id="selling_price" value="{{ $cart->product->selling_price }}">
                                 </div>
+                                <div class="col-12 mb-3">
+                                    <label for="quantity" class="form-label">Kuantitas Dibeli</label>
+                                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ $cart->quantity }}" min="1" max="{{ $cart->product->stock }}">
+                                    @error('quantity')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                                 <div class="col-12">
                                     <p class="text-mention"></p>
                                 </div>
@@ -60,7 +70,7 @@
                                         @if (auth()->user()->role == 'reseller')
                                             <input type="hidden" name="resellers_id" value="{{ auth()->user()->id }}">
                                         @endif
-                                        <select class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
+                                        <select required class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
                                             <option value="">Pilih pelanggan</option>
                                             @foreach ($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -76,7 +86,7 @@
                                 @if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin')
                                     <div class="col-md-6 mb-3">
                                         <label for="resellers_id" class="form-label">Nama Karyawan</label>
-                                        <select class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
+                                        <select required class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
                                             <option value="">Pilih karyawan</option>
                                             @foreach ($resellers as $reseller)
                                                 <option value="{{ $reseller->id }}">{{ $reseller->name }}</option>
@@ -89,15 +99,6 @@
                                         @enderror
                                     </div>
                                 @endif
-                                <div class="col-md-6 mb-3">
-                                    <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity', 1) }}" min="1" max="{{ $cart->product->stock }}">
-                                    @error('quantity')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="total" class="form-label">Total</label>
                                     <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total', $cart->product->selling_price) }}">
@@ -155,8 +156,8 @@
             });
 
             let productPrice = $('#selling_price').val();
-            $(document).on('change', '#quantity', function() {
-                let quantity = $(this).val();
+            function handleTransaction() {
+                let quantity = $('#quantity').val();
                 let productsId = $('#products_id').val();
                 if (quantity != '') {
                     $.ajax({
@@ -179,6 +180,15 @@
                     $('#selling_price').val(productPrice);
                     $('#total').val('');
                 }
+            }
+
+            $(document).ready(function() {
+                $('#total').val(parseInt($('#quantity').val()) * parseInt(productPrice));
+                handleTransaction();
+            });
+
+            $(document).on('change', '#quantity', function() {
+                handleTransaction();
             });
         </script>
     @endpush
