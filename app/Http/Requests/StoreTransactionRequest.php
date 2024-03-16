@@ -22,13 +22,13 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'products_id' => 'required|integer',
-            'customers_id' => 'required|integer',
+            'products_id' => 'nullable|integer',
+            'customers_id' => 'nullable|integer',
             'resellers_id' => 'nullable|integer',
+            'quantity' => 'nullable|integer',
             'proof_of_payment' => 'nullable|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
-            'quantity' => 'required|integer',
-            'total' => 'required|integer',
-            'total_payment' => 'required|integer',
+            'total' => 'nullable|integer',
+            'total_payment' => 'nullable|integer',
             'status' => 'nullable|integer',
         ];
     }
