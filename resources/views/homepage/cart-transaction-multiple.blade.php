@@ -1,6 +1,16 @@
 @extends('layouts.main')
 
 @section('content-homepage')
+    @php
+        $cartId = [];
+        $productSelectId = [];
+        foreach ($cart as $item) {
+            $cartId[] = $item->id;
+            $productSelectId[] = $item->product->id;
+        }
+        $cartId = implode('+', $cartId);
+        $productSelectId = implode('+', $productSelectId);
+    @endphp
     <div class="container my-5">
         <div class="row" style="margin-top: 32px;">
             <div class="col-12">
@@ -13,51 +23,58 @@
                         {{ session('failed') }}
                     </div>
                 @endif
-                <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="w-100" enctype="multipart/form-data">
+                <form action="{{ route('cart.update', $cartId) }}" method="POST" class="w-100" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
-                    <input type="hidden" value="{{ $cart->id }}" id="cart_id">
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="card-body-title mb-4">Ringkasan Produk</h6>
-                            <div class="row">
-                                <div class="col-12 mb-3 d-flex flex-column">
-                                    <label class="form-label">Foto Produk</label>
-                                    <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2" width="100" height="100" style="object-fit: cover;">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="product_name" class="form-label">Nama Produk</label>
-                                    <input readonly type="hidden" class="form-control" id="products_id" name="products_id" value="{{ $cart->product->id }}">
-                                    <input readonly type="text" class="form-control" id="product_name" value="{{ $cart->product->name }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="stock" class="form-label">Sisa Stok</label>
-                                    <input readonly type="text" class="form-control" id="stock" value="{{ $cart->product->stock }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="purchase_price" class="form-label">Harga Beli</label>
-                                    <input readonly type="text" class="form-control" id="purchase_price" value="{{ $cart->product->purchase_price }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="selling_price" class="form-label">Harga Jual</label>
-                                    <input readonly type="text" class="form-control" id="selling_price" value="{{ $cart->product->selling_price }}">
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ $cart->quantity }}" min="1" max="{{ $cart->product->stock }}">
-                                    @error('quantity')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="col-12">
-                                    <p class="text-mention"></p>
+                    @foreach ($cart as $item)
+                        <input type="hidden" id="product_select" value="{{ $productSelectId }}">
+                        <input type="hidden" value="{{ $item->id }}" id="cart_id">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h6 class="card-body-title mb-4">Ringkasan Produk</h6>
+                                <div class="row">
+                                    <div class="col-12 mb-3 d-flex flex-column">
+                                        <label class="form-label">Foto Produk</label>
+                                        <img src="{{ file_exists('assets/images/product/' . $item->product->image) && $item->product->image ? asset('assets/images/product/' . $item->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2" width="100" height="100" style="object-fit: cover;">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="product_name" class="form-label">Nama Produk</label>
+                                        <input readonly type="hidden" class="form-control" id="products_id{{ $item->product->id }}" name="products_id[]" value="{{ $item->product->id }}">
+                                        <input readonly type="text" class="form-control" id="product_name" value="{{ $item->product->name }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="stock" class="form-label">Sisa Stok</label>
+                                        <input readonly type="text" class="form-control" id="stock" value="{{ $item->product->stock }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="purchase_price" class="form-label">Harga Beli</label>
+                                        <input readonly type="text" class="form-control" id="purchase_price" value="{{ $item->product->purchase_price }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="selling_price{{ $item->product->id }}" class="form-label">Harga Jual</label>
+                                        <input readonly type="text" class="form-control" id="selling_price{{ $item->product->id }}" value="{{ $item->product->selling_price }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="quantity{{ $item->product->id }}" class="form-label">Kuantitas Dibeli</label>
+                                        <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity{{ $item->product->id }}" name="quantity[]" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}">
+                                        @error('quantity')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="total_product{{ $item->product->id }}" class="form-label">Total Produk</label>
+                                        <input readonly type="text" class="form-control total_product" id="total_product{{ $item->product->id }}">
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="text-mention" id="text-mention{{ $item->product->id }}"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card mt-4">
+                    @endforeach
+                    <div class="card mb-4">
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Pembayaran Transaksi</h6>
                             <div class="row">
@@ -101,7 +118,7 @@
                                 @endif
                                 <div class="col-md-6 mb-3">
                                     <label for="total" class="form-label">Total</label>
-                                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total', $cart->product->selling_price) }}">
+                                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total">
                                     @error('total')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -120,7 +137,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card mt-4">
+                    <div class="card">
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Upload Bukti Pembayaran</h6>
                             <div class="row">
@@ -155,39 +172,49 @@
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
 
-            let productPrice = $('#selling_price').val();
+            let productSelectId = $('#product_select').val();
+            let productSelectIdArray = productSelectId.split('+')
+            let totalAllProduct = 0;
+
             function handleTransaction() {
-                let quantity = $('#quantity').val();
-                let productsId = $('#products_id').val();
-                if (quantity != '') {
-                    $.ajax({
-                        type: 'get',
-                        url: '/transaction/get_package/' + quantity + '/' + productsId,
-                        success: function(package) {
-                            if (package.status == 'success') {
-                                if (package.data != null) {
-                                    $('#selling_price').val(package.data.selling_price);
-                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
-                                } else {
-                                    $('#selling_price').val(productPrice);
-                                    $('.text-mention').html('');
-                                }
-                                $('#total').val(quantity * $('#selling_price').val());
-                            }
+                productSelectIdArray.forEach(productId => {
+                    totalSellingPerProduct = $('#selling_price' + productId).val()
+                    quantityPerProduct = $('#quantity' + productId).val()
+                    let productsId = $('#products_id' + productId).val();
+                });
+
+                let packageObject = {};
+
+                $.ajax({
+                    type: 'get',
+                    url: '/transaction/get_package_all/' + productSelectId,
+                    success: function(package) {
+                        if (package.status == 'success') {
+
+                            productSelectIdArray.forEach(productId => {
+                                package.data.forEach(data => {
+                                    if (data.products_id == productId) {
+                                        if (data.quantity <= $('#quantity' + productId).val()) {
+                                            $('#selling_price' + productId).val(data.selling_price);
+                                            $('#text-mention' + productId).html('Kamu mendapatkan potongan sebesar Rp. ' + data.selling_price + ' karena membeli diatas ' + data.quantity + ' kuantitas produk');
+                                        }
+                                    }
+                                });
+
+                                $('#total_product' + productId).val($('#quantity' + productId).val() * $('#selling_price' + productId).val())
+                                totalAllProduct += parseInt($('#total_product' + productId).val());
+                                $('#total').val(totalAllProduct);
+                            });
                         }
-                    });
-                } else {
-                    $('#selling_price').val(productPrice);
-                    $('#total').val('');
-                }
+                    }
+                });
             }
 
             $(document).ready(function() {
-                $('#total').val(parseInt($('#quantity').val()) * parseInt(productPrice));
                 handleTransaction();
             });
 
-            $(document).on('change', '#quantity', function() {
+            $(document).on('change', '[name="quantity[]"]', function() {
                 handleTransaction();
             });
         </script>
