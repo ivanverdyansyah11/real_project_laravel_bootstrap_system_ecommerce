@@ -86,6 +86,23 @@ class TransactionController extends Controller
         }
     }
 
+    public function getPackageAll($id) {
+        $productIdSelect = explode('+', $id);
+        try {
+            $package = $this->package->findWhereProductId($productIdSelect);
+            return response()->json([
+                'status' => 'success',
+                'data' => $package,
+            ]);
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal untuk mengambil data dari produk dengan ID ' . $id,
+            ], 500);
+        }
+    }
+
     public function store(StoreTransactionRequest $request) : RedirectResponse {
         try {
             $this->transaction->store($request->validated());
