@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('products_id')->index();
             $table->bigInteger('users_id')->index();
+            $table->integer('quantity');
             $table->timestamps();
             $table->softDeletes();
         });
