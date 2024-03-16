@@ -71,6 +71,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/homepage/product', [HomepageController::class, 'products'])->name('products');
     Route::get('/homepage/product/{id}', [HomepageController::class, 'product'])->name('product');
     Route::resource('/homepage/cart', CartController::class);
+    Route::post('/homepage/cart-transaction', [CartController::class, 'storeTransaction'])->name('store-transaction');
+
+    Route::post('/homepage/cart-session', [CartController::class, 'createSession'])->name('create-session');
+
     Route::get('/homepage/testimonial', [HomepageController::class, 'testimonial'])->name('testimonial');
     Route::get('/homepage/contact', [HomepageController::class, 'contact'])->name('contact');
     Route::get('/homepage/profile', [HomepageController::class, 'profile'])->name('profile');
