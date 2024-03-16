@@ -15,33 +15,34 @@ class CartRepositories
         protected readonly ProductRepositories $product,
         protected readonly CustomerRepositories $customer,
         protected readonly ResellerRepositories $reseller,
+        protected readonly TransactionRepositories $transactionRepo,
         protected readonly Transaction $transaction,
         protected readonly UploadFile $uploadFile,
     ) {}
 
     public function findAll()
     {
-        return $this->cart->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->latest()->get();
     }
 
     public function findLatest()
     {
-        return $this->cart->latest()->first();
+        return $this->cart->whereNull('invois')->where('status', 0)->latest()->first();
     }
 
     public function findWhereIn($cart_id)
     {
-        return $this->cart->whereIn('id', [$cart_id])->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->whereIn('id', [$cart_id])->latest()->get();
     }
 
     public function findAllByUserId(int $user_id)
     {
-        return $this->cart->where('users_id', $user_id)->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->where('users_id', $user_id)->latest()->get();
     }
 
     public function findAllPaginate()
     {
-        return $this->cart->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->latest()->get();
     }
 
     public function findById(int $cart_id): Cart
@@ -49,14 +50,14 @@ class CartRepositories
         return $this->cart->where('id', $cart_id)->first();
     }
 
-    public function findByProductId(int $product_id)
+    public function findByProductId(int $product_id, int $user_id)
     {
-        return $this->cart->where('products_id', $product_id)->first();
+        return $this->cart->whereNull('invois')->where('users_id', $user_id)->where('status', 1)->where('products_id', $product_id)->first();
     }
 
     public function store($request)
     {
-        $cart = $this->findByProductId($request['products_id']);
+        $cart = $this->findByProductId($request['products_id'], auth()->user()->id);
         if ($cart != null) {
             $request['quantity'] += $cart['quantity'];
             return $cart->update($request);
@@ -67,17 +68,46 @@ class CartRepositories
 
     public function storeTransaction($request)
     {
-        return $this->cart->create($request);
+        $requestData = $request->all();
+        $requestData['status'] = 0;
+        return $this->cart->create(Arr::only($requestData, ['users_id', 'products_id', 'quantity', 'status']));
     }
 
     public function storeProduct($request, int $cart_id)
     {
         $cartSelected = $this->findById($cart_id);
-        $cartSelected->update(Arr::only($request, 'quantity'));
-        $request['invois'] = rand();
-        $request['status'] = 2;
-        dd($cartSelected);
-        return $this->transaction->create(Arr::except($request, 'stock'));
+        if ($cartSelected->invois == null) {
+            if ($request['resellers_id'] != null) {
+                $reseller = $this->reseller->findById($request['resellers_id']);
+                $request['resellers_id'] = $reseller->id;
+            }
+            $request['invois'] = rand();
+            $request['status'] = 2;
+            $cartSelected->update(Arr::only($request, ['quantity', 'invois']));
+            return $this->transaction->create(Arr::except($request, 'stock'));
+        } else {
+            if(isset($request['proof_of_payment'])) {
+                $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+            }
+            $product = $this->product->findById($cartSelected->products_id);
+            $request['stock'] = $product->stock - $cartSelected->quantity;
+            $transaction = $this->transactionRepo->findByInvois($cartSelected->invois);
+            if (auth()->user()->role == 'reseller') {
+                $request['status'] = 0;
+            } else {
+                $request['status'] = 1;
+            }
+
+            if ($transaction->resellers_id != null) {
+                $reseller = $this->reseller->findById($transaction->resellers_id);
+                $request['poin'] = $reseller->poin + $cartSelected->quantity;
+                $reseller->update(Arr::only($request, 'poin'));
+            }
+
+            $cartSelected->delete();
+            $product->update(Arr::only($request, 'stock'));
+            return $transaction->update(Arr::except($request, ['stock', 'poin']));
+        }
     }
 
     public function update($request, int $cart_id)
