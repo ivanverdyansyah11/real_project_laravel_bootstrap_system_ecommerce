@@ -70,6 +70,16 @@ class CartRepositories
         return $this->cart->create($request);
     }
 
+    public function storeProduct($request, int $cart_id)
+    {
+        $cartSelected = $this->findById($cart_id);
+        $cartSelected->update(Arr::only($request, 'quantity'));
+        $request['invois'] = rand();
+        $request['status'] = 2;
+        dd($cartSelected);
+        return $this->transaction->create(Arr::except($request, 'stock'));
+    }
+
     public function update($request, int $cart_id)
     {
         $cartSelected = $this->findById($cart_id);
