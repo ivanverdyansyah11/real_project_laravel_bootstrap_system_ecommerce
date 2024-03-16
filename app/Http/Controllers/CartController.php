@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Cart;
 use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
+use App\Repositories\PackageRepositories;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +20,7 @@ class CartController extends Controller
         protected readonly CartRepositories $cart,
         protected readonly TransactionRepositories $transaction,
         protected readonly CustomerRepositories $customer,
+        protected readonly PackageRepositories $package,
         protected readonly ResellerRepositories $reseller,
     ) {}
 
@@ -30,7 +32,18 @@ class CartController extends Controller
     }
 
     public function createSession(Request $request) {
-        $cartIdSelect = implode('+', $request->cart_id);
+        if ($request->cart_id == null) {
+            $this->cart->storeTransaction($request);
+            $cartIdSelect = $this->cart->findLatest()->id;
+        } else {
+            foreach ($request->cart_id as $cart_id) {
+                $cart = $this->cart->findById($cart_id);
+                if ($cart->product->stock <= $cart->quantity) {
+                    return redirect(route('cart.index'))->with('failed', 'Stock produk telah habis!');
+                }
+            }
+            $cartIdSelect = implode('+', $request->cart_id);
+        }
         return redirect(route('cart.edit', $cartIdSelect));
     }
 
@@ -102,8 +115,14 @@ class CartController extends Controller
 
     public function storeProduct(StoreTransactionRequest $request, int $cart_id) {
         try {
-            $this->cart->storeProduct($request->validated(), $cart_id);
-            return redirect(route('cart-transaction', $cart_id))->with('success', 'Berhasil menambahkan transaksi baru!');
+            $cart = $this->cart->findById($cart_id);
+            if ($cart->invois == null) {
+                $this->cart->storeProduct($request->validated(), $cart_id);
+                return redirect(route('cart-transaction', $cart_id));
+            } else {
+                $this->cart->storeProduct($request->validated(), $cart_id);
+                return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
+            }
         } catch (\Exception $e) {
             logger($e->getMessage());
             return redirect(route('cart.index'))->with('failed', 'Gagal menambahkan transaksi baru!');
@@ -112,7 +131,12 @@ class CartController extends Controller
 
     public function cartTransaction(int $cart_id) {
         $cart = $this->cart->findById($cart_id);
-        dd($cart);
+        $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
+        return view('homepage.cart-transaction-payment', [
+            'title' => 'Halaman Transaksi Pembayaran Keranjang',
+            'cart' => $cart,
+            'package' => $package,
+        ]);
     }
 
     public function update(StoreTransactionRequest $request, int $cart_id) : RedirectResponse {
