@@ -22,7 +22,7 @@
                         <button type="button" class="button-primary" data-bs-toggle="modal" data-bs-target="#quantityModal">Tambah Keranjang</button>
                         @include('partials.quantity-cart')
                     </form>
-                    <form action="{{ route('store-transaction') }}" method="POST">
+                    <form action="{{ route('create-session') }}" method="POST">
                         @csrf
                         <input type="hidden" name="users_id" value="{{ auth()->user()->id }}">
                         <input type="hidden" name="products_id" value="{{ $product->id }}">
