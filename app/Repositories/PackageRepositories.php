@@ -30,6 +30,11 @@ class PackageRepositories
         return $this->package->with('product')->where('products_id', $id)->where('quantity', '<=', $quantity)->orderBy('quantity', 'desc')->first();
     }
 
+    public function findWhereProductId($id)
+    {
+        return $this->package->with('product')->whereIn('products_id', $id)->get();
+    }
+
     public function store($request): Package
     {
         return $this->package->create($request);
