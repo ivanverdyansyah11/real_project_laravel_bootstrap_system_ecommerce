@@ -24,6 +24,7 @@ class StoreCartRequest extends FormRequest
         return [
             'products_id' => 'required|integer',
             'users_id' => 'required|integer',
+            'quantity' => 'required|integer',
         ];
     }
 }
