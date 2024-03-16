@@ -100,6 +100,21 @@ class CartController extends Controller
         }
     }
 
+    public function storeProduct(StoreTransactionRequest $request, int $cart_id) {
+        try {
+            $this->cart->storeProduct($request->validated(), $cart_id);
+            return redirect(route('cart-transaction', $cart_id))->with('success', 'Berhasil menambahkan transaksi baru!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('cart.index'))->with('failed', 'Gagal menambahkan transaksi baru!');
+        }
+    }
+
+    public function cartTransaction(int $cart_id) {
+        $cart = $this->cart->findById($cart_id);
+        dd($cart);
+    }
+
     public function update(StoreTransactionRequest $request, int $cart_id) : RedirectResponse {
         try {
             $this->cart->update($request->validated(), $cart_id);
