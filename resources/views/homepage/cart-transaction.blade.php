@@ -13,7 +13,7 @@
                         {{ session('failed') }}
                     </div>
                 @endif
-                <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="w-100" enctype="multipart/form-data">
+                <form action="{{ route('transaction-store-product', $cart->id) }}" method="POST" class="w-100" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
                     <input type="hidden" value="{{ $cart->id }}" id="cart_id">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="card mt-4">
                         <div class="card-body">
-                            <h6 class="card-body-title mb-4">Pembayaran Transaksi</h6>
+                            <h6 class="card-body-title mb-4">Data Pembeli</h6>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="customers_id" class="form-label">Nama Pelanggan</label>
@@ -99,7 +99,13 @@
                                         @enderror
                                     </div>
                                 @endif
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12">
+                                    <div class="wrapper d-flex gap-2">
+                                        <button type="submit" class="button-primary">Lanjutkan Pembayaran</button>
+                                        <a href="{{ route('cart.index') }}" class="button-dark">Batal Lanjutkan</a>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-6 mb-3">
                                     <label for="total" class="form-label">Total</label>
                                     <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total', $cart->product->selling_price) }}">
                                     @error('total')
@@ -116,11 +122,11 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
-                    <div class="card mt-4">
+                    {{-- <div class="card mt-4">
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Upload Bukti Pembayaran</h6>
                             <div class="row">
@@ -140,7 +146,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
         </div>
@@ -155,41 +161,41 @@
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
 
-            let productPrice = $('#selling_price').val();
-            function handleTransaction() {
-                let quantity = $('#quantity').val();
-                let productsId = $('#products_id').val();
-                if (quantity != '') {
-                    $.ajax({
-                        type: 'get',
-                        url: '/transaction/get_package/' + quantity + '/' + productsId,
-                        success: function(package) {
-                            if (package.status == 'success') {
-                                if (package.data != null) {
-                                    $('#selling_price').val(package.data.selling_price);
-                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
-                                } else {
-                                    $('#selling_price').val(productPrice);
-                                    $('.text-mention').html('');
-                                }
-                                $('#total').val(quantity * $('#selling_price').val());
-                            }
-                        }
-                    });
-                } else {
-                    $('#selling_price').val(productPrice);
-                    $('#total').val('');
-                }
-            }
+            // let productPrice = $('#selling_price').val();
+            // function handleTransaction() {
+            //     let quantity = $('#quantity').val();
+            //     let productsId = $('#products_id').val();
+            //     if (quantity != '') {
+            //         $.ajax({
+            //             type: 'get',
+            //             url: '/transaction/get_package/' + quantity + '/' + productsId,
+            //             success: function(package) {
+            //                 if (package.status == 'success') {
+            //                     if (package.data != null) {
+            //                         $('#selling_price').val(package.data.selling_price);
+            //                         $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
+            //                     } else {
+            //                         $('#selling_price').val(productPrice);
+            //                         $('.text-mention').html('');
+            //                     }
+            //                     $('#total').val(quantity * $('#selling_price').val());
+            //                 }
+            //             }
+            //         });
+            //     } else {
+            //         $('#selling_price').val(productPrice);
+            //         $('#total').val('');
+            //     }
+            // }
 
-            $(document).ready(function() {
-                $('#total').val(parseInt($('#quantity').val()) * parseInt(productPrice));
-                handleTransaction();
-            });
+            // $(document).ready(function() {
+            //     $('#total').val(parseInt($('#quantity').val()) * parseInt(productPrice));
+            //     handleTransaction();
+            // });
 
-            $(document).on('change', '#quantity', function() {
-                handleTransaction();
-            });
+            // $(document).on('change', '#quantity', function() {
+            //     handleTransaction();
+            // });
         </script>
     @endpush
 @endsection
