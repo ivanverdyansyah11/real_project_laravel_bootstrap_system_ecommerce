@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('users_id')->index();
             $table->integer('quantity');
             $table->integer('invois')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
