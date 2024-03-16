@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Cart;
+use App\Models\Product;
 use App\Models\Transaction;
 use App\Utils\UploadFile;
 use Illuminate\Support\Arr;
@@ -23,6 +24,16 @@ class CartRepositories
         return $this->cart->latest()->get();
     }
 
+    public function findLatest()
+    {
+        return $this->cart->latest()->first();
+    }
+
+    public function findWhereIn($cart_id)
+    {
+        return $this->cart->whereIn('id', [$cart_id])->latest()->get();
+    }
+
     public function findAllByUserId(int $user_id)
     {
         return $this->cart->where('users_id', $user_id)->latest()->get();
@@ -38,7 +49,23 @@ class CartRepositories
         return $this->cart->where('id', $cart_id)->first();
     }
 
-    public function store($request): Cart
+    public function findByProductId(int $product_id)
+    {
+        return $this->cart->where('products_id', $product_id)->first();
+    }
+
+    public function store($request)
+    {
+        $cart = $this->findByProductId($request['products_id']);
+        if ($cart != null) {
+            $request['quantity'] += $cart['quantity'];
+            return $cart->update($request);
+        } else {
+            return $this->cart->create($request);
+        }
+    }
+
+    public function storeTransaction($request)
     {
         return $this->cart->create($request);
     }
