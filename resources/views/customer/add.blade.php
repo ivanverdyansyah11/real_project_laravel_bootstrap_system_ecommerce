@@ -10,8 +10,6 @@
             @endif
             <form class="row row-cols-1" action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" value="customer" name="role">
-                <input type="hidden" value="1" name="status">
                 <div class="col mb-3">
                     <div class="row row-cols-1 row-cols-md-2">
                         <div class="col d-flex flex-column">
@@ -55,18 +53,58 @@
                     @enderror
                 </div>
                 <div class="col mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input required type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
-                    @error('password')
+                    <label for="number_phone" class="form-label">Nomor Telepon</label>
+                    <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ old('number_phone') }}">
+                    @error('number_phone')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
                 <div class="col mb-3">
-                    <label for="number_phone" class="form-label">Nomor Telepon</label>
-                    <input required type="number" class="form-control @error('number_phone') is-invalid @enderror" id="number_phone" name="number_phone" value="{{ old('number_phone') }}">
-                    @error('number_phone')
+                    <label for="origin" class="form-label">Kota Domisili</label>
+                    <input required type="text" class="form-control @error('origin') is-invalid @enderror" id="origin" name="origin" value="{{ old('origin') }}">
+                    @error('origin')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="place_of_birth" class="form-label">Tempat Lahir</label>
+                    <input required type="text" class="form-control @error('place_of_birth') is-invalid @enderror" id="place_of_birth" name="place_of_birth" value="{{ old('place_of_birth') }}">
+                    @error('place_of_birth')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="date_of_birth" class="form-label">Tanggal Lahir</label>
+                    <input required type="date" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}">
+                    @error('date_of_birth')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="gender" class="form-label">Jenis Kelamin</label>
+                    <select required class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
+                        <option value="">Pilih jenis kelamin</option>
+                        <option {{ old('gender') == 'L' ? 'selected' : '' }} value="L">Laki Laki</option>
+                        <option {{ old('gender') == 'P' ? 'selected' : '' }} value="P">Perempuan</option>
+                    </select>
+                    @error('gender')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col mb-3">
+                    <label for="address" class="form-label">Alamat</label>
+                    <input required type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address') }}">
+                    @error('address')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>

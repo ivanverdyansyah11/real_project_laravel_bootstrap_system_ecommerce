@@ -22,7 +22,7 @@
                             <div class="row">
                                 <div class="col-12 mb-3 d-flex flex-column">
                                     <label class="form-label">Foto Produk</label>
-                                    <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                                    <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2" width="100" height="100" style="object-fit: cover;">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="product_name" class="form-label">Nama Produk</label>
@@ -38,8 +38,11 @@
                                     <input readonly type="text" class="form-control" id="purchase_price" value="{{ $cart->product->purchase_price }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="selling_price" class="form-label">Harga Beli</label>
+                                    <label for="selling_price" class="form-label">Harga Jual</label>
                                     <input readonly type="text" class="form-control" id="selling_price" value="{{ $cart->product->selling_price }}">
+                                </div>
+                                <div class="col-12">
+                                    <p class="text-mention"></p>
                                 </div>
                             </div>
                         </div>
@@ -88,12 +91,7 @@
                                 @endif
                                 <div class="col-md-6 mb-3">
                                     <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                                    <select required class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity">
-                                        <option value="">Pilih kuantitas dibeli</option>
-                                        @for($i = 1; $i <= $cart->product->stock; $i++)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
+                                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity', 1) }}" min="1" max="{{ $cart->product->stock }}">
                                     @error('quantity')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -102,7 +100,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="total" class="form-label">Total</label>
-                                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}">
+                                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total', $cart->product->selling_price) }}">
                                     @error('total')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -149,6 +147,14 @@
 
     @push('js')
         <script>
+            const tagImage = document.querySelector('.img-preview');
+            const inputImage = document.querySelector('.input-file');
+
+            inputImage.addEventListener('change', function() {
+                tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            });
+
+            let productPrice = $('#selling_price').val();
             $(document).on('change', '#quantity', function() {
                 let quantity = $(this).val();
                 let productsId = $('#products_id').val();
@@ -160,12 +166,17 @@
                             if (package.status == 'success') {
                                 if (package.data != null) {
                                     $('#selling_price').val(package.data.selling_price);
+                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
+                                } else {
+                                    $('#selling_price').val(productPrice);
+                                    $('.text-mention').html('');
                                 }
                                 $('#total').val(quantity * $('#selling_price').val());
                             }
                         }
                     });
                 } else {
+                    $('#selling_price').val(productPrice);
                     $('#total').val('');
                 }
             });

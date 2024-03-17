@@ -9,24 +9,7 @@
         <p class="auth-caption">Mari sukses bersama kami!</p>
         <form action="{{ route('register.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="mb-2">
-                <label class="form-label">Daftar sebagai</label>
-                <div class="wrapper d-flex gap-4">
-                    <div class="form-check m-0">
-                        <input required class="form-check-input" type="radio" name="role" id="customer" value="customer">
-                        <label class="form-check-label" for="customer">Customer</label>
-                    </div>
-                    <div class="form-check m-0">
-                        <input required class="form-check-input" type="radio" name="role" id="reseller" value="reseller">
-                        <label class="form-check-label" for="reseller">Reseller</label>
-                    </div>
-                </div>
-                @error('role')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
+            <input required class="form-check-input" type="hidden" name="role" id="reseller" value="reseller">
             <div class="mb-2">
                 <label for="name" class="form-label">Nama</label>
                 <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
@@ -110,7 +93,7 @@
                 const password = document.querySelector('#password');
                 const confirmationPassword = document.querySelector('#confirmation_password');
                 const openPassword = document.querySelector('#open_password');
-    
+
                 if (openPassword.checked == true) {
                     password.setAttribute("type", "text");
                     confirmationPassword.setAttribute("type", "text");

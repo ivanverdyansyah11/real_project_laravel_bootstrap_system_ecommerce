@@ -19,34 +19,27 @@ class CustomerRepositories
 
     public function findAll()
     {
-        return $this->customer->with(['user'])->latest()->get();
+        return $this->customer->latest()->get();
     }
 
     public function findAllPaginate()
     {
-        return $this->customer->with(['user'])->latest()->get();
+        return $this->customer->latest()->get();
     }
 
     public function findById(int $customer_id): customer
     {
-        return $this->customer->with(['user'])->where('id', $customer_id)->first();
+        return $this->customer->where('id', $customer_id)->first();
     }
 
     public function findByUserId(int $customer_id)
     {
-        return $this->customer->with(['user'])->where('users_id', $customer_id)->first();
+        return $this->customer->where('users_id', $customer_id)->first();
     }
 
     public function findLastData()
     {
         return $this->user->latest()->first();
-    }
-
-    public function approved(int $id)
-    {
-        $customer = $this->findByUserId($id);
-        $request['status'] = 1;
-        return $customer->user->update($request);
     }
 
     public function store($request)
@@ -57,12 +50,8 @@ class CustomerRepositories
             $filenameImage = $this->uploadFile->uploadSingleFile($request['image'], "assets/images/profile");
             $request['image'] = $filenameImage;
             $request['photo_ktp'] = $filenameKTP;
-            $request['password'] = bcrypt($request['password']);
-            $this->user->create(Arr::only($request, ['email', 'password', 'image', 'role', 'status']));
-            $user = $this->user->latest()->first();
-            $request['users_id'] = $user->id;
             DB::commit();
-            return $this->customer->create(Arr::only($request, ['users_id', 'name', 'number_phone', 'photo_ktp']));
+            return $this->customer->create($request);
         } catch (\Exception $e) {
             logger($e->getMessage());
             DB::rollBack();
@@ -82,15 +71,14 @@ class CustomerRepositories
                 $request['photo_ktp'] = $customer->photo_ktp;
             }
             if (isset($request["image"])) {
-                $this->uploadFile->deleteExistFile("assets/images/profile/" . $customer->user->image);
+                $this->uploadFile->deleteExistFile("assets/images/profile/" . $customer->image);
                 $filename = $this->uploadFile->uploadSingleFile($request['image'], 'assets/images/profile');
                 $request['image'] = $filename;
             } else {
-                $request['image'] = $customer->user->image;
+                $request['image'] = $customer->image;
             }
-            $customer->user->update(Arr::only($request, ['email', 'image']));
             DB::commit();
-            return $customer->update(Arr::only($request, ['name', 'number_phone', 'photo_ktp']));
+            return $customer->update($request);
         } catch (\Exception $e) {
             logger($e->getMessage());
             DB::rollBack();
@@ -101,7 +89,7 @@ class CustomerRepositories
     public function delete($customer)
     {
         $this->uploadFile->deleteExistFile("assets/images/customer/" . $customer->photo_ktp);
-        $this->uploadFile->deleteExistFile("assets/images/profile/" . $customer->user->image);
+        $this->uploadFile->deleteExistFile("assets/images/profile/" . $customer->image);
         return $customer->delete();
     }
 }

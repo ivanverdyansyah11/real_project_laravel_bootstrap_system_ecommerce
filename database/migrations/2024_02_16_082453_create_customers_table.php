@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('users_id');
-            $table->string('photo_ktp');
+            $table->string('email')->unique();
+            $table->string('image')->nullable();
+            $table->string('photo_ktp')->nullable();
             $table->string('name', 255);
             $table->string('number_phone', 15);
             $table->string('origin', 50)->nullable();

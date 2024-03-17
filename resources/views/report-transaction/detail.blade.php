@@ -16,6 +16,10 @@
                     <img src="{{ file_exists('assets/images/transaction/' . $transaction->proof_of_payment) && $transaction->proof_of_payment ? asset('assets/images/transaction/' . $transaction->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
                 </div>
                 <div class="col-md-6 mb-3">
+                    <label for="customers_id" class="form-label">Nomor Invois</label>
+                    <input readonly type="text" class="form-control" id="invois" value="{{ $transaction->invois }}">
+                </div>
+                <div class="col-md-6 mb-3">
                     <label for="customers_id" class="form-label">Nama Pelanggan</label>
                     <input readonly type="text" class="form-control" id="customers_id" value="{{ $transaction->customer->name }}">
                 </div>
@@ -47,7 +51,7 @@
                     <label for="created_at" class="form-label">Transaksi Dilakukan</label>
                     <input readonly type="text" class="form-control" id="created_at" value="{{ Carbon\Carbon::parse($transaction->created_at)->format('l, d F Y') }}">
                 </div>
-                <div class="col">
+                <div class="col-12">
                     <button type="button" class="button-dark" onClick="history_back()">Kembali ke Halaman</button>
                 </div>
             </form>

@@ -14,7 +14,7 @@
             @endif
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-body-title mb-4">Biodata Saya</h6>
+                    <h6 class="card-body-title mb-4 text-capitalize">Biodata Saya Sebagai {{ auth()->user()->role == 'super_admin' ? 'Admin' : auth()->user()->role }}</h6>
                     <form class="row row-cols-1 row-cols-md-2" action="{{ route('profile.update', $profile->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method("PUT")

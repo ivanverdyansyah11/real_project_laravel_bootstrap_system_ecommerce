@@ -52,7 +52,6 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('/reseller', ResellerController::class)->middleware('isAdmin');
     Route::put('/reseller/approved/{id}', [ResellerController::class, 'approved'])->middleware('isAdmin');
     Route::resource('/customer', CustomerController::class)->middleware('isAdmin');
-    Route::put('/customer/approved/{id}', [CustomerController::class, 'approved'])->middleware('isAdmin');
     Route::resource('/cashier', CashierController::class)->middleware('isAdmin');
     Route::resource('/category', CategoryController::class)->middleware('isAdmin');
     Route::resource('/product', ProductController::class)->middleware('isAdmin');

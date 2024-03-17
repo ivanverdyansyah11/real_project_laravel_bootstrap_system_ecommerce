@@ -28,15 +28,6 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function approved(int $id) {
-        try {
-            $this->customer->approved($id);
-            return redirect()->route('customer.index')->with('success', 'Berhasil menyetujui pelanggan');
-        } catch (\Exception $e) {
-            return redirect()->route('customer.create')->with('error', 'Gagal menyetujui pelanggan');
-        }
-    }
-
     public function create() : View {
         return view('customer.add', [
             'title' => 'Halaman Tambah Pelanggan',
@@ -48,7 +39,7 @@ class CustomerController extends Controller
             $this->customer->store($request->validated());
             return redirect()->route('customer.index')->with('success', 'Berhasil membuat pelanggan baru');
         } catch (\Exception $e) {
-            return redirect()->route('customer.create')->with('error', 'Gagal membuat pelanggan baru');
+            return redirect()->route('customer.create')->with('failed', 'Gagal membuat pelanggan baru');
         }
     }
 
@@ -64,7 +55,8 @@ class CustomerController extends Controller
             $this->customer->update($request->validated(), $customer);
             return redirect()->route('customer.index')->with('success', 'Berhasil edit pelanggan');
         } catch (\Exception $e) {
-            return redirect()->route('customer.edit')->with('error', 'Gagal edit pelanggan');
+            logger($e->getMessage());
+            return back()->with('failed', 'Gagal edit pelanggan');
         }
     }
 
