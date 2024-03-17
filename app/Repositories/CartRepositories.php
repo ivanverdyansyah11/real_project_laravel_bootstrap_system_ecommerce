@@ -45,9 +45,14 @@ class CartRepositories
         return $this->cart->whereNull('invois')->where('status', 1)->latest()->get();
     }
 
-    public function findById(int $cart_id): Cart
+    public function findById($cart_id)
     {
         return $this->cart->where('id', $cart_id)->first();
+    }
+
+    public function findAllById($cart_id)
+    {
+        return Cart::whereIn('id', $cart_id)->get();
     }
 
     public function findByProductId(int $product_id, int $user_id)
@@ -73,7 +78,7 @@ class CartRepositories
         return $this->cart->create(Arr::only($requestData, ['users_id', 'products_id', 'quantity', 'status']));
     }
 
-    public function storeProduct($request, int $cart_id)
+    public function storeProduct($request, $cart_id)
     {
         $cartSelected = $this->findById($cart_id);
         if ($cartSelected->invois == null) {
