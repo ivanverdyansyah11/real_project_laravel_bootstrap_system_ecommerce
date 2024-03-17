@@ -22,7 +22,7 @@ class CartRepositories
 
     public function findAll()
     {
-        return $this->cart->whereNull('invois')->where('status', 1)->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->get();
     }
 
     public function findLatest()
@@ -42,7 +42,7 @@ class CartRepositories
 
     public function findAllPaginate()
     {
-        return $this->cart->whereNull('invois')->where('status', 1)->latest()->get();
+        return $this->cart->whereNull('invois')->where('status', 1)->get();
     }
 
     public function findById($cart_id)

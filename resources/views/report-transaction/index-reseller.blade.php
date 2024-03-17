@@ -34,7 +34,7 @@
                                             </div>
                                             <div class="wrapper text-end">
                                                 <p class="card-body-caption mb-1">Total Belanja</p>
-                                                <h6 class="card-body-subtitle mb-3">Rp. {{ number_format($transaction->total, 2, ",", ".") }}</h6>
+                                                <h6 class="card-body-subtitle mb-3">Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</h6>
                                                 <div class="wrapper d-flex gap-2">
                                                     @if ($transaction->proof_of_payment	== null)
                                                         <a href="{{ route('transaction.edit', $transaction->id) }}" class="button-primary-reverse">Upload Bukti Pembayaran</a>
@@ -59,7 +59,7 @@
                                             </div>
                                             <div class="wrapper text-end">
                                                 <p class="card-body-caption mb-1">Total Belanja</p>
-                                                <h6 class="card-body-subtitle mb-3">Rp. {{ number_format($transaction->total, 2, ",", ".") }}</h6>
+                                                <h6 class="card-body-subtitle mb-3">Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</h6>
                                                 <div class="wrapper d-flex gap-2">
                                                     @if ($transaction->proof_of_payment	== null)
                                                         <a href="{{ route('transaction.edit', $transaction->id) }}" class="button-primary-reverse">Upload Bukti Pembayaran</a>
@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="wrapper text-end">
                                                 <p class="card-body-caption mb-1">Total Belanja</p>
-                                                <h6 class="card-body-subtitle mb-3">Rp. {{ number_format($transaction->total, 2, ",", ".") }}</h6>
+                                                <h6 class="card-body-subtitle mb-3">Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</h6>
                                                 <div class="wrapper d-flex gap-2">
                                                     @if ($transaction->proof_of_payment	== null)
                                                         <a href="{{ route('transaction.edit', $transaction->id) }}" class="button-primary-reverse">Upload Bukti Pembayaran</a>

@@ -57,6 +57,10 @@
             <a href="{{ route('report-reward.index') }}" class="{{ Route::is('report-reward.index') ? 'active' : '' }}">Rekap Point</a>
             <a href="{{ route('report-transaction') }}" class="{{ Route::is('report-transaction') ? 'active' : '' }}">Rekap Transaksi</a>
         </div>
+        <a href="{{ route('homepage') }}" class="link-item d-flex align-items-center {{ Route::is('homepage') ? 'active' : '' }}">
+            <img src="{{ asset('assets/images/sidebar/dashboard.png') }}" alt="Sidebar Icon" class="img-fluid">
+            <span>Homepage</span>
+        </a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="link-item d-flex align-items-center">
