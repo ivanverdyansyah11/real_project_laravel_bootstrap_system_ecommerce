@@ -23,7 +23,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-3">
+                {{-- <div class="col-md-6 mb-3">
                     <label for="customers_id" class="form-label">Nama Pelanggan</label>
                     <select required class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
                         <option value="">Pilih pelanggan</option>
@@ -36,7 +36,7 @@
                             {{ $message }}
                         </div>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="col-md-6 mb-3">
                     <label for="resellers_id" class="form-label">Nama Karyawan</label>
                     <select class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">

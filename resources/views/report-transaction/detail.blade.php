@@ -19,10 +19,10 @@
                     <label for="customers_id" class="form-label">Nomor Invois</label>
                     <input readonly type="text" class="form-control" id="invois" value="{{ $transaction->invois }}">
                 </div>
-                <div class="col-md-6 mb-3">
+                {{-- <div class="col-md-6 mb-3">
                     <label for="customers_id" class="form-label">Nama Pelanggan</label>
                     <input readonly type="text" class="form-control" id="customers_id" value="{{ $transaction->customer->name }}">
-                </div>
+                </div> --}}
                 <div class="col-md-6 mb-3">
                     <label for="resellers_id" class="form-label">Nama Karyawan</label>
                     <input readonly type="text" class="form-control" id="resellers_id" value="{{ $transaction->reseller ? $transaction->reseller->name : '-' }}">

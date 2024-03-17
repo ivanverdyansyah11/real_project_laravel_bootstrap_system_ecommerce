@@ -17,7 +17,7 @@
                     <thead>
                         <tr>
                             <th>Nomor Invois</th>
-                            <th>Nama Pelanggan</th>
+                            {{-- <th>Nama Pelanggan</th> --}}
                             <th>Nama Karyawan</th>
                             <th>Nama Produk</th>
                             <th>Total</th>
@@ -28,7 +28,7 @@
                         @if ($transactions->count() == 0)
                             <tr>
                                 <td>Data transaksi selesai tidak ditemukan!</td>
-                                <td></td>
+                                {{-- <td></td> --}}
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -38,7 +38,7 @@
                             @foreach ($transactions as $transaction)
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
-                                    <td>{{ $transaction->customer->name }}</td>
+                                    {{-- <td>{{ $transaction->customer->name }}</td> --}}
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
                                     <td>{{ $transaction->product->name }}</td>
                                     <td>Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</td>
