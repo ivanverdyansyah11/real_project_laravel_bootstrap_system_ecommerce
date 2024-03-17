@@ -41,7 +41,7 @@
                                     <td>{{ $transaction->customer->name }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
                                     <td>{{ $transaction->product->name }}</td>
-                                    <td>Rp. {{ number_format($transaction->total_payment, 2, ",", ".") }}</td>
+                                    <td>Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         <button type="button" class="button-approved d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ $transaction->id }}">
                                             <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon" class="img-fluid" width="16">
