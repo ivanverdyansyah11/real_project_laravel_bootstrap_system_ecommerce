@@ -22,10 +22,6 @@ class User extends Authenticatable
         return $this->belongsTo(Reseller::class, 'id');
     }
 
-    public function customer() {
-        return $this->belongsTo(Customer::class, 'id');
-    }
-
     public function admin() {
         return $this->belongsTo(Admin::class, 'id');
     }
