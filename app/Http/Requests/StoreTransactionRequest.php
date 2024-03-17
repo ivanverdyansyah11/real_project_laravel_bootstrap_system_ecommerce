@@ -22,12 +22,13 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'invois' => 'nullable|integer',
             'products_id' => 'nullable',
-            'customers_id' => 'nullable|integer',
             'resellers_id' => 'nullable|integer',
             'quantity' => 'nullable',
             'proof_of_payment' => 'nullable|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
             'total' => 'nullable|integer',
+            'price_per_product' => 'nullable',
             'total_payment' => 'nullable|integer',
             'status' => 'nullable|integer',
         ];
