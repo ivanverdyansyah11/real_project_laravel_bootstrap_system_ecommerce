@@ -68,7 +68,7 @@
                                     @endphp
                                     <div class="col-md-6 mb-3">
                                         <label for="total_per_product" class="form-label">Total Per Produk</label>
-                                        <input readonly type="number" class="form-control" id="total_per_product" value="{{ $cart->quantity * $totalProduct }}">
+                                        <input readonly type="number" class="form-control" id="total_per_product" name="total_per_product[]" value="{{ $cart->quantity * $totalProduct }}">
                                     </div>
                                     @if ($packages[$i] != null)
                                         <div class="col-12">
