@@ -50,9 +50,10 @@ class TransactionController extends Controller
     }
 
     public function show(Transaction $transaction) : View {
+        $transaction = $this->transaction->findById($transaction->id);
         return view('report-transaction.detail', [
             'title' => 'Halaman Detail Transaksi',
-            'transaction' => $this->transaction->findById($transaction->id),
+            'transactions' => $this->transaction->findByInvois($transaction->invois),
         ]);
     }
 
@@ -118,9 +119,11 @@ class TransactionController extends Controller
     }
 
     public function edit(Transaction $transaction) : View {
+        $transaction = $this->transaction->findById($transaction->id);
         return view('report-transaction.edit', [
             'title' => 'Halaman Edit Transaksi',
-            'transaction' => $this->transaction->findById($transaction->id),
+            'transactions' => $this->transaction->findByInvois($transaction->invois),
+            'transactionId' => $transaction->id,
         ]);
     }
 
