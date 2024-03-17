@@ -26,6 +26,7 @@
                 <form action="{{ route('transaction-store-product', $cartId) }}" method="POST" class="w-100" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
+                    <input type="hidden" value="{{ rand() }}" name="invois">
                     @foreach ($cart as $item)
                         <input type="hidden" value="{{ $item->id }}" id="cart_id">
                         <div class="card mb-4">
@@ -73,30 +74,8 @@
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Data Pembeli</h6>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="customers_id" class="form-label">Nama Pelanggan</label>
-                                    @if (auth()->user()->role == 'customer')
-                                        <input required type="hidden" class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id" value="{{ $customer->id }}">
-                                        <input readonly type="text" class="form-control" value="{{ $customer->name }}">
-                                    @else
-                                        @if (auth()->user()->role == 'reseller')
-                                            <input type="hidden" name="resellers_id" value="{{ auth()->user()->id }}">
-                                        @endif
-                                        <select required class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
-                                            <option value="">Pilih pelanggan</option>
-                                            @foreach ($customers as $customer)
-                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
-                                    @error('customers_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
                                 @if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin')
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-12 mb-3">
                                         <label for="resellers_id" class="form-label">Nama Karyawan</label>
                                         <select class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
                                             <option value="">Pilih karyawan</option>

@@ -27,14 +27,12 @@
                     <tbody>
                         @if ($transactions->count() == 0)
                             <tr>
-                                <tr>
-                                    <td>Data transaksi tidak ditemukan!</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                <td>Data transaksi penghargaan karyawan tidak ditemukan!</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         @else
                             @foreach ($transactions as $i => $transaction)

@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="selling_price" class="form-label">Harga Jual</label>
-                                    <input readonly type="text" class="form-control" id="selling_price" value="{{ $package != null ? $package->selling_price : $cart->product->selling_price }}">
+                                    <input readonly type="text" class="form-control" id="selling_price" name="price_per_product" value="{{ $package != null ? $package->selling_price : $cart->product->selling_price }}">
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="quantity" class="form-label">Kuantitas Dibeli</label>

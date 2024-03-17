@@ -52,7 +52,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="selling_price" class="form-label">Harga Jual</label>
-                                        <input readonly type="text" class="form-control" id="selling_price" value="{{ $packages[$i] != null ? $packages[$i]->selling_price : $cart->product->selling_price }}">
+                                        <input readonly type="text" class="form-control" id="selling_price" name="price_per_product[]" value="{{ $packages[$i] != null ? $packages[$i]->selling_price : $cart->product->selling_price }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="quantity" class="form-label">Kuantitas Dibeli</label>
@@ -136,12 +136,14 @@
             const inputImage = document.querySelector('.input-file');
             const sellingPrice = document.querySelectorAll('#total_per_product');
             const total = document.querySelector('#total');
+            const totalPayment = document.querySelector('#total_payment');
 
             let totalSellingPrice = [];
             sellingPrice.forEach(price => {
                 totalSellingPrice.push(price.getAttribute('value'));
             });
             total.setAttribute('value', totalSellingPrice.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0));
+            totalPayment.setAttribute('min', totalSellingPrice.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0));
 
             inputImage.addEventListener('change', function() {
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
