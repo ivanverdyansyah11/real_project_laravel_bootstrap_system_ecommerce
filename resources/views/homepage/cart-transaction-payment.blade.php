@@ -55,7 +55,7 @@
                     </div>
                     <div class="card mt-4">
                         <div class="card-body">
-                            <h6 class="card-body-title mb-4">Data Pembeli</h6>
+                            <h6 class="card-body-title mb-4">Total Pembelian</h6>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="total" class="form-label">Total</label>
