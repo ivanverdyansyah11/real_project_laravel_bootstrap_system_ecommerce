@@ -678,13 +678,6 @@ section.about .paragraph {
     font-family: var(--urbanist-semibold);
 }
 
-.checkbox-cart {
-    position: absolute;
-    top: -1000px;
-    left: -1000px;
-    opacity: 0;
-}
-
 .checkbox-cart ~ label.active {
     background-color: rgba(var(--dark-color), 0.03);
 }
