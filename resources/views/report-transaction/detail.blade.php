@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="price_per_unit" class="form-label">Harga Satuan</label>
-                    <input readonly type="text" class="form-control" id="price_per_unit" value="Rp. {{ number_format($transaction->product->selling_price, 2, ",", ".") }}">
+                    <input readonly type="text" class="form-control" id="price_per_unit" value="Rp. {{ number_format($transaction->price_per_product, 2, ",", ".") }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="total" class="form-label">Total</label>
