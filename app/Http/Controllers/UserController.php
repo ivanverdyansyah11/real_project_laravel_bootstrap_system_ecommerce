@@ -22,13 +22,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function authentication(Request $request) : RedirectResponse {
+    public function authentication(Request $request): RedirectResponse {
         try {
             if (auth()->attempt($request->only("email", "password"))) {
                 $user = auth()->user();
                 if ($user->status == 0) {
                     auth()->logout();
-                    return redirect()->back()->with('failed', 'Akun belum diaktifkan!');
+                    return redirect()->back()->with('failed', 'Akun belum diaktifkan oleh admin! Silahkan menunggu persetujuan admin.');
                 } else {
                     if (auth()->user()->role == 'customer') {
                         return redirect()->route("homepage")->with('success', 'Berhasil login akun!');
@@ -36,10 +36,12 @@ class UserController extends Controller
                         return redirect()->route("dashboard.index")->with('success', 'Berhasil login akun!');
                     }
                 }
+            } else {
+                return redirect()->back()->with('failed', 'Email atau password tidak ditemukan!');
             }
         } catch (\Exception $e) {
             logger($e->getMessage());
-            return redirect()->back()->with('failed', 'Email atau password tidak ditemukan!');
+            return redirect()->back()->with('failed', 'Terjadi kesalahan! Silakan coba lagi nanti.');
         }
     }
 
