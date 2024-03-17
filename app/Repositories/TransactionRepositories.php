@@ -19,7 +19,7 @@ class TransactionRepositories
 
     public function findAll()
     {
-        return $this->transaction->latest()->get();
+        return $this->transaction->whereIn('status', [0, 1])->latest()->get();
     }
 
     public function findAllByReseller(int $users_id)
@@ -80,6 +80,11 @@ class TransactionRepositories
     public function findById(int $transaction_id): Transaction
     {
         return $this->transaction->where('id', $transaction_id)->first();
+    }
+
+    public function findByInvois($invois): Transaction
+    {
+        return $this->transaction->where('invois', $invois)->first();
     }
 
     public function filterDay()

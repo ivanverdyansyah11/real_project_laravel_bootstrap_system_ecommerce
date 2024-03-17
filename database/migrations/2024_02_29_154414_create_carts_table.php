@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('products_id')->index();
             $table->bigInteger('users_id')->index();
+            $table->integer('quantity');
+            $table->integer('invois')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

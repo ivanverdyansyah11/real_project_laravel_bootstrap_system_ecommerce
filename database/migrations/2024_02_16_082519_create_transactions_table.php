@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('proof_of_payment')->nullable();
             $table->string('invois');
             $table->integer('quantity');
-            $table->integer('total');
-            $table->integer('total_payment');
+            $table->integer('total')->nullable();
+            $table->integer('total_payment')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();

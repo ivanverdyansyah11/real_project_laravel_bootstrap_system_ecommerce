@@ -14,12 +14,20 @@
                 <p class="badge-primary">{{ $product->category->name }}</p>
                 <p class="paragraph-title mt-3">Deskripsi Produk</p>
                 <p class="paragraph mt-1">{!! $product->description !!}</p>
-                <div class="wrapper mt-4">
+                <div class="wrapper mt-4 d-flex gap-2">
                     <form action="{{ route('cart.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="users_id" value="{{ auth()->user()->id }}">
                         <input type="hidden" name="products_id" value="{{ $product->id }}">
-                        <button type="submit" class="button-primary">Tambah Keranjang</button>
+                        <button type="button" class="button-primary" data-bs-toggle="modal" data-bs-target="#quantityModal">Tambah Keranjang</button>
+                        @include('partials.quantity-cart')
+                    </form>
+                    <form action="{{ route('create-session') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="users_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="products_id" value="{{ $product->id }}">
+                        <button type="button" class="button-primary" data-bs-toggle="modal" data-bs-target="#quantityTransactionModal">Beli Sekarang</button>
+                        @include('partials.quantity-cart-transaction')
                     </form>
                 </div>
             </div>

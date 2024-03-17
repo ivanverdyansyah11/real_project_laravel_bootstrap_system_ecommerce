@@ -146,7 +146,8 @@ canvas.hide {
 
 .button-primary,
 .button-primary-reverse,
-.button-dark {
+.button-dark,
+.button-danger {
     width: fit-content;
     padding: 12px;
     border-radius: 4px;
@@ -171,6 +172,10 @@ canvas.hide {
 
 .button-dark {
     background-color: rgba(var(--dark-color), 1);
+}
+
+.button-danger {
+    background-color: rgba(var(--danger-color), 1);
 }
 
 .button-approved,
@@ -671,6 +676,29 @@ section.about .paragraph {
 .card-chart .chart-title {
     font-size: 1.125rem;
     font-family: var(--urbanist-semibold);
+}
+
+.checkbox-cart {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+    opacity: 0;
+}
+
+.checkbox-cart ~ label.active {
+    background-color: rgba(var(--dark-color), 0.03);
+}
+
+.card-body-title span.text-caption {
+    font-size: 0.875rem;
+    color: rgba(var(--dark-color), 0.62);
+}
+
+.text-description {
+    font-size: 0.913rem;
+    color: rgba(var(--dark-color), 0.62);
+    text-align: center;
+    margin: 62px 0;
 }
 /* END DASHBOARD */
 
