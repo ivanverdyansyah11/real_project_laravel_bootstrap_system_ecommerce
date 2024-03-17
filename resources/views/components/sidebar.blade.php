@@ -5,6 +5,10 @@
             <img src="{{ asset('assets/images/sidebar/dashboard.png') }}" alt="Sidebar Icon" class="img-fluid">
             <span>Dashboard</span>
         </a>
+        <a href="{{ route('homepage') }}" class="link-item d-flex align-items-center {{ Route::is('homepage') ? 'active' : '' }}">
+            <img src="{{ asset('assets/images/sidebar/homepage.png') }}" alt="Sidebar Icon" class="img-fluid">
+            <span>Homepage</span>
+        </a>
         @if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin')
             <a href="{{ route('profile.index') }}" class="link-item d-flex align-items-center d-lg-none {{ Route::is('profile.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/profile.png') }}" alt="Sidebar Icon" class="img-fluid">
@@ -14,9 +18,8 @@
                 <img src="{{ asset('assets/images/sidebar/user.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Pengguna</span>
             </button>
-            <div class="item-child {{ Route::is('reseller.index') || Route::is('customer.index') ? 'active' : '' }}" id="child_data_user">
+            <div class="w-100 item-child {{ Route::is('reseller.index') || Route::is('customer.index') ? 'active' : '' }}" id="child_data_user">
                 <a href="{{ route('reseller.index') }}" class="{{ Route::is('reseller.index') ? 'active' : '' }}">Karyawan</a>
-                <a href="{{ route('customer.index') }}" class="{{ Route::is('customer.index') ? 'active' : '' }}">Pelanggan</a>
             </div>
             {{-- <a href="{{ route('cashier.index') }}" class="link-item d-flex align-items-center {{ Route::is('cashier.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/cashier.png') }}" alt="Sidebar Icon" class="img-fluid">
@@ -57,10 +60,6 @@
             <a href="{{ route('report-reward.index') }}" class="{{ Route::is('report-reward.index') ? 'active' : '' }}">Rekap Point</a>
             <a href="{{ route('report-transaction') }}" class="{{ Route::is('report-transaction') ? 'active' : '' }}">Rekap Transaksi</a>
         </div>
-        <a href="{{ route('homepage') }}" class="link-item d-flex align-items-center {{ Route::is('homepage') ? 'active' : '' }}">
-            <img src="{{ asset('assets/images/sidebar/dashboard.png') }}" alt="Sidebar Icon" class="img-fluid">
-            <span>Homepage</span>
-        </a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="link-item d-flex align-items-center">
