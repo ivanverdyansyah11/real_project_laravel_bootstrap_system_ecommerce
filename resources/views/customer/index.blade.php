@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($customers->count() == 0)
+                        @if (count($customers) == 0)
                             <tr>
                                 <td>Data pelanggan tidak ditemukan!</td>
                                 <td></td>
