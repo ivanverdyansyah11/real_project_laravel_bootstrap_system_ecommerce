@@ -124,7 +124,7 @@ class CartController extends Controller
             if (str_contains($cart_id, '+') && $request->total == null) {
                 $cartIdSelect = explode('+', $cart_id);
                 $requestTemporary = [];
-                // $requestTemporary['invois'] = rand();
+                $requestTemporary['invois'] = $request->invois;
                 for ($i=0; $i < count($cartIdSelect) ; $i++) {
                     $requestTemporary['products_id'] = $request['products_id'][$i];
                     $requestTemporary['customers_id'] = $request['customers_id'];
@@ -141,33 +141,34 @@ class CartController extends Controller
                     $image->move(public_path('assets/images/transaction/'), $imageName);
                     $request['proof_of_payment_new'] = $imageName;
                 }
-
-                foreach ($cartIdSelect as $i => $cartId) {
+                foreach ($cartIdSelect as $id => $cartId) {
                     $cartSelected = $this->cart->findById($cartId);
                     $cartSelectedArray[] = $cartSelected;
-
                     $product = $this->product->findById($cartSelected->products_id);
                     $request['stock'] = $product->stock - $cartSelected->quantity;
-                    $transaction = $this->transaction->findByInvois($cartSelected->invois);
+                    $transactions = $this->transaction->findByInvois($cartSelected->invois);
                     if (auth()->user()->role == 'reseller') {
                         $request['status'] = 0;
                     } else {
                         $request['status'] = 1;
                     }
-                    if ($transaction->resellers_id != null) {
-                        $reseller = $this->reseller->findById($transaction->resellers_id);
+                    foreach ($transactions as $i => $transaction) {
+                        $transaction->update([
+                            'total' => $request['total'],
+                            'price_per_product' => $request['price_per_product'][$i],
+                            'total_per_product' => $request['total_per_product'][$i],
+                            'total_payment' => $request['total_payment'],
+                            'proof_of_payment' => $request['proof_of_payment_new'],
+                            'status' => $request['status'],
+                        ]);
+                    }
+                    if ($transactions[$id]->resellers_id != null) {
+                        $reseller = $this->reseller->findById($transactions[$id]->resellers_id);
                         $request['poin'] = $reseller->poin + $cartSelected->quantity;
                         $reseller->update(Arr::only($request->all(), 'poin'));
                     }
                     $cartSelected->delete();
                     $product->update(Arr::only($request->all(), 'stock'));
-                    $transaction->update([
-                        'total' => $request['total'],
-                        'total_per_product' => $request['total_per_product'][$i],
-                        'total_payment' => $request['total_payment'],
-                        'proof_of_payment' => $request['proof_of_payment_new'],
-                        'status' => $request['status'],
-                    ]);
                 }
                 return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
             }
