@@ -1,6 +1,17 @@
 @extends('layouts.main')
 
 @section('content-dashboard')
+    @php
+        $uniqueTransactions = [];
+        $invoiceTransactions = [];
+        foreach($transactions as $transaction) {
+            if(!in_array($transaction->invois, $invoiceTransactions)) {
+                $uniqueTransactions[] = $transaction;
+                $invoiceTransactions[] = $transaction->invois;
+            }
+        }
+    @endphp
+
     <div class="row me-lg-4" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
             @if (session()->has('success'))
@@ -17,7 +28,6 @@
                     <thead>
                         <tr>
                             <th>Nomor Invois</th>
-                            <th>Nama Pelanggan</th>
                             <th>Nama Karyawan</th>
                             <th>Nama Produk</th>
                             <th>Total</th>
@@ -25,20 +35,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($transactions->count() == 0)
+                        @if (count($uniqueTransactions) == 0)
                             <tr>
                                 <td>Data transaksi tidak ditemukan!</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                             </tr>
                         @else
-                            @foreach ($transactions as $transaction)
+                            @foreach ($uniqueTransactions as $transaction)
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
-                                    <td>{{ $transaction->customer->name }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
                                     <td>{{ $transaction->product->name }}</td>
                                     <td>Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</td>
