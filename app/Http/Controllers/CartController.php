@@ -8,11 +8,14 @@ use App\Models\Cart;
 use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\PackageRepositories;
+use App\Repositories\ProductRepositories;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
+use App\Utils\UploadFile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Arr;
 
 class CartController extends Controller
 {
@@ -20,8 +23,10 @@ class CartController extends Controller
         protected readonly CartRepositories $cart,
         protected readonly TransactionRepositories $transaction,
         protected readonly CustomerRepositories $customer,
+        protected readonly ProductRepositories $product,
         protected readonly PackageRepositories $package,
         protected readonly ResellerRepositories $reseller,
+        protected readonly UploadFile $uploadFile,
     ) {}
 
     public function index() : View {
@@ -38,9 +43,10 @@ class CartController extends Controller
         } else {
             foreach ($request->cart_id as $cart_id) {
                 $cart = $this->cart->findById($cart_id);
-                if ($cart->product->stock <= $cart->quantity) {
+                if ($cart->product->stock < $cart->quantity) {
                     return redirect(route('cart.index'))->with('failed', 'Stock produk telah habis!');
                 }
+                $cart->update(['status' => 2]);
             }
             $cartIdSelect = implode('+', $request->cart_id);
         }
@@ -113,8 +119,53 @@ class CartController extends Controller
         }
     }
 
-    public function storeProduct(StoreTransactionRequest $request, int $cart_id) {
+    public function storeProduct(StoreTransactionRequest $request, $cart_id) {
         try {
+            if (str_contains($cart_id, '+') && $request->total == null) {
+                $cartIdSelect = explode('+', $cart_id);
+                $requestTemporary = [];
+                for ($i=0; $i < count($cartIdSelect) ; $i++) {
+                    $requestTemporary['products_id'] = $request['products_id'][$i];
+                    $requestTemporary['customers_id'] = $request['customers_id'];
+                    $requestTemporary['resellers_id'] = $request['resellers_id'];
+                    $requestTemporary['quantity'] = $request['quantity'][$i];
+                    $this->cart->storeProduct($requestTemporary, $cartIdSelect[$i]);
+                }
+                return redirect(route('cart-transaction', $cart_id));
+            } else {
+                $cartIdSelect = explode('+', $cart_id);
+
+                if(isset($request['proof_of_payment'])) {
+                    $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+                }
+
+                foreach ($cartIdSelect as $i => $cartId) {
+                    $cartSelected = $this->cart->findById($cartId);
+                    $product = $this->product->findById($cartSelected->products_id);
+                    $request['stock'][$i] = $product->stock - $cartSelected->quantity;
+                    $transaction = $this->transaction->findByInvois($cartSelected->invois);
+                    if (auth()->user()->role == 'reseller') {
+                        $request['status'] = 0;
+                    } else {
+                        $request['status'] = 1;
+                    }
+                    if ($transaction->resellers_id != null) {
+                        $reseller = $this->reseller->findById($transaction->resellers_id);
+                        $request['poin'] = $reseller->poin + $cartSelected->quantity;
+                    }
+                    // $reseller->update(Arr::only($request->all(), 'poin'));
+                    // $cartSelected->delete();
+                    // $product->update(Arr::only($request->all(), 'stock'));
+                    // $transaction->update(Arr::except($request->all(), ['stock', 'poin']));
+                }
+
+                dd($request->all());
+
+                dd('123');
+
+                return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
+            }
+
             $cart = $this->cart->findById($cart_id);
             if ($cart->invois == null) {
                 $this->cart->storeProduct($request->validated(), $cart_id);
@@ -129,10 +180,22 @@ class CartController extends Controller
         }
     }
 
-    public function cartTransaction(int $cart_id) {
-        $cart = $this->cart->findById($cart_id);
-        $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
-        return view('homepage.cart-transaction-payment', [
+    public function cartTransaction($cart_id) {
+        if (str_contains($cart_id, '+')) {
+            $view = 'homepage.cart-transaction-multiple-payment';
+            $cartIdSelect = explode('+', $cart_id);
+            $cart = [];
+            $package = [];
+            foreach ($cartIdSelect as $i => $carts) {
+                $cart[] = $this->cart->findById($carts);
+                $package[] = $this->package->findWhereProduct($cart[$i]->quantity, $cart[$i]->products_id);
+            }
+        } else {
+            $view = 'homepage.cart-transaction-payment';
+            $cart = $this->cart->findById($cart_id);
+            $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
+        }
+        return view($view, [
             'title' => 'Halaman Transaksi Pembayaran Keranjang',
             'cart' => $cart,
             'package' => $package,
