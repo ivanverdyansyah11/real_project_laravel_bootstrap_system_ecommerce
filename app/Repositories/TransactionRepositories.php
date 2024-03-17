@@ -82,9 +82,9 @@ class TransactionRepositories
         return $this->transaction->where('id', $transaction_id)->first();
     }
 
-    public function findByInvois($invois): Transaction
+    public function findByInvois($invois)
     {
-        return $this->transaction->where('invois', $invois)->first();
+        return $this->transaction->where('invois', $invois)->get();
     }
 
     public function filterDay()
