@@ -37,11 +37,11 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="total" class="form-label">Total</label>
-                    <input readonly type="text" class="form-control" id="total" value="Rp. {{ number_format($transaction->total, 2, ",", ".") }}">
+                    <input readonly type="text" class="form-control" id="total" value="Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="total_payment" class="form-label">Total Bayar</label>
-                    <input readonly type="text" class="form-control" id="total_payment" value="Rp. {{ number_format($transaction->total_payment, 2, ",", ".") }}">
+                    <input readonly type="text" class="form-control" id="total_payment" value="Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="created_at" class="form-label">Transaksi Dilakukan</label>
