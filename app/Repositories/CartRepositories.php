@@ -86,32 +86,29 @@ class CartRepositories
                 $reseller = $this->reseller->findById($request['resellers_id']);
                 $request['resellers_id'] = $reseller->id;
             }
-            $request['invois'] = rand();
             $request['status'] = 2;
-            $cartSelected->update(Arr::only($request, ['quantity', 'invois']));
-            return $this->transaction->create(Arr::except($request, 'stock'));
+            $cartSelected->update(Arr::only($request, ['quantity', 'invois', 'status']));
+            return $this->transaction->create(Arr::except($request, 'status'));
         } else {
             if(isset($request['proof_of_payment'])) {
                 $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
             }
             $product = $this->product->findById($cartSelected->products_id);
             $request['stock'] = $product->stock - $cartSelected->quantity;
-            $transaction = $this->transactionRepo->findByInvois($cartSelected->invois);
+            $transactions = $this->transactionRepo->findByInvois($cartSelected->invois);
             if (auth()->user()->role == 'reseller') {
                 $request['status'] = 0;
             } else {
                 $request['status'] = 1;
             }
-
-            if ($transaction->resellers_id != null) {
-                $reseller = $this->reseller->findById($transaction->resellers_id);
+            if ($transactions[0]->resellers_id != null) {
+                $reseller = $this->reseller->findById($transactions[0]->resellers_id);
                 $request['poin'] = $reseller->poin + $cartSelected->quantity;
                 $reseller->update(Arr::only($request, 'poin'));
             }
-
             $cartSelected->delete();
             $product->update(Arr::only($request, 'stock'));
-            return $transaction->update(Arr::except($request, ['stock', 'poin']));
+            return $transactions[0]->update(Arr::except($request, ['stock', 'poin']));
         }
     }
 
