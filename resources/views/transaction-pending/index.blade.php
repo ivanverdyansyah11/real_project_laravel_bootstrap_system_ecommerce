@@ -27,7 +27,7 @@
                     <tbody>
                         @if ($transactions->count() == 0)
                             <tr>
-                                <td>Data transaksi tidak ditemukan!</td>
+                                <td>Data transaksi ditunda tidak ditemukan!</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
