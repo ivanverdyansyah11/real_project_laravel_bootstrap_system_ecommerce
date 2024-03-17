@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('invois');
             $table->integer('quantity');
             $table->integer('total')->nullable();
+            $table->integer('total_per_product')->nullable();
             $table->integer('total_payment')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();
