@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\Customer;
 use App\Models\Reseller;
 use App\Models\User;
 use App\Utils\UploadFile;
@@ -14,7 +13,6 @@ class AuthRepository
     public function __construct(
         protected readonly User $user,
         protected readonly Reseller $reseller,
-        protected readonly Customer $customer,
         protected readonly UploadFile $uploadFile,
     ) {}
 
