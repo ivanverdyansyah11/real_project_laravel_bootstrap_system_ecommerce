@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($categories->count() == 0)
+                        @if (count($categories) == 0)
                             <tr>
                                 <td>Data kategori tidak ditemukan!</td>
                                 <td></td>
