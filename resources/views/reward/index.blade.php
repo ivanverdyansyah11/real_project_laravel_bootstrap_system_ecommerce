@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($rewards->count() == 0)
+                        @if (count($rewards) == 0)
                             <tr>
                                 <td>Data penghargaan tidak ditemukan!</td>
                                 <td></td>

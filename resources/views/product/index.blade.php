@@ -78,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($products->count() == 0)
+                        @if (count($products) == 0)
                             <tr>
                                 <td>Data produk tidak ditemukan!</td>
                                 <td></td>

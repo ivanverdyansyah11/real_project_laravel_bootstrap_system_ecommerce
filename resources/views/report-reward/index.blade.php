@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($transactions->count() == 0)
+                        @if (count($transactions) == 0)
                             <tr>
                                 <td>Data transaksi penghargaan karyawan tidak ditemukan!</td>
                                 <td></td>

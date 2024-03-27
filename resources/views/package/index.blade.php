@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($packages->count() == 0)
+                        @if (count($packages) == 0)
                             <tr>
                                 <td>Data paket tidak ditemukan!</td>
                                 <td></td>

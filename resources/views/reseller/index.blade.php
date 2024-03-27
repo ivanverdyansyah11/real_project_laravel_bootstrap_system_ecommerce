@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($resellers->count() == 0)
+                        @if (count($resellers) == 0)
                             <tr>
                                 <td>Data karyawan tidak ditemukan!</td>
                                 <td></td>

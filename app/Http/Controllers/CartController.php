@@ -126,6 +126,7 @@ class CartController extends Controller
                 $requestTemporary = [];
                 $requestTemporary['invois'] = $request->invois;
                 for ($i=0; $i < count($cartIdSelect) ; $i++) {
+                    $requestTemporary['status'] = 2;
                     $requestTemporary['products_id'] = $request['products_id'][$i];
                     $requestTemporary['customers_id'] = $request['customers_id'];
                     $requestTemporary['resellers_id'] = $request['resellers_id'];

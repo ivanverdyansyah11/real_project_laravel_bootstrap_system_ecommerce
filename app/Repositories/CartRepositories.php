@@ -13,7 +13,6 @@ class CartRepositories
     public function __construct(
         protected readonly Cart $cart,
         protected readonly ProductRepositories $product,
-        protected readonly CustomerRepositories $customer,
         protected readonly ResellerRepositories $reseller,
         protected readonly TransactionRepositories $transactionRepo,
         protected readonly Transaction $transaction,
@@ -88,7 +87,7 @@ class CartRepositories
             }
             $request['status'] = 2;
             $cartSelected->update(Arr::only($request, ['quantity', 'invois', 'status']));
-            return $this->transaction->create(Arr::except($request, 'status'));
+            return $this->transaction->create($request);
         } else {
             if(isset($request['proof_of_payment'])) {
                 $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");

@@ -13,8 +13,4 @@ class Cart extends Model
     public function product() {
         return $this->belongsTo(Product::class, 'products_id');
     }
-
-    public function customer() {
-        return $this->belongsTo(Customer::class, 'customers_id');
-    }
 }
