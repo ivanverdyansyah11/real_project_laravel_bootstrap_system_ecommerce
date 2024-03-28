@@ -4,8 +4,8 @@
     @php
         $uniqueTransactions = [];
         $invoiceTransactions = [];
-        foreach($transactions as $transaction) {
-            if(!in_array($transaction->invois, $invoiceTransactions)) {
+        foreach ($transactions as $transaction) {
+            if (!in_array($transaction->invois, $invoiceTransactions)) {
                 $uniqueTransactions[] = $transaction;
                 $invoiceTransactions[] = $transaction->invois;
             }
@@ -49,17 +49,27 @@
                                     <td>{{ $transaction->invois }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
                                     <td>{{ $transaction->product->name }}</td>
-                                    <td>Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ",", ".") : number_format($transaction->total_per_product, 2, ",", ".") }}</td>
+                                    <td>Rp.
+                                        {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ',', '.') : number_format($transaction->total_per_product, 2, ',', '.') }}
+                                    </td>
                                     <td class="wrapper d-flex gap-2">
-                                        <button type="button" class="button-approved d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#approveModal" data-id="{{ $transaction->id }}">
-                                            <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon" class="img-fluid" width="16">
+                                        <button type="button"
+                                            class="button-approved d-flex align-items-center justify-content-center"
+                                            data-bs-toggle="modal" data-bs-target="#approveModal"
+                                            data-id="{{ $transaction->id }}">
+                                            <img src="{{ asset('assets/images/icons/approved.png') }}" alt="Approved Icon"
+                                                class="img-fluid" width="16">
                                         </button>
-                                        <a href="{{ route('transaction.show', $transaction->id) }}" class="button-detail d-flex align-items-center justify-content-center">
-                                            <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
+                                        <a href="{{ route('transaction.show', $transaction->id) }}"
+                                            class="button-detail d-flex align-items-center justify-content-center">
+                                            <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon"
+                                                class="img-fluid" width="16">
                                         </a>
-                                        @if ($transaction->proof_of_payment	== null)
-                                            <a href="{{ route('transaction.edit', $transaction->id) }}" class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                                <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon" class="img-fluid" width="16">
+                                        @if ($transaction->proof_of_payment == null)
+                                            <a href="{{ route('transaction.edit', $transaction->id) }}"
+                                                class="button-edit d-none d-md-flex align-items-center justify-content-center">
+                                                <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon"
+                                                    class="img-fluid" width="16">
                                             </a>
                                         @endif
                                     </td>
@@ -75,9 +85,9 @@
     @include('partials.transaction-pending')
     @push('js')
         <script>
-            $('#table_transaction').DataTable( {
+            $('#table_transaction').DataTable({
                 responsive: true
-            } );
+            });
 
             $(document).on('click', '[data-bs-target="#approveModal"]', function() {
                 let id = $(this).data('id');
