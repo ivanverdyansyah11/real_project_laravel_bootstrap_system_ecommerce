@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
         Admin::create([
             'users_id' => 1,
             'photo_ktp' => 'photo_ktp_1.jpg',
-            'name' => 'Ivan Verdyansyah',
+            'name' => 'Super Admin',
             'number_phone' => '0812376574565',
             'origin' => 'Badung',
             'place_of_birth' => 'Denpasar',
@@ -28,7 +28,7 @@ class AdminSeeder extends Seeder
         Admin::create([
             'users_id' => 2,
             'photo_ktp' => 'photo_ktp_2.jpg',
-            'name' => 'Aditya Prayatna',
+            'name' => 'Admin',
             'number_phone' => '083453545554',
             'origin' => 'Klungkung',
             'place_of_birth' => 'Badung',

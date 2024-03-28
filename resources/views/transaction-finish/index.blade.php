@@ -37,8 +37,7 @@
                         @if (count($uniqueTransactions) == 0)
                             <tr>
                                 <td>Data transaksi selesai tidak ditemukan!</td>
-                                <td></td>
-                                <td></td>
+                                {{-- <td></td> --}}
                                 <td></td>
                                 <td></td>
                             </tr>

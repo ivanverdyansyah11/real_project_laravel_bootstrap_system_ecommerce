@@ -58,9 +58,11 @@
 
     @push('js')
         <script>
-            $('#table_report').DataTable( {
-                responsive: true
-            } );
+            if(@json($transactions->count())){
+                $('#table_report').DataTable( {
+                    responsive: true
+                } );
+            }
         </script>
     @endpush
 @endsection
