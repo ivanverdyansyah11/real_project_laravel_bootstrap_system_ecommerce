@@ -55,10 +55,6 @@
                     @else
                         <div class="notification-item">
                             <p>Tidak ada pemberitahuan terbaru!</p>
-                            {{-- <div class="wrapper d-flex justify-content-between align-items-center mt-1">
-                                    <span>{{ $transaction->updated_at }}</span>
-                                    <a href="{{ route('report-transaction') }}">See detail</a>
-                                </div> --}}
                         </div>
                     @endif
                 </div>
@@ -95,7 +91,8 @@
                                 Pengaturan Akun
                             </a>
                         </div>
-                        <form action="post" action="{{ route('logout') }}">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
                             <button type="submit"
                                 class="button-primary w-100 d-flex align-items-center justify-content-center gap-2">
                                 <img src="{{ asset('assets/images/icons/logout.png') }}" alt="Logout Icon"
