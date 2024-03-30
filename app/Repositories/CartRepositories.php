@@ -91,7 +91,11 @@ class CartRepositories
             if ($request['resellers_id'] != null) {
                 $reseller = $this->reseller->findById($request['resellers_id']);
                 $request['resellers_id'] = $reseller->id;
+            } elseif (auth()->user()->role == 'reseller') {
+                $reseller = $this->reseller->findByUserId(auth()->user()->id);
+                dd($reseller);
             }
+            dd($request);
             $request['status'] = 2;
             $cartSelected->update(Arr::only($request, ['quantity', 'invois', 'status']));
             return $this->transaction->create($request);

@@ -15,13 +15,13 @@ class ProductImageSeeder extends Seeder
         ProductImage::create([
             'products_id' => 1,
             'image' => 'minyak_dewantari.jpg',
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductImage::create([
             'products_id' => 1,
             'image' => 'minyak_dewantari_sample.jpg',
-            'status' => 1,
+            'status' => 0,
         ]);
 
         ProductImage::create([
