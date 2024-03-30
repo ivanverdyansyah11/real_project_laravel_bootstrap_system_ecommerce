@@ -106,7 +106,7 @@ class CartController extends Controller
                 $this->cart->delete($cart);
                 return redirect(route('cart.index'))->with('failed', 'Stok pada produk ini telah habis!');
             }
-            $packages = [];
+            $packages = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
         } else {
             $cart = [];
             foreach ($cartIdSelect as $cartId) {
