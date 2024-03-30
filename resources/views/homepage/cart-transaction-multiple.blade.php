@@ -189,6 +189,7 @@
                                 if (package.status == 'success') {
                                     if (package.data != null) {
                                         $(`#selling_price${index}`).val(package.data.selling_price);
+                                        $('#package_name').val(package.data.name);
                                         $(`.text-mention${index}`).html(
                                             'Kamu mendapatkan potongan sebesar Rp. ' +
                                             package.data.selling_price +

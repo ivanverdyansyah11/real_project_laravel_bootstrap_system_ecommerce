@@ -157,6 +157,7 @@
                                 if (package.data != null) {
                                     $('#package_name').val(package.data.name);
                                     $('#selling_price').val(package.data.selling_price);
+                                    $('#package_name').val(package.data.name);
                                     $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' +
                                         package.data.selling_price + ' karena membeli diatas ' + package
                                         .data.quantity + ' kuantitas produk');
