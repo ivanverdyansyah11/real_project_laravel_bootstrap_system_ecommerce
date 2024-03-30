@@ -1,4 +1,5 @@
-<div class="modal fade" id="quantityTransactionModal" tabindex="-1" aria-labelledby="quantityTransactionModalLabel" aria-hidden="true">
+<div class="modal fade" id="quantityTransactionModal" tabindex="-1" aria-labelledby="quantityTransactionModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +9,9 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Kuantitas</label>
-                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity') }}" min="1" max="{{ $product->stock }}">
+                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror"
+                        id="quantity" name="quantity" value="{{ old('quantity') }}" min="1"
+                        max="{{ $product->stock }}">
                     @error('quantity')
                         <div class="invalid-feedback">
                             {{ $message }}

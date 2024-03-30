@@ -10,15 +10,23 @@ class Product extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class, 'categories_id');
     }
 
-    public function package() {
+    public function productImage()
+    {
+        return $this->belongsTo(ProductImage::class, 'id');
+    }
+
+    public function package()
+    {
         return $this->hasMany(Package::class, 'id');
     }
 
-    public function transaction() {
+    public function transaction()
+    {
         return $this->hasMany(Transaction::class, 'id');
     }
 }

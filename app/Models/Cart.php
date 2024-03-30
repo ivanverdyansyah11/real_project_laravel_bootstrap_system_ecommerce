@@ -10,7 +10,8 @@ class Cart extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongsTo(Product::class, 'products_id');
     }
 }

@@ -15,35 +15,47 @@
                 @endif
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-body-title mb-4">Rincian Pembelian <span class="text-caption">{{ count($carts) != 0 ? '(Pilih produk untuk melakukan pembelian)' : '' }}</span></h6>
-                            <div class="row">
-                                @if (count($carts) == 0)
-                                    <div class="col-12">
-                                        <p class="text-description">Tidak ada produk yang disimpan!</p>
-                                    </div>
-                                @else
-                                    @foreach ($carts as $cart)
-                                    <label class="col-12 d-flex gap-3 pt-3 pb-2" for="{{ $cart->id }}" style="cursor: pointer;">
-                                        <input type="checkbox" name="cart_id" id="{{ $cart->id }}" value="{{ $cart->id }}">
-                                        <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                        <h6 class="card-body-title mb-4">Rincian Pembelian <span
+                                class="text-caption">{{ count($carts) != 0 ? '(Pilih produk untuk melakukan pembelian)' : '' }}</span>
+                        </h6>
+                        <div class="row">
+                            @if (count($carts) == 0)
+                                <div class="col-12">
+                                    <p class="text-description">Tidak ada produk yang disimpan!</p>
+                                </div>
+                            @else
+                                @foreach ($carts as $cart)
+                                    <label class="col-12 d-flex gap-3 pt-3 pb-2" for="{{ $cart->id }}"
+                                        style="cursor: pointer;">
+                                        <input type="checkbox" name="cart_id" id="{{ $cart->id }}"
+                                            value="{{ $cart->id }}">
+                                        <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}"
+                                            alt="Image Not Found" class="rounded mb-2 img-preview" width="100"
+                                            height="100" style="object-fit: cover;">
                                         <div class="wrapper d-flex justify-content-between align-items-center w-100">
                                             <div class="wrapper">
-                                                <h6 class="card-body-subtitle mb-1">{{ $cart->product->name }} ({{ $cart->quantity }} {{ $cart->product->unit }})</h6>
-                                                <p class="card-body-caption">Kategori Produk: {{ $cart->product->category->name }}</p>
+                                                <h6 class="card-body-subtitle mb-1">{{ $cart->product->name }}
+                                                    ({{ $cart->quantity }} {{ $cart->product->unit }})
+                                                </h6>
+                                                <p class="card-body-caption">Kategori Produk:
+                                                    {{ $cart->product->category->name }}</p>
                                             </div>
                                             <div class="wrapper text-end">
                                                 <p class="card-body-caption mb-1">Harga Produk</p>
-                                                <h6 class="card-body-subtitle mb-3">Rp. {{ number_format($cart->product->selling_price, 2, ",", ".") }}</h6>
+                                                <h6 class="card-body-subtitle mb-3">Rp.
+                                                    {{ number_format($cart->product->selling_price, 2, ',', '.') }}</h6>
                                                 <div class="wrapper d-flex gap-2">
                                                     {{-- <a href="{{ route('cart.edit', $cart->id) }}" class="button-primary">Transaksi Produk</a> --}}
-                                                    <button type="button" class="button-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $cart->id }}">Hapus Produk</button>
+                                                    <button type="button" class="button-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal" data-id="{{ $cart->id }}">Hapus
+                                                        Produk</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        </label>
-                                    @endforeach
-                                @endif
-                            </div>
+                                    </label>
+                                @endforeach
+                            @endif
+                        </div>
                         <form action="{{ route('create-session') }}" id="formCartId" method="POST">
                             @csrf
                             <button type="submit" class="button-primary mt-4 d-none">Lakukan Pembelian</button>
@@ -73,7 +85,7 @@
                 }
             });
 
-            $(document).change(function () {
+            $(document).change(function() {
                 if ($('#formCartId input[name="cart_id[]"]').length != 0) {
                     $('#formCartId button').removeClass('d-none')
                 } else {

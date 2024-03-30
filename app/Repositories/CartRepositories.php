@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Utils\UploadFile;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 class CartRepositories
@@ -17,7 +18,8 @@ class CartRepositories
         protected readonly TransactionRepositories $transactionRepo,
         protected readonly Transaction $transaction,
         protected readonly UploadFile $uploadFile,
-    ) {}
+    ) {
+    }
 
     public function findAll()
     {
@@ -47,6 +49,11 @@ class CartRepositories
     public function findById($cart_id)
     {
         return $this->cart->where('id', $cart_id)->first();
+    }
+
+    public function findByIdAndInvois($cart_id)
+    {
+        return $this->cart->where('id', $cart_id)->orWhere('invois', $cart_id)->first();
     }
 
     public function findAllById($cart_id)
@@ -89,32 +96,39 @@ class CartRepositories
             $cartSelected->update(Arr::only($request, ['quantity', 'invois', 'status']));
             return $this->transaction->create($request);
         } else {
-            if(isset($request['proof_of_payment'])) {
-                $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
-            }
-            $product = $this->product->findById($cartSelected->products_id);
-            $request['stock'] = $product->stock - $cartSelected->quantity;
+            $dateNow = Carbon::now();
+            $dateDayLimit = Carbon::parse($cartSelected->updated_at)->addDay();
             $transactions = $this->transactionRepo->findByInvois($cartSelected->invois);
-            if (auth()->user()->role == 'reseller') {
-                $request['status'] = 0;
+            if ($dateNow <= $dateDayLimit) {
+                if (isset($request['proof_of_payment'])) {
+                    $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+                }
+                $product = $this->product->findById($cartSelected->products_id);
+                $request['stock'] = $product->stock - $cartSelected->quantity;
+                if (auth()->user()->role == 'reseller') {
+                    $request['status'] = 0;
+                } else {
+                    $request['status'] = 1;
+                }
+                if ($transactions[0]->resellers_id != null) {
+                    $reseller = $this->reseller->findById($transactions[0]->resellers_id);
+                    $request['poin'] = $reseller->poin + $cartSelected->quantity;
+                    $reseller->update(Arr::only($request, 'poin'));
+                }
+                $cartSelected->delete();
+                $product->update(Arr::only($request, 'stock'));
+                return $transactions[0]->update(Arr::except($request, ['stock', 'poin']));
             } else {
-                $request['status'] = 1;
+                $cartSelected->delete();
+                $transactions[0]->delete();
             }
-            if ($transactions[0]->resellers_id != null) {
-                $reseller = $this->reseller->findById($transactions[0]->resellers_id);
-                $request['poin'] = $reseller->poin + $cartSelected->quantity;
-                $reseller->update(Arr::only($request, 'poin'));
-            }
-            $cartSelected->delete();
-            $product->update(Arr::only($request, 'stock'));
-            return $transactions[0]->update(Arr::except($request, ['stock', 'poin']));
         }
     }
 
     public function update($request, int $cart_id)
     {
         $cartSelected = $this->findById($cart_id);
-        if(isset($request['proof_of_payment'])) {
+        if (isset($request['proof_of_payment'])) {
             $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
         }
         $product = $this->product->findById($request['products_id']);
@@ -125,7 +139,7 @@ class CartRepositories
                 if (auth()->user()->role == 'reseller') {
                     $reseller = $this->reseller->findByUserId($request['resellers_id']);
                     $request['resellers_id'] = $reseller->id;
-                } elseif(auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
+                } elseif (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
                     $reseller = $this->reseller->findById($request['resellers_id']);
                 }
                 $request['poin'] = $reseller->poin + $request['quantity'];

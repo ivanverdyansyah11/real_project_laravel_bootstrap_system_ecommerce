@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Cart;
+use App\Models\Payment;
 use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\PackageRepositories;
+use App\Repositories\PaymentRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use App\Utils\UploadFile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,17 +29,21 @@ class CartController extends Controller
         protected readonly ProductRepositories $product,
         protected readonly PackageRepositories $package,
         protected readonly ResellerRepositories $reseller,
+        protected readonly PaymentRepositories $payment,
         protected readonly UploadFile $uploadFile,
-    ) {}
+    ) {
+    }
 
-    public function index() : View {
+    public function index(): View
+    {
         return view('homepage.cart', [
             'title' => 'Halaman Keranjang',
             'carts' => $this->cart->findAllByUserId(auth()->user()->id),
         ]);
     }
 
-    public function createSession(Request $request) {
+    public function createSession(Request $request)
+    {
         if ($request->cart_id == null) {
             $this->cart->storeTransaction($request);
             $cartIdSelect = $this->cart->findLatest()->id;
@@ -53,7 +60,8 @@ class CartController extends Controller
         return redirect(route('cart.edit', $cartIdSelect));
     }
 
-    public function store(StoreCartRequest $request) : RedirectResponse {
+    public function store(StoreCartRequest $request): RedirectResponse
+    {
         try {
             $this->cart->store($request->validated());
             return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan produk di keranjang!');
@@ -63,7 +71,8 @@ class CartController extends Controller
         }
     }
 
-    public function storeTransaction(StoreCartRequest $request) : RedirectResponse {
+    public function storeTransaction(StoreCartRequest $request): RedirectResponse
+    {
         try {
             $this->cart->storeTransaction($request->validated());
             return redirect(route('cart.edit', $this->cart->findLatest()->id))->with('success', 'Berhasil menambahkan produk di keranjang!');
@@ -73,7 +82,8 @@ class CartController extends Controller
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $cartIdSelect = explode('+', $id);
         $view = 'homepage.cart-transaction';
         if (count($cartIdSelect) == 1) {
@@ -82,6 +92,7 @@ class CartController extends Controller
                 $this->cart->delete($cart);
                 return redirect(route('cart.index'))->with('failed', 'Stok pada produk ini telah habis!');
             }
+            $packages = [];
         } else {
             $cart = [];
             foreach ($cartIdSelect as $cartId) {
@@ -94,47 +105,49 @@ class CartController extends Controller
                     $view = 'homepage.cart-transaction-multiple';
                 }
             }
+            $packages = [];
+            foreach ($cart as $item) {
+                $packages[] = $this->package->findWhereProduct($item->quantity, $item->products_id);
+            }
+            $packages = array_filter($packages);
         }
 
-        if (auth()->user()->role == 'customer') {
+        if (auth()->user()->role == 'reseller') {
             return view($view, [
                 'title' => 'Halaman Transaksi Keranjang',
                 'cart' => $cart,
-                'customer' => $this->customer->findByUserId(auth()->user()->id),
-            ]);
-        } elseif (auth()->user()->role == 'reseller') {
-            return view($view, [
-                'title' => 'Halaman Transaksi Keranjang',
-                'cart' => $cart,
-                'customers' => $this->customer->findAll(),
                 'reseller' => $this->reseller->findByUserId(auth()->user()->id),
+                'package' => $packages,
             ]);
         } elseif (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view($view, [
                 'title' => 'Halaman Transaksi Keranjang',
                 'cart' => $cart,
-                'customers' => $this->customer->findAll(),
                 'resellers' => $this->reseller->findAll(),
+                'package' => $packages,
             ]);
         }
     }
 
-    public function storeProduct(StoreTransactionRequest $request, $cart_id) {
+    public function storeProduct(StoreTransactionRequest $request, $cart_id)
+    {
         try {
             if (str_contains($cart_id, '+') && $request->total == null) {
                 $cartIdSelect = explode('+', $cart_id);
                 $requestTemporary = [];
                 $requestTemporary['invois'] = $request->invois;
-                for ($i=0; $i < count($cartIdSelect) ; $i++) {
+                $requestTemporary['shipping'] = $request->shipping;
+                for ($i = 0; $i < count($cartIdSelect); $i++) {
                     $requestTemporary['status'] = 2;
                     $requestTemporary['products_id'] = $request['products_id'][$i];
                     $requestTemporary['customers_id'] = $request['customers_id'];
                     $requestTemporary['resellers_id'] = $request['resellers_id'];
                     $requestTemporary['quantity'] = $request['quantity'][$i];
+                    $requestTemporary['price_per_product'] = $request['price_per_product'][$i];
                     $this->cart->storeProduct($requestTemporary, $cartIdSelect[$i]);
                 }
                 return redirect(route('cart-transaction', $cart_id));
-            } elseif(str_contains($cart_id, '+') && $request->total != null) {
+            } elseif (str_contains($cart_id, '+') && $request->total != null) {
                 $cartIdSelect = explode('+', $cart_id);
                 if (!empty($request->proof_of_payment)) {
                     $image = $request->file('proof_of_payment');
@@ -155,11 +168,11 @@ class CartController extends Controller
                     }
                     foreach ($transactions as $i => $transaction) {
                         $transaction->update([
-                            'total' => $request['total'],
-                            'price_per_product' => $request['price_per_product'][$i],
-                            'total_per_product' => $request['total_per_product'][$i],
-                            'total_payment' => $request['total_payment'],
+                            'payments_id' => $request['payments_id'],
                             'proof_of_payment' => $request['proof_of_payment_new'],
+                            'total' => $request['total'],
+                            'total_per_product' => $transaction->quantity * $transaction->price_per_product,
+                            'total_payment' => $request['total_payment'],
                             'status' => $request['status'],
                         ]);
                     }
@@ -171,7 +184,7 @@ class CartController extends Controller
                     $cartSelected->delete();
                     $product->update(Arr::only($request->all(), 'stock'));
                 }
-                return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
+                return redirect(route('order-completed'));
             }
 
             $cart = $this->cart->findById($cart_id);
@@ -180,7 +193,7 @@ class CartController extends Controller
                 return redirect(route('cart-transaction', $cart_id));
             } else {
                 $this->cart->storeProduct($request->validated(), $cart_id);
-                return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
+                return redirect(route('order-completed'));
             }
         } catch (\Exception $e) {
             logger($e->getMessage());
@@ -188,29 +201,51 @@ class CartController extends Controller
         }
     }
 
-    public function cartTransaction($cart_id) {
+    public function cartTransaction($cart_id)
+    {
         if (str_contains($cart_id, '+')) {
             $view = 'homepage.cart-transaction-multiple-payment';
             $cartIdSelect = explode('+', $cart_id);
             $cart = [];
             $package = [];
+            $transaction = [];
             foreach ($cartIdSelect as $i => $carts) {
                 $cart[] = $this->cart->findById($carts);
                 $package[] = $this->package->findWhereProduct($cart[$i]->quantity, $cart[$i]->products_id);
+                $transaction = $this->transaction->findByInvois($cart[$i]->invois);
             }
         } else {
             $view = 'homepage.cart-transaction-payment';
-            $cart = $this->cart->findById($cart_id);
+            $cart = $this->cart->findByIdAndInvois($cart_id);
+            $transaction = $this->transaction->findByInvois($cart->invois);
             $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
         }
         return view($view, [
             'title' => 'Halaman Transaksi Pembayaran Keranjang',
             'cart' => $cart,
+            'transaction' => $transaction,
             'package' => $package,
+            'payments' => $this->payment->findAll(),
         ]);
     }
 
-    public function update(StoreTransactionRequest $request, int $cart_id) : RedirectResponse {
+    public function getPayment(int $payment_id): JsonResponse
+    {
+        try {
+            return response()->json([
+                'status' => 'success',
+                'data' => $this->payment->findById($payment_id),
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal untuk mengambil data dari pembayaran dengan ID ' . $payment_id,
+            ], 500);
+        }
+    }
+
+    public function update(StoreTransactionRequest $request, int $cart_id): RedirectResponse
+    {
         try {
             $this->cart->update($request->validated(), $cart_id);
             return redirect(route('cart.index'))->with('success', 'Berhasil menambahkan transaksi baru!');
@@ -220,7 +255,8 @@ class CartController extends Controller
         }
     }
 
-    public function destroy(Cart $cart) : RedirectResponse {
+    public function destroy(Cart $cart): RedirectResponse
+    {
         try {
             $this->cart->delete($cart);
             return redirect(route('cart.index'))->with('success', 'Berhasil hapus produk dari keranjang!');

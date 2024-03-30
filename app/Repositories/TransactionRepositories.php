@@ -15,7 +15,8 @@ class TransactionRepositories
         protected readonly ProductRepositories $product,
         protected readonly ResellerRepositories $reseller,
         protected readonly UploadFile $uploadFile,
-    ) {}
+    ) {
+    }
 
     public function findAll()
     {
@@ -31,6 +32,11 @@ class TransactionRepositories
     public function findAllWherePending()
     {
         return $this->transaction->where('status', 0)->latest()->get();
+    }
+
+    public function findAllWherePayment()
+    {
+        return $this->transaction->where('status', 2)->get();
     }
 
     public function findAllWherePendingByReseller(int $users_id)
@@ -242,7 +248,7 @@ class TransactionRepositories
 
     public function store($request): Transaction
     {
-        if(isset($request['proof_of_payment'])) {
+        if (isset($request['proof_of_payment'])) {
             $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
         }
         $product = $this->product->findById($request['products_id']);
@@ -270,5 +276,20 @@ class TransactionRepositories
         $transaction = $this->findById($id);
         $request['status'] = 1;
         return $transaction->update($request);
+    }
+
+    public function approvedShipping(int $id, $request): bool
+    {
+        if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
+            $transaction = $this->findById($id);
+            $transactions = $this->findByInvois($transaction->invois);
+            foreach ($transactions as $transaction) {
+                $transaction->update($request);
+            }
+            return true;
+        } elseif (auth()->user()->role == 'reseller') {
+            $transaction = $this->findById($id);
+            return $transaction->update($request);
+        }
     }
 }

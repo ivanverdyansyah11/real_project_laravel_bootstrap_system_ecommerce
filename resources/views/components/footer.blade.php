@@ -1,9 +1,11 @@
-<div class="container">
+<div class="container section-gap">
     <footer class="footer">
         <div class="row">
             <div class="col-lg-4 col-xl-3">
                 <img src="{{ asset('assets/images/brand/brand-logo.svg') }}" alt="Brand Logo" width="62">
-                <p class="paragraph-small my-3">PT. Adigoero Siwa ambara merupakan suatu perusahaan perusahaan yang berfokus pada bidang perbaikan manusia secara holistik. PT. Adigoeroe Siwa Ambara mulai berdiri pada tahun 2022 dan merupakan salah satu anak perusahaan yang berada di bawah naungan Varash Group</p>
+                <p class="paragraph-small my-3">PT. Adigoero Siwa ambara merupakan suatu perusahaan perusahaan yang
+                    berfokus pada bidang perbaikan manusia secara holistik. PT. Adigoeroe Siwa Ambara mulai berdiri pada
+                    tahun 2022 dan merupakan salah satu anak perusahaan yang berada di bawah naungan Varash Group</p>
                 <div class="sosmed-link d-flex gap-3 flex-column">
                     <a target="_blank" href="https://wa.me/089776636666" class="d-flex gap-2 align-items-center">
                         <img src="{{ asset('assets/images/icons/number_phone.svg') }}" alt="Icon Sosmed" width="20">
@@ -13,7 +15,8 @@
                         <img src="{{ asset('assets/images/icons/email.svg') }}" alt="Icon Sosmed" width="20">
                         <span class="paragraph-small">minyakdewantari@gmail.com</span>
                     </a>
-                    <a target="_blank" href="https://maps.app.goo.gl/RBLreHYkFEqYeGt98" class="d-flex gap-2 align-items-center">
+                    <a target="_blank" href="https://maps.app.goo.gl/RBLreHYkFEqYeGt98"
+                        class="d-flex gap-2 align-items-center">
                         <img src="{{ asset('assets/images/icons/location.svg') }}" alt="Icon Sosmed" width="20">
                         <span class="paragraph-small">Jalan Ayani, Gg. Sriti Peguyangan, Denpasar utara</span>
                     </a>

@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('products_id');
-            // $table->bigInteger('customers_id');
             $table->bigInteger('resellers_id')->nullable();
+            $table->bigInteger('payments_id')->nullable();
             $table->string('proof_of_payment')->nullable();
             $table->string('invois');
             $table->integer('quantity');
+            $table->enum('shipping', ['ekspedisi', 'offline']);
+            $table->integer('shipping_price')->nullable();
             $table->integer('price_per_product')->nullable();
             $table->integer('total_per_product')->nullable();
             $table->integer('total')->nullable();

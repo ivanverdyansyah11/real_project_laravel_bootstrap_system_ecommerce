@@ -11,7 +11,7 @@
         $cartId = implode('+', $cartId);
         $productSelectId = implode('+', $productSelectId);
         $carts = $cart;
-        $packages = $package;
+        $packages = array_filter($package);
     @endphp
     <div class="container my-5">
         <div class="row" style="margin-top: 32px;">
@@ -25,67 +25,67 @@
                         {{ session('failed') }}
                     </div>
                 @endif
-                <form action="{{ route('transaction-store-product', $cartId) }}" method="POST" class="w-100" enctype="multipart/form-data">
+                <form action="{{ route('transaction-store-product', $cartId) }}" method="POST" class="w-100"
+                    enctype="multipart/form-data">
                     @csrf
-                    @method("PUT")
+                    @method('PUT')
                     @foreach ($carts as $i => $cart)
                         <input type="hidden" value="{{ $cart->id }}" id="cart_id">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h6 class="card-body-title mb-4">Ringkasan Produk</h6>
-                                <div class="row">
-                                    <div class="col-12 mb-3 d-flex flex-column">
-                                        <label class="form-label">Foto Produk</label>
-                                        <img src="{{ file_exists('assets/images/product/' . $cart->product->image) && $cart->product->image ? asset('assets/images/product/' . $cart->product->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2" width="100" height="100" style="object-fit: cover;">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="product_name" class="form-label">Nama Produk</label>
-                                        <input readonly type="text" class="form-control" id="product_name" value="{{ $cart->product->name }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="stock" class="form-label">Sisa Stok</label>
-                                        <input readonly type="text" class="form-control" id="stock" value="{{ $cart->product->stock }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="purchase_price" class="form-label">Harga Beli</label>
-                                        <input readonly type="text" class="form-control" id="purchase_price" value="{{ $cart->product->purchase_price }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="selling_price" class="form-label">Harga Jual</label>
-                                        <input readonly type="text" class="form-control" id="selling_price" name="price_per_product[]" value="{{ $packages[$i] != null ? $packages[$i]->selling_price : $cart->product->selling_price }}">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                                        <input readonly type="number" class="form-control" id="quantity" value="{{ $cart->quantity }}">
-                                    </div>
-                                    @php
-                                        $totalProduct;
-                                        if ($packages[$i] != null) {
-                                            $totalProduct = $packages[$i]->selling_price;
-                                        } else {
-                                            $totalProduct = $cart->product->selling_price;
-                                        }
-                                    @endphp
-                                    <div class="col-md-6 mb-3">
-                                        <label for="total_per_product" class="form-label">Total Per Produk</label>
-                                        <input readonly type="number" class="form-control" id="total_per_product" name="total_per_product[]" value="{{ $cart->quantity * $totalProduct }}">
-                                    </div>
-                                    @if ($packages[$i] != null)
-                                        <div class="col-12">
-                                            <p class="text-mention">Kamu mendapatkan potongan sebesar Rp. {{ $packages[$i]->selling_price }} karena membeli diatas {{ $packages[$i]->quantity }} kuantitas produk</p>
+                    @endforeach
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-body-title mb-4">Ringkasan Pembayaran</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="day_limit" class="form-label">Batas Hari Pembayaran</label>
+                                    <input readonly type="text" class="form-control" id="day_limit"
+                                        value="{{ Carbon\Carbon::parse($carts[0]->updated_at)->addDay()->format('Y-m-d') }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="hour_limit" class="form-label">Batas Jam Pembayaran</label>
+                                    <input readonly type="text" class="form-control" id="hour_limit"
+                                        value="{{ Carbon\Carbon::parse($carts[0]->updated_at)->format('H:i:s') }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="payments_id" class="form-label">Pembayaran</label>
+                                    <select required name="payments_id" id="payments_id" class="form-control"
+                                        @error('payments_id') is-invalid @enderror>
+                                        <option value="">Pilih pembayaran</option>
+                                        @foreach ($payments as $payment)
+                                            <option value="{{ $payment->id }}">{{ $payment->bank_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('payments_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
                                         </div>
-                                    @endif
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="owner_name" class="form-label">Pemilik Bank</label>
+                                    <input readonly type="text" class="form-control" id="owner_name">
+                                </div>
+                                <div class="col-12">
+                                    <label for="account_number" class="form-label">Nomor Rekening</label>
+                                    <input readonly type="text" class="form-control" id="account_number">
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    </div>
                     <div class="card mb-4">
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Total Pembelian</h6>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="total" class="form-label">Total</label>
-                                    <input readonly type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total">
+                                    @php
+                                        $totalPayment = 0;
+                                        foreach ($transaction as $payment) {
+                                            $totalPayment += $payment->price_per_product * $payment->quantity;
+                                        }
+                                    @endphp
+                                    <label for="total" class="form-label">Total Pembelian Barang</label>
+                                    <input readonly type="text" class="form-control @error('total') is-invalid @enderror"
+                                        id="total" name="total" value="{{ $totalPayment }}">
                                     @error('total')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -93,14 +93,36 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    @php
+                                        $shippingPrice = 0;
+                                        if ($transaction[0]->shipping == 'ekspedisi') {
+                                            $shippingPrice = $transaction[0]->shipping_price;
+                                        }
+                                    @endphp
                                     <label for="total_payment" class="form-label">Total Bayar</label>
-                                    <input required type="number" class="form-control @error('total_payment') is-invalid @enderror" id="total_payment" name="total_payment" value="{{ old('total_payment') }}">
+                                    <input required type="number"
+                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"
+                                        name="total_payment" value="{{ old('total_payment') }}"
+                                        min="{{ $totalPayment + $shippingPrice }}">
                                     @error('total_payment')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                     @enderror
                                 </div>
+                                @if ($transaction[0]->shipping == 'ekspedisi')
+                                    <div class="col-12">
+                                        <label for="shipping_price" class="form-label">Total Pengiriman</label>
+                                        <input required type="number" class="form-control" id="shipping_price"
+                                            value="{{ $transaction[0]->shipping_price }}">
+                                    </div>
+                                    @if ($transaction[0]->shipping_price == null)
+                                        <div class="col-12 mt-3">
+                                            <p class="text-mention">Silahkan menunggu konfirmasi total pengiriman dari
+                                                admin!</p>
+                                        </div>
+                                    @endif
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -110,8 +132,12 @@
                             <div class="row">
                                 <div class="col-12 mb-3 d-flex flex-column">
                                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
-                                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
-                                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror" name="proof_of_payment" id="proof_of_payment">
+                                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
+                                        class="rounded mb-2 img-preview" width="100" height="100"
+                                        style="object-fit: cover;">
+                                    <input required type="file"
+                                        class="form-control input-file @error('proof_of_payment') is-invalid @enderror"
+                                        name="proof_of_payment" id="proof_of_payment">
                                     @error('proof_of_payment')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -134,19 +160,28 @@
         <script>
             const tagImage = document.querySelector('.img-preview');
             const inputImage = document.querySelector('.input-file');
-            const sellingPrice = document.querySelectorAll('#total_per_product');
-            const total = document.querySelector('#total');
-            const totalPayment = document.querySelector('#total_payment');
-
-            let totalSellingPrice = [];
-            sellingPrice.forEach(price => {
-                totalSellingPrice.push(price.getAttribute('value'));
-            });
-            total.setAttribute('value', totalSellingPrice.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0));
-            totalPayment.setAttribute('min', totalSellingPrice.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0));
 
             inputImage.addEventListener('change', function() {
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            });
+
+            $(document).on('change', '#payments_id', function() {
+                let id = $(this).val();
+                if (id != '') {
+                    $.ajax({
+                        type: 'get',
+                        url: '/homepage/getPayment/' + id,
+                        success: function(payment) {
+                            if (payment.status == 'success') {
+                                $('#owner_name').val(payment.data.owner_name);
+                                $('#account_number').val(payment.data.account_number);
+                            }
+                        }
+                    });
+                } else {
+                    $('#owner_name').val('');
+                    $('#account_number').val('');
+                }
             });
         </script>
     @endpush

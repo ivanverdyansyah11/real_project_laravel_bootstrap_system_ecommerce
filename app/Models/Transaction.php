@@ -10,11 +10,13 @@ class Transaction extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongsTo(Product::class, 'products_id');
     }
 
-    public function reseller() {
+    public function reseller()
+    {
         return $this->belongsTo(Reseller::class, 'resellers_id');
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +13,23 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap5.css') }}">
 </head>
+
 <body>
     @if (Route::is('login') || Route::is('register'))
         <div class="container-fluid content-auth">
-            <div class="row justify-content-center align-items-center" style="height: 100vh !important; min-height: fit-content !important;">
+            <div class="row justify-content-center align-items-center"
+                style="height: 100vh !important; min-height: fit-content !important;">
                 @yield('content-auth')
             </div>
         </div>
-    @elseif (Route::is('homepage') || Route::is('products') || Route::is('product') || Route::is('testimonial') || Route::is('contact') || Route::is('cart*') || Route::is('profile'))
+    @elseif (Route::is('homepage') ||
+            Route::is('products') ||
+            Route::is('product') ||
+            Route::is('testimonial') ||
+            Route::is('contact') ||
+            Route::is('cart*') ||
+            Route::is('profile') ||
+            Route::is('order-completed'))
         @include('components.navbar')
         @yield('content-homepage')
         @include('components.footer')
@@ -43,4 +53,5 @@
     @stack('js')
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 </body>
+
 </html>
