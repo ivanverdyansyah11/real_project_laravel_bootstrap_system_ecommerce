@@ -40,17 +40,27 @@
                     <div class="icon-notification"></div>
                 </button>
                 <div class="popup-notification">
-                    @foreach ($uniqueTransactions as $transaction)
-                        @if ($transaction->status == 2)
-                            <div class="notification-item">
-                                <p>Silahkan bayar transaksi pembelian produk!</p>
-                                <div class="wrapper d-flex justify-content-between align-items-center mt-1">
+                    @if ($uniqueTransactions != [])
+                        @foreach ($uniqueTransactions as $transaction)
+                            @if ($transaction->status == 2)
+                                <div class="notification-item">
+                                    <p>Silahkan bayar transaksi pembelian produk!</p>
+                                    <div class="wrapper d-flex justify-content-between align-items-center mt-1">
+                                        <span>{{ $transaction->updated_at }}</span>
+                                        <a href="{{ route('report-transaction') }}">See detail</a>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    @else
+                        <div class="notification-item">
+                            <p>Tidak ada pemberitahuan terbaru!</p>
+                            {{-- <div class="wrapper d-flex justify-content-between align-items-center mt-1">
                                     <span>{{ $transaction->updated_at }}</span>
                                     <a href="{{ route('report-transaction') }}">See detail</a>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
+                                </div> --}}
+                        </div>
+                    @endif
                 </div>
             </div>
             <button class="wrapper-icon d-flex align-items-center justify-content-center">

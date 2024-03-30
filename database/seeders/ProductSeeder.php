@@ -16,7 +16,8 @@ class ProductSeeder extends Seeder
         Product::create([
             'categories_id' => 1,
             'name' => 'Minyak Dewantari',
-            'image' => 'minyak_dewantari.jpg',
+            // 'image' => 'minyak_dewantari.jpg',
+            'image' => 'minyak_dewantari_sample.jpg',
             'description' => 'Minyak Dewantari adalah produk perawatan kulit eksklusif yang menggabungkan bahan alami berkualitas tinggi, seperti minyak esensial lavender, chamomile, dan tea tree, untuk memberikan perawatan mendalam dan menyeluruh. Diperkaya dengan ekstrak herbal pilihan, produk ini tidak hanya memberikan kelembapan optimal tetapi juga menawarkan aroma menenangkan yang merelaksasi. Cocok untuk semua jenis kulit, Minyak Dewantari memberikan pengalaman perawatan kulit yang unik dan menyegarkan, sambil menekankan keberlanjutan dengan kemasan elegan dan desain ramah lingkungan. Produk ini tidak hanya mendukung kecantikan alami tetapi juga merayakan perpaduan antara keajaiban alam dan teknologi modern dalam merawat kulit Anda.',
             'unit' => 'box',
             'stock' => 350,

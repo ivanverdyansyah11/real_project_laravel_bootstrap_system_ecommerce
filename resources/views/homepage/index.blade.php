@@ -28,15 +28,13 @@
                 </div>
             </div>
             <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 content-gap">
-                @foreach ($products as $product)
+                @foreach ($products as $transaction)
                     <div class="col">
                         <div class="card-product text-center ">
-                            <img src="{{ file_exists('assets/images/product/' . $product->image) && $product->image ? asset('assets/images/product/' . $product->image) : asset('assets/images/other/img-not-found.jpg') }}"
+                            <img src="{{ file_exists('assets/images/product/' . $transaction->product->image) && $transaction->product->image ? asset('assets/images/product/' . $transaction->product->image) : asset('assets/images/other/img-not-found.jpg') }}"
                                 alt="Product Image">
-                            <p class="product-name">{{ $product->name }}</p>
-                            @if ($product->stock > 0)
-                                <a href="{{ route('product', $product->id) }}">Lebih Detail</a>
-                            @endif
+                            <p class="product-name">{{ $transaction->product->name }}</p>
+                            <a href="{{ route('product', $transaction->product->id) }}">Lebih Detail</a>
                         </div>
                     </div>
                 @endforeach

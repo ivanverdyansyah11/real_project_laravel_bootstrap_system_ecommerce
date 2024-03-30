@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Cart;
 use App\Models\Payment;
+use App\Models\Transaction;
 use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\PackageRepositories;
@@ -36,9 +37,16 @@ class CartController extends Controller
 
     public function index(): View
     {
+        if (auth()->user() != null && auth()->user()->role == 'reseller') {
+            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+        } else {
+            $transactions = [];
+        }
+
         return view('homepage.cart', [
             'title' => 'Halaman Keranjang',
             'carts' => $this->cart->findAllByUserId(auth()->user()->id),
+            'transactions' => $transactions,
         ]);
     }
 
@@ -84,6 +92,12 @@ class CartController extends Controller
 
     public function edit($id)
     {
+        if (auth()->user() != null && auth()->user()->role == 'reseller') {
+            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+        } else {
+            $transactions = [];
+        }
+
         $cartIdSelect = explode('+', $id);
         $view = 'homepage.cart-transaction';
         if (count($cartIdSelect) == 1) {
@@ -118,6 +132,7 @@ class CartController extends Controller
                 'cart' => $cart,
                 'reseller' => $this->reseller->findByUserId(auth()->user()->id),
                 'package' => $packages,
+                'transactions' => $transactions,
             ]);
         } elseif (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view($view, [
@@ -125,6 +140,7 @@ class CartController extends Controller
                 'cart' => $cart,
                 'resellers' => $this->reseller->findAll(),
                 'package' => $packages,
+                'transactions' => $transactions,
             ]);
         }
     }
@@ -203,6 +219,12 @@ class CartController extends Controller
 
     public function cartTransaction($cart_id)
     {
+        if (auth()->user() != null && auth()->user()->role == 'reseller') {
+            $transactionNotification = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+        } else {
+            $transactionNotification = [];
+        }
+
         if (str_contains($cart_id, '+')) {
             $view = 'homepage.cart-transaction-multiple-payment';
             $cartIdSelect = explode('+', $cart_id);
@@ -226,6 +248,7 @@ class CartController extends Controller
             'transaction' => $transaction,
             'package' => $package,
             'payments' => $this->payment->findAll(),
+            'transactions' => $transactionNotification,
         ]);
     }
 

@@ -25,7 +25,12 @@ class HomepageController extends Controller
 
         return view('homepage.index', [
             'title' => 'Halaman Beranda',
-            'products' => $this->product->findAll(),
+            'products' => Transaction::where('status', 1)
+                ->with('product')
+                ->selectRaw('products_id, SUM(quantity) as total_quantity')
+                ->groupBy('products_id')
+                ->orderByDesc('total_quantity')
+                ->get(),
             'transactions' => $transactions,
         ]);
     }
