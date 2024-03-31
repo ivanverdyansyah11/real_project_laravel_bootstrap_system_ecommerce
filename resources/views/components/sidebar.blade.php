@@ -28,10 +28,11 @@
                 <a href="{{ route('reseller.index') }}"
                     class="{{ Route::is('reseller.index') ? 'active' : '' }}">Karyawan</a>
             </div>
-            {{-- <a href="{{ route('cashier.index') }}" class="link-item d-flex align-items-center {{ Route::is('cashier.index') ? 'active' : '' }}">
+            <a href="{{ route('cashier.index') }}"
+                class="link-item d-flex align-items-center {{ Route::is('cashier.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/cashier.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Kasir</span>
-            </a> --}}
+            </a>
             <a href="{{ route('category.index') }}"
                 class="link-item d-flex align-items-center {{ Route::is('category.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/category.png') }}" alt="Sidebar Icon" class="img-fluid">
