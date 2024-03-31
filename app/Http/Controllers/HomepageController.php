@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Transaction;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\TransactionRepositories;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class HomepageController extends Controller
 {
@@ -47,7 +49,7 @@ class HomepageController extends Controller
         ]);
     }
 
-    public function products(): View
+    public function products(Request $request): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
             $transactions = $this->transaction->findAllWithNotification();
@@ -64,10 +66,19 @@ class HomepageController extends Controller
             $transactions = [];
         }
 
+        if ($request) {
+            $products = Product::where('name', 'LIKE', '%' . $request->search . '%')->get();
+            $request = $request->search;
+        } else {
+            $products = $this->product->findAll();
+            $request = null;
+        }
+
         return view('homepage.products', [
             'title' => 'Halaman Produk',
-            'products' => $this->product->findAll(),
+            'products' => $products,
             'transactions' => $transactions,
+            'request' => $request,
         ]);
     }
 
