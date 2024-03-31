@@ -327,7 +327,8 @@ table td {
 
 .col-card-all,
 .col-card-pending,
-.col-card-finish {
+.col-card-finish,
+.col-card-confirmation {
     position: absolute;
     z-index: -9999;
     opacity: 0;
@@ -336,7 +337,8 @@ table td {
 
 .col-card-all.active,
 .col-card-pending.active,
-.col-card-finish.active {
+.col-card-finish.active,
+.col-card-confirmation.active {
     position: relative;
     z-index: 100;
     opacity: 1;
@@ -416,6 +418,18 @@ nav.navbar .popup-profile {
     border-radius: 6px;
     border: 1px solid rgba(var(--dark-color), 0.12);
     transition: 600ms !important;
+}
+
+nav.navbar .popup-notification {
+    min-height: fit-content !important;
+    max-height: 300px !important;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+nav.navbar .popup-notification::-webkit-scrollbar {
+    display: none;
 }
 
 nav.navbar .popup-profile {
