@@ -65,6 +65,7 @@ class TransactionController extends Controller
                 'transactionAll' => $this->transaction->findAllByReseller(auth()->user()->id),
                 'transactionPending' => $this->transaction->findAllWherePendingByReseller(auth()->user()->id),
                 'transactionFinish' => $this->transaction->findAllWhereFinishByReseller(auth()->user()->id),
+                'transactionConfirmation' => $this->transaction->findAllWherePaymentByReseller(auth()->user()->id),
             ]);
         }
     }
@@ -72,9 +73,15 @@ class TransactionController extends Controller
     public function show(Transaction $transaction): View
     {
         $transaction = $this->transaction->findById($transaction->id);
+        $transaction = $this->transaction->findByInvois($transaction->invois);
+        $packages = [];
+        foreach ($transaction as $i => $transac) {
+            $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
+        }
         return view('report-transaction.detail', [
             'title' => 'Halaman Detail Transaksi',
-            'transactions' => $this->transaction->findByInvois($transaction->invois),
+            'transactions' => $transaction,
+            'packages' => $packages,
         ]);
     }
 
