@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\TransactionRepositories;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 
 class HomepageController extends Controller
@@ -12,13 +14,23 @@ class HomepageController extends Controller
     public function __construct(
         protected readonly ProductRepositories $product,
         protected readonly CustomerRepositories $customer,
+        protected readonly TransactionRepositories $transaction,
     ) {
     }
 
     public function index(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -38,7 +50,16 @@ class HomepageController extends Controller
     public function products(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -53,7 +74,16 @@ class HomepageController extends Controller
     public function product(int $id): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -68,7 +98,16 @@ class HomepageController extends Controller
     public function testimonial(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -82,7 +121,16 @@ class HomepageController extends Controller
     public function contact(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -96,7 +144,16 @@ class HomepageController extends Controller
     public function profile(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -111,7 +168,16 @@ class HomepageController extends Controller
     public function orderCompleted(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
