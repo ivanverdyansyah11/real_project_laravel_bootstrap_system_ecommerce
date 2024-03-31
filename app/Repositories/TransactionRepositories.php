@@ -23,6 +23,21 @@ class TransactionRepositories
         return $this->transaction->whereIn('status', [0, 1])->latest()->get();
     }
 
+    public function findAllWithNotification()
+    {
+        $today = Carbon::now()->subDay();
+        return $this->transaction->where(function ($query) use ($today) {
+            $query->where('status', 1)
+                ->whereNotNull('resellers_id')
+                ->where('updated_at', '>=', $today);
+        })
+            ->orWhere(function ($query) {
+                $query->whereRaw('created_at <> updated_at')
+                    ->where('status', 2);
+            })
+            ->get();
+    }
+
     public function findAllByReseller(int $users_id)
     {
         $reseller = $this->reseller->findByUserId($users_id);
@@ -36,7 +51,13 @@ class TransactionRepositories
 
     public function findAllWherePayment()
     {
-        return $this->transaction->where('status', 2)->get();
+        return $this->transaction->where('status', 2)->latest()->get();
+    }
+
+    public function findAllWherePaymentByReseller(int $users_id)
+    {
+        $reseller = $this->reseller->findByUserId($users_id);
+        return $this->transaction->where('resellers_id', $reseller->id)->where('status', 2)->latest()->get();
     }
 
     public function findAllWherePendingByReseller(int $users_id)
@@ -274,8 +295,12 @@ class TransactionRepositories
     public function approved(int $id): bool
     {
         $transaction = $this->findById($id);
+        $transactions = $this->findByInvois($transaction->invois);
         $request['status'] = 1;
-        return $transaction->update($request);
+        foreach ($transactions as $transaction) {
+            $transaction->update($request);
+        }
+        return true;
     }
 
     public function approvedShipping(int $id, $request): bool
