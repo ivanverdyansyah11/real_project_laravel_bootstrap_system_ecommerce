@@ -44,10 +44,18 @@
                         @foreach ($uniqueTransactions as $transaction)
                             @if ($transaction->status == 2)
                                 <div class="notification-item">
-                                    <p>Silahkan bayar transaksi pembelian produk!</p>
+                                    <p>Admin baru saja menambahakan jumlah pengiriman, lanjutkan pembayaran!</p>
                                     <div class="wrapper d-flex justify-content-between align-items-center mt-1">
                                         <span>{{ $transaction->updated_at }}</span>
-                                        <a href="{{ route('report-transaction') }}">See detail</a>
+                                        <a href="{{ route('transaction.show', $transaction->id) }}">See detail</a>
+                                    </div>
+                                </div>
+                            @elseif($transaction->status == 1)
+                                <div class="notification-item">
+                                    <p>Admin baru saja menyetujui transaksi anda!</p>
+                                    <div class="wrapper d-flex justify-content-between align-items-center mt-1">
+                                        <span>{{ $transaction->updated_at }}</span>
+                                        <a href="{{ route('transaction.show', $transaction->id) }}">See detail</a>
                                     </div>
                                 </div>
                             @endif
