@@ -38,7 +38,16 @@ class CartController extends Controller
     public function index(): View
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -93,7 +102,16 @@ class CartController extends Controller
     public function edit($id)
     {
         if (auth()->user() != null && auth()->user()->role == 'reseller') {
-            $transactions = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
+            $transactions = $this->transaction->findAllWithNotification();
+            $uniqueTransactions = [];
+            $invoiceTransactions = [];
+            foreach ($transactions as $transaction) {
+                if (!in_array($transaction->invois, $invoiceTransactions)) {
+                    $uniqueTransactions[] = $transaction;
+                    $invoiceTransactions[] = $transaction->invois;
+                }
+            }
+            $transactions = $uniqueTransactions;
         } else {
             $transactions = [];
         }
@@ -153,6 +171,7 @@ class CartController extends Controller
                 $requestTemporary = [];
                 $requestTemporary['invois'] = $request->invois;
                 $requestTemporary['shipping'] = $request->shipping;
+                $requestTemporary['shipping_address'] = ($request->shipping_address != null) ? $request->shipping_address : null;
                 for ($i = 0; $i < count($cartIdSelect); $i++) {
                     $requestTemporary['status'] = 2;
                     $requestTemporary['products_id'] = $request['products_id'][$i];
@@ -223,6 +242,16 @@ class CartController extends Controller
             $transactionNotification = Transaction::whereRaw('created_at <> updated_at')->where('status', 2)->get();
         } else {
             $transactionNotification = [];
+        }
+
+        $transactions = $this->transaction->findByInvois($cart_id);
+        if (count($transactions) > 1) {
+            $cart_id = $this->cart->findAllByIdAndInvois($cart_id);
+            $cartTemp = [];
+            foreach ($cart_id as $cart) {
+                $cartTemp[] = $cart->id;
+            }
+            $cart_id = implode('+', $cartTemp);
         }
 
         if (str_contains($cart_id, '+')) {
