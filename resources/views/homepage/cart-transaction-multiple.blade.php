@@ -49,7 +49,7 @@
                                             value="{{ $item->product->name }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="stock" class="form-label">Nama Paket</label>
+                                        <label for="package_name{{ $i }}" class="form-label">Nama Paket</label>
                                         @php
                                             $packageName = '-';
                                             if (count($package) != 0) {
@@ -60,8 +60,8 @@
                                                 }
                                             }
                                         @endphp
-                                        <input readonly type="text" class="form-control" id="stock"
-                                            value="{{ $packageName }}">
+                                        <input readonly type="text" class="form-control"
+                                            id="package_name{{ $i }}" value="{{ $packageName }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         @php
@@ -159,6 +159,17 @@
                                         </div>
                                     @enderror
                                 </div>
+                                <div class="col-12 mb-3 d-none" id="formShippingAddress">
+                                    <label for="shipping_address" class="form-label">Alamat Pengiriman</label>
+                                    <input type="text"
+                                        class="form-control @error('shipping_address') is-invalid @enderror"
+                                        id="shipping_address" name="shipping_address">
+                                    @error('shipping_address')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                                 <div class="col-12">
                                     <div class="wrapper d-flex gap-2">
                                         <button type="submit" class="button-primary">Lanjutkan Pembayaran</button>
@@ -175,6 +186,16 @@
 
     @push('js')
         <script>
+            $(document).on('change', '#shipping', function() {
+                if ($('#shipping').val() == 'ekspedisi') {
+                    $('#formShippingAddress').removeClass('d-none')
+                    $('#shipping_address').prop('required', true);
+                } else {
+                    $('#formShippingAddress').addClass('d-none')
+                    $('#shipping_address').prop('required', false);
+                }
+            })
+
             const productPrice = document.querySelectorAll('#selling_price_product')
             let index = 0
             productPrice.forEach((product, index) => {
@@ -188,14 +209,15 @@
                             success: function(package) {
                                 if (package.status == 'success') {
                                     if (package.data != null) {
+                                        $(`#package_name${index}`).val(package.data.name);
                                         $(`#selling_price${index}`).val(package.data.selling_price);
-                                        $('#package_name').val(package.data.name);
                                         $(`.text-mention${index}`).html(
                                             'Kamu mendapatkan potongan sebesar Rp. ' +
                                             package.data.selling_price +
                                             ' karena membeli diatas ' + package
                                             .data.quantity + ' kuantitas produk');
                                     } else {
+                                        $(`#package_name${index}`).val('-');
                                         $(`#selling_price${index}`).val(product.getAttribute(
                                             'value'));
                                         $(`.text-mention${index}`).html('');
@@ -206,6 +228,7 @@
                             }
                         });
                     } else {
+                        $(`#package_name${index}`).val('-');
                         $(`#selling_price${index}`).val(product.getAttribute('value'));
                         $(`#total${index}`).val('');
                     }
