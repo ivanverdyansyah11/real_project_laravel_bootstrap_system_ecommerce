@@ -67,7 +67,7 @@
                     @endif
                 </div>
             </div>
-            <button class="wrapper-icon d-flex align-items-center justify-content-center">
+            <button class="wrapper-icon d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#searchingModal">
                 <div class="icon-search"></div>
             </button>
             @if (auth()->user() == null)
@@ -114,3 +114,5 @@
         </div>
     </div>
 </nav>
+
+@include('partials.searching')
