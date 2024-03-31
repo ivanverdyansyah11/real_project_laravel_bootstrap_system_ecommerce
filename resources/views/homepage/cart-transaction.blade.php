@@ -128,6 +128,17 @@
                                         </div>
                                     @enderror
                                 </div>
+                                <div class="col-12 mb-3 d-none" id="formShippingAddress">
+                                    <label for="shipping_address" class="form-label">Alamat Pengiriman</label>
+                                    <input type="text"
+                                        class="form-control @error('shipping_address') is-invalid @enderror"
+                                        id="shipping_address" name="shipping_address">
+                                    @error('shipping_address')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                                 <div class="col-12">
                                     <div class="wrapper d-flex gap-2">
                                         <button type="submit" class="button-primary">Lanjutkan Pembayaran</button>
@@ -144,6 +155,16 @@
 
     @push('js')
         <script>
+            $(document).on('change', '#shipping', function() {
+                if ($('#shipping').val() == 'ekspedisi') {
+                    $('#formShippingAddress').removeClass('d-none')
+                    $('#shipping_address').prop('required', true);
+                } else {
+                    $('#formShippingAddress').addClass('d-none')
+                    $('#shipping_address').prop('required', false);
+                }
+            })
+
             let productPrice = $('#selling_price_product').val();
             $(document).on('change', '#quantity', function() {
                 let quantity = $(this).val();
@@ -157,7 +178,6 @@
                                 if (package.data != null) {
                                     $('#package_name').val(package.data.name);
                                     $('#selling_price').val(package.data.selling_price);
-                                    $('#package_name').val(package.data.name);
                                     $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' +
                                         package.data.selling_price + ' karena membeli diatas ' + package
                                         .data.quantity + ' kuantitas produk');
