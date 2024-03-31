@@ -19,4 +19,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Reseller::class, 'resellers_id');
     }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'payments_id');
+    }
 }
