@@ -103,7 +103,7 @@
                                 @if ($transaction[0]->shipping == 'ekspedisi')
                                     <div class="col-12">
                                         <label for="shipping_price" class="form-label">Total Pengiriman</label>
-                                        <input required type="number" class="form-control" id="shipping_price"
+                                        <input required type="number" class="form-control readonly" id="shipping_price"
                                             value="{{ $transaction[0]->shipping_price }}">
                                     </div>
                                     @if ($transaction[0]->shipping_price == null)
@@ -172,6 +172,11 @@
                     $('#owner_name').val('');
                     $('#account_number').val('');
                 }
+            });
+
+            $(".readonly").on('keydown paste focus mousedown', function(e) {
+                if (e.keyCode != 9)
+                    e.preventDefault();
             });
         </script>
     @endpush
