@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->enum('shipping', ['ekspedisi', 'offline']);
             $table->integer('shipping_price')->nullable();
+            $table->string('shipping_address')->nullable();
             $table->integer('price_per_product')->nullable();
             $table->integer('total_per_product')->nullable();
             $table->integer('total')->nullable();
