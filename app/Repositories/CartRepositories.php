@@ -56,6 +56,11 @@ class CartRepositories
         return $this->cart->where('id', $cart_id)->orWhere('invois', $cart_id)->first();
     }
 
+    public function findAllByIdAndInvois($cart_id)
+    {
+        return $this->cart->where('id', $cart_id)->orWhere('invois', $cart_id)->get();
+    }
+
     public function findAllById($cart_id)
     {
         return Cart::whereIn('id', $cart_id)->get();
