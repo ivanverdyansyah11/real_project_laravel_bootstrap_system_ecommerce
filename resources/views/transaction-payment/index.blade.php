@@ -65,11 +65,6 @@
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon"
                                                 class="img-fluid" width="16">
                                         </a>
-                                        <a href="{{ route('cart-transaction', $transaction->invois) }}"
-                                            class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                            <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon"
-                                                class="img-fluid" width="16">
-                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
