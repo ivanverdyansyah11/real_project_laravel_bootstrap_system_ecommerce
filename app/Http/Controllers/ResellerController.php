@@ -16,14 +16,14 @@ class ResellerController extends Controller
 
     public function index() {
         return view('reseller.index', [
-            'title' => 'Halaman Karyawan',
+            'title' => 'Halaman Reseller',
             'resellers' => $this->reseller->findAll(),
         ]);
     }
 
     public function show(Reseller $reseller) : View {
         return view('reseller.detail', [
-            'title' => 'Halaman Detail Karyawan',
+            'title' => 'Halaman Detail Reseller',
             'reseller' => $this->reseller->findById($reseller->id),
         ]);
     }
@@ -31,30 +31,30 @@ class ResellerController extends Controller
     public function approved(int $id) {
         try {
             $this->reseller->approved($id);
-            return redirect()->route('reseller.index')->with('success', 'Berhasil menyetujui karyawan');
+            return redirect()->route('reseller.index')->with('success', 'Berhasil menyetujui reseller');
         } catch (\Exception $e) {
-            return redirect()->route('reseller.create')->with('error', 'Gagal menyetujui karyawan');
+            return redirect()->route('reseller.create')->with('error', 'Gagal menyetujui reseller');
         }
     }
 
     public function create() : View {
         return view('reseller.add', [
-            'title' => 'Halaman Tambah Karyawan',
+            'title' => 'Halaman Tambah Reseller',
         ]);
     }
 
     public function store(StoreResellerRequest $request) {
         try {
             $this->reseller->store($request->validated());
-            return redirect()->route('reseller.index')->with('success', 'Berhasil membuat karyawan baru');
+            return redirect()->route('reseller.index')->with('success', 'Berhasil membuat reseller baru');
         } catch (\Exception $e) {
-            return redirect()->route('reseller.create')->with('error', 'Gagal membuat karyawan baru');
+            return redirect()->route('reseller.create')->with('error', 'Gagal membuat reseller baru');
         }
     }
 
     public function edit(Reseller $reseller) : View {
         return view('reseller.edit', [
-            'title' => 'Halaman Edit Karyawan',
+            'title' => 'Halaman Edit Reseller',
             'reseller' => $this->reseller->findById($reseller->id),
         ]);
     }
@@ -62,18 +62,18 @@ class ResellerController extends Controller
     public function update(UpdateResellerRequest $request, Reseller $reseller) {
         try {
             $this->reseller->update($request->validated(), $reseller);
-            return redirect()->route('reseller.index')->with('success', 'Berhasil edit karyawan');
+            return redirect()->route('reseller.index')->with('success', 'Berhasil edit reseller');
         } catch (\Exception $e) {
-            return redirect()->route('reseller.edit')->with('error', 'Gagal edit karyawan');
+            return redirect()->route('reseller.edit')->with('error', 'Gagal edit reseller');
         }
     }
 
     public function destroy(Reseller $reseller) {
         try {
             $this->reseller->delete($reseller);
-            return redirect(route('reseller.index'))->with('success', 'Berhasil hapus karyawan!');
+            return redirect(route('reseller.index'))->with('success', 'Berhasil hapus reseller!');
         } catch (\Exception $e) {
-            return redirect(route('reseller.index'))->with('failed', 'Gagal hapus karyawan!');
+            return redirect(route('reseller.index'))->with('failed', 'Gagal hapus reseller!');
         }
     }
 }
