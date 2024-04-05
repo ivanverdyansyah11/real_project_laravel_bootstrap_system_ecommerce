@@ -12,7 +12,7 @@
                     {{ session('failed') }}
                 </div>
             @endif
-            <a href="{{ route('reseller.create') }}" class="d-none d-md-inline-block button-primary mb-2">Buat Karyawan</a>
+            <a href="{{ route('reseller.create') }}" class="d-none d-md-inline-block button-primary mb-2">Buat Reseller</a>
             <div class="wrapper-table">
                 <table id="table_reseller" class="table display responsive nowrap table-striped" style="width:100%">
                     <thead>
@@ -28,7 +28,7 @@
                     <tbody>
                         @if (count($resellers) == 0)
                             <tr>
-                                <td>Data karyawan tidak ditemukan!</td>
+                                <td>Data reseller tidak ditemukan!</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
