@@ -73,7 +73,7 @@
                     @enderror
                 </div>
                 <div class="col d-flex gap-2 mt-2">
-                    <button type="submit" class="button-primary">Tambah Karyawan</button>
+                    <button type="submit" class="button-primary">Tambah Reseller</button>
                     <a href="{{ route('reseller.index') }}" class="button-dark">Batal Tambah</a>
                 </div>
             </form>
