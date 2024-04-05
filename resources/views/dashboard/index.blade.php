@@ -19,8 +19,8 @@
             <div class="col mt-4 mt-md-0">
                 <div class="dashboard-menu d-flex justify-content-between p-3">
                     <div class="wrapper">
-                        <p class="menu-title mb-2">Total Paket</p>
-                        <p class="menu-value mb-0">{{ $total_package }}</p>
+                        <p class="menu-title mb-2">Total Reseller</p>
+                        <p class="menu-value mb-0">{{ $total_reseller }}</p>
                     </div>
                     <div class="menu-icon d-flex justify-content-center align-items-center">
                         <img src="{{ asset('assets/images/dashboard/package.png') }}" alt="Dashboard Icon" class="img-fluid"
@@ -31,7 +31,7 @@
             <div class="col mt-4 mt-xl-0">
                 <div class="dashboard-menu d-flex justify-content-between p-3">
                     <div class="wrapper">
-                        <p class="menu-title mb-2">Total Produk Dijual</p>
+                        <p class="menu-title mb-2">Total Produk Terjual</p>
                         <p class="menu-value mb-0">{{ $total_product_sold }}</p>
                     </div>
                     <div class="menu-icon d-flex justify-content-center align-items-center">
@@ -99,7 +99,9 @@
         <div
             class="{{ auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin' ? 'col-lg-4 pe-xl-0 order-2' : 'col-md-3 order-3' }}">
             <div class="card-chart p-3">
-                <h5 class="chart-title" style="margin: 4px 0 18px 0;">Grafik Pesanan Hari Ini</h5>
+                <h5 class="chart-title" style="margin: 4px 0 18px 0;">
+                    {{ auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin' ? 'Informasi Produk Terlaris' : 'Grafik Pesanan Hari Ini' }}
+                </h5>
                 <canvas style="width: 100%;" id="chartPie"></canvas>
             </div>
         </div>
