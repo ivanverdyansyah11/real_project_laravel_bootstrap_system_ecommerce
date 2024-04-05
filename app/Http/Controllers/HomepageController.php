@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Repositories\CustomerRepositories;
+use App\Repositories\ProductImageRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\TransactionRepositories;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ class HomepageController extends Controller
 {
     public function __construct(
         protected readonly ProductRepositories $product,
+        protected readonly ProductImageRepositories $productImage,
         protected readonly CustomerRepositories $customer,
         protected readonly TransactionRepositories $transaction,
     ) {
@@ -103,6 +105,7 @@ class HomepageController extends Controller
             'title' => 'Halaman Produk',
             'product' => $this->product->findById($id),
             'transactions' => $transactions,
+            'product_images' => $this->productImage->findAllWhereByproductId($id),
         ]);
     }
 
