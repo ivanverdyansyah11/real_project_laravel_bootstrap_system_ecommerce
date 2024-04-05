@@ -2,14 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Models\Product;
 use App\Models\ProductImage;
 use App\Utils\UploadFile;
+use Illuminate\Support\Facades\Route as FacadesRoute;
 
 class ProductImageRepositories
 {
     public function __construct(
         protected readonly ProductImage $productImage,
-        protected readonly ProductRepositories $product,
         protected readonly UploadFile $uploadFile,
     ) {
     }
@@ -36,21 +37,22 @@ class ProductImageRepositories
 
     public function store($request): ProductImage
     {
-        $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], "assets/images/product");
-        $request['status'] = 0;
+        if (FacadesRoute::is('thumbnail-image.create')) {
+            $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], "assets/images/product");
+        }
         return $this->productImage->create($request);
     }
 
     public function update($id): bool
     {
-        $productImage = $this->findById($id);
-        $productImages = $this->findAllWhereByproductId($productImage->products_id);
+        $productImageSingle = $this->findById($id);
+        $productImages = $this->findAllWhereByproductId($productImageSingle->products_id);
         foreach ($productImages as $productImage) {
             $productImage->update(['status' => 0]);
         }
-        // $product = $this->product->findById($productImage->products_id);
-        // $product->update(['image' => $productImage->image]);
-        return $productImage->update(['status' => 1]);
+        $product = Product::where('id', $productImageSingle->products_id)->first();
+        $product->update(['image' => $productImageSingle->image]);
+        return $productImageSingle->update(['status' => 1]);
     }
 
     public function delete($id): bool
