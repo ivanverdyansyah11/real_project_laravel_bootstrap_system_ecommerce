@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRewardRequest;
 use App\Http\Requests\UpdateRewardRequest;
 use App\Models\Reward;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\RewardRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -14,23 +15,28 @@ class RewardController extends Controller
 {
     public function __construct(
         protected readonly RewardRepositories $reward,
-    ) {}
+        protected readonly ResellerRepositories $reseller,
+    ) {
+    }
 
-    public function index() : View {
+    public function index(): View
+    {
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('reward.index', [
                 'title' => 'Halaman Penghargaan',
                 'rewards' => $this->reward->findAllPaginate(),
             ]);
-        } elseif(auth()->user()->role == 'reseller') {
+        } elseif (auth()->user()->role == 'reseller') {
             return view('reward.index-reseller', [
                 'title' => 'Halaman Penghargaan',
                 'rewards' => $this->reward->findAllPaginate(),
+                'total_poin' => $this->reseller->findByUserId(auth()->user()->id)->poin,
             ]);
         }
     }
 
-    public function show(Reward $reward) : JsonResponse {
+    public function show(Reward $reward): JsonResponse
+    {
         try {
             return response()->json([
                 'status' => 'success',
@@ -44,7 +50,8 @@ class RewardController extends Controller
         }
     }
 
-    public function store(StoreRewardRequest $request) : RedirectResponse {
+    public function store(StoreRewardRequest $request): RedirectResponse
+    {
         try {
             $this->reward->store($request->validated());
             return redirect(route('reward.index'))->with('success', 'Berhasil menambahkan penghargaan baru!');
@@ -54,7 +61,8 @@ class RewardController extends Controller
         }
     }
 
-    public function update(UpdateRewardRequest $request, Reward $reward) : RedirectResponse {
+    public function update(UpdateRewardRequest $request, Reward $reward): RedirectResponse
+    {
         try {
             $this->reward->update($request->validated(), $reward);
             return redirect(route('reward.index'))->with('success', 'Berhasil edit penghargaan!');
@@ -63,7 +71,8 @@ class RewardController extends Controller
         }
     }
 
-    public function destroy(Reward $reward) : RedirectResponse {
+    public function destroy(Reward $reward): RedirectResponse
+    {
         try {
             $this->reward->delete($reward);
             return redirect(route('reward.index'))->with('success', 'Berhasil hapus penghargaan!');
