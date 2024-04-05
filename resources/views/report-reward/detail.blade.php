@@ -16,7 +16,7 @@
                     <img src="{{ file_exists('assets/images/reward/' . $transaction->reward->image) && $transaction->reward->image ? asset('assets/images/reward/' . $transaction->reward->image) : asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="resellers_id" class="form-label">Nama Karyawan</label>
+                    <label for="resellers_id" class="form-label">Nama Reseller</label>
                     <input readonly type="text" class="form-control" id="resellers_id" value="{{ $transaction->reseller->name }}">
                 </div>
                 <div class="col-md-6 mb-3">
