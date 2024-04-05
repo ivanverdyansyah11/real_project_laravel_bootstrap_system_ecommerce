@@ -76,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction-pending', [TransactionController::class, 'index'])->name('transaction-pending')->middleware('isAdmin');
     Route::get('/transaction-payment', [TransactionController::class, 'index'])->name('transaction-payment')->middleware('isAdmin');
     Route::get('/transaction-finish', [TransactionController::class, 'index'])->name('transaction-finish')->middleware('isAdmin');
+    Route::get('/transaction-finish/{id}/export-invoice', [TransactionController::class, 'export'])->name('export-invoice')->middleware('isAdminReseller');
     Route::resource('/report-reward', TransactionRewardController::class)->middleware('isAdminReseller');
     Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction')->middleware('isAdminReseller');
 
