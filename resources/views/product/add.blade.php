@@ -3,7 +3,7 @@
 @section('content-dashboard')
     <div class="row me-lg-4 pb-4 d-none d-md-inline-block" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
-            @if(session()->has('failed'))
+            @if (session()->has('failed'))
                 <div class="alert alert-danger w-100 mb-3" role="alert">
                     {{ session('failed') }}
                 </div>
@@ -12,8 +12,10 @@
                 @csrf
                 <div class="col mb-3 d-flex flex-column">
                     <label for="image" class="form-label">Foto Produk</label>
-                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
-                    <input required type="file" class="form-control input-file @error('image') is-invalid @enderror" name="image" id="image">
+                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
+                        class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
+                    <input required multiple type="file"
+                        class="form-control input-file @error('image') is-invalid @enderror" name="image[]" id="image">
                     @error('image')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -22,7 +24,8 @@
                 </div>
                 <div class="col mb-3">
                     <label for="name" class="form-label">Nama Produk</label>
-                    <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
+                    <input required type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                        name="name" value="{{ old('name') }}">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -31,10 +34,12 @@
                 </div>
                 <div class="col mb-3">
                     <label for="categories_id" class="form-label">Kategori</label>
-                    <select required class="form-control @error('categories_id') is-invalid @enderror" id="categories_id" name="categories_id">
+                    <select required class="form-control @error('categories_id') is-invalid @enderror" id="categories_id"
+                        name="categories_id">
                         <option value="">Pilih kategori produk</option>
                         @foreach ($categories as $category)
-                            <option {{ old('categories_id') == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option {{ old('categories_id') == $category->id ? 'selected' : '' }}
+                                value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                     @error('categories_id')
@@ -58,7 +63,8 @@
                 </div>
                 <div class="col mb-3">
                     <label for="stock" class="form-label">Stock</label>
-                    <input required type="number" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock') }}">
+                    <input required type="number" class="form-control @error('stock') is-invalid @enderror" id="stock"
+                        name="stock" value="{{ old('stock') }}">
                     @error('stock')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -67,7 +73,8 @@
                 </div>
                 <div class="col mb-3">
                     <label for="purchase_price" class="form-label">Harga Beli</label>
-                    <input required type="number" class="form-control @error('purchase_price') is-invalid @enderror" id="purchase_price" name="purchase_price" value="{{ old('purchase_price') }}">
+                    <input required type="number" class="form-control @error('purchase_price') is-invalid @enderror"
+                        id="purchase_price" name="purchase_price" value="{{ old('purchase_price') }}">
                     @error('purchase_price')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -76,7 +83,8 @@
                 </div>
                 <div class="col mb-3">
                     <label for="selling_price" class="form-label">Harga Jual</label>
-                    <input required type="number" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" value="{{ old('selling_price') }}">
+                    <input required type="number" class="form-control @error('selling_price') is-invalid @enderror"
+                        id="selling_price" name="selling_price" value="{{ old('selling_price') }}">
                     @error('selling_price')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -85,7 +93,8 @@
                 </div>
                 <div class="col mb-3">
                     <label for="description" class="form-label">Deskripsi</label>
-                    <textarea required rows="4" class="form-control @error('description') is-invalid @enderror" id="description" name="description">{{ old('description') }}</textarea>
+                    <textarea required rows="4" class="form-control @error('description') is-invalid @enderror" id="description"
+                        name="description">{{ old('description') }}</textarea>
                     @error('description')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -93,7 +102,7 @@
                     @enderror
                 </div>
                 <div class="col d-flex gap-2 mt-2">
-                    <button type="submit" class="button-primary">Tambah Karyawan</button>
+                    <button type="submit" class="button-primary">Tambah Produk</button>
                     <a href="{{ route('product.index') }}" class="button-dark">Batal Tambah</a>
                 </div>
             </form>
