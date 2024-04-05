@@ -28,7 +28,7 @@
                     <thead>
                         <tr>
                             <th>Nomor Invois</th>
-                            <th>Nama Karyawan</th>
+                            <th>Nama Reseller</th>
                             <th>Nama Produk</th>
                             <th>Pengiriman</th>
                             <th></th>
