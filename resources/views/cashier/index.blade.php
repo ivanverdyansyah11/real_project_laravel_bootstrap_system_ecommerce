@@ -38,9 +38,9 @@
                     @enderror
                 </div> --}}
                 <div class="col-md-6 mb-3">
-                    <label for="resellers_id" class="form-label">Nama Karyawan</label>
+                    <label for="resellers_id" class="form-label">Nama Reseller</label>
                     <select class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
-                        <option value="">Pilih karyawan</option>
+                        <option value="">Pilih reseller</option>
                         @foreach ($resellers as $reseller)
                             <option value="{{ $reseller->id }}">{{ $reseller->name }}</option>
                         @endforeach
