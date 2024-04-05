@@ -17,7 +17,7 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Nama Karyawan</th>
+                            <th>Nama Reseller</th>
                             <th>Nama Penghargaan</th>
                             <th>Poin Dibutuhkan</th>
                             <th>Tanggal Ditukarnya</th>
@@ -27,7 +27,7 @@
                     <tbody>
                         @if (count($transactions) == 0)
                             <tr>
-                                <td>Data transaksi penghargaan karyawan tidak ditemukan!</td>
+                                <td>Data transaksi penghargaan reseller tidak ditemukan!</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
