@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Utils\UploadFile;
+use Illuminate\Support\Arr;
 
 class ProductRepositories
 {
@@ -12,6 +13,7 @@ class ProductRepositories
         protected readonly Product $product,
         protected readonly ProductImage $productImage,
         protected readonly UploadFile $uploadFile,
+        protected readonly ProductImageRepositories $productImageRepositories,
     ) {
     }
 
@@ -40,15 +42,29 @@ class ProductRepositories
         return $this->product->with('category')->where('id', $product_id)->first();
     }
 
+    public function findLatest(): Product
+    {
+        return $this->product->with('category')->latest()->first();
+    }
+
     public function findWithById(int $product_id)
     {
         return $this->productImage->with('product')->where('products_id', $product_id)->where('status', 1)->first();
     }
 
-    public function store($request): Product
+    public function store($request): bool
     {
-        $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], "assets/images/product");
-        return $this->product->create($request);
+        $this->product->create(Arr::except($request, ['image']));
+        $product = $this->findLatest();
+        foreach ($request['image'] as $image) {
+            $request['products_id'] = $product->id;
+            $request['image'] = $this->uploadFile->uploadSingleFile($image, "assets/images/product");
+            $request['status'] = 0;
+            $this->productImageRepositories->store(Arr::only($request, ['products_id', 'image', 'status']));
+        }
+        $productImage = ProductImage::where('products_id', $product->id)->first();
+        $product->update(['image' => $productImage->image]);
+        return $productImage->update(['status' => 1]);
     }
 
     public function update($request, $product): bool
