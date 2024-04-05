@@ -23,7 +23,7 @@
                         <div class="col">
                             <a href="{{ route('product', $product->id) }}" class="card card-reward mb-3">
                                 <img src="{{ file_exists('assets/images/product/' . $product->image) && $product->image ? asset('assets/images/product/' . $product->image) : asset('assets/images/other/img-not-found.jpg') }}"
-                                    class="card-img-top" height="200" style="object-fit: cover;">
+                                    class="card-img-top" style="width: 100%; height: 200px !important; object-fit: cover;">
                                 <div class="card-body card-body-reward rounded">
                                     <h5 class="card-body-title mb-2">{{ $product->name }}</h5>
                                     <p class="card-body-text mb-3">{!! $product->description !!}</p>
