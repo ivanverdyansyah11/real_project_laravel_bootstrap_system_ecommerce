@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Utils\UploadFile;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class TransactionRepositories
 {
@@ -265,6 +266,16 @@ class TransactionRepositories
             }
         }
         return $transactionPerMonth;
+    }
+
+    public function totalAculmulationProduct(int $user_id)
+    {
+        $reseller = $this->reseller->findByUserId($user_id);
+        return $this->transaction->select('transactions.products_id', 'products.name', DB::raw('SUM(transactions.quantity) as total_quantity'))
+            ->join('products', 'transactions.products_id', '=', 'products.id')
+            ->where('transactions.resellers_id', $reseller->id)
+            ->groupBy('transactions.products_id', 'products.name')
+            ->get();
     }
 
     public function store($request): Transaction
