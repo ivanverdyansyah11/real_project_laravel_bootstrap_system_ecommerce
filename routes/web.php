@@ -62,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/category', CategoryController::class)->middleware('isAdmin');
     Route::resource('/product', ProductController::class)->middleware('isAdmin');
     Route::get('/product/thumbnail-image/{id}', [ProductImageController::class, 'edit'])->middleware('isAdmin')->name('thumbnail-image');
-    Route::post('/product/thumbnail-image/{id}/create', [ProductImageController::class, 'store'])->middleware('isAdmin');
+    Route::post('/product/thumbnail-image/create', [ProductImageController::class, 'store'])->middleware('isAdmin')->name('thumbnail-image.create');
     Route::post('/product/thumbnail-image/{id}/edit', [ProductImageController::class, 'update'])->middleware('isAdmin');
     Route::post('/product/thumbnail-image/{id}/delete', [ProductImageController::class, 'destroy'])->middleware('isAdmin');
     Route::resource('/package', PackageController::class)->middleware('isAdmin');
