@@ -27,6 +27,7 @@ class DashboardController extends Controller
                 'title' => 'Halaman Dashboard',
                 'total_product' => count($this->product->findAll()),
                 'total_package' => count($this->package->findAll()),
+                'total_reseller' => count($this->reseller->findAll()),
                 'total_product_sold' => $this->transaction->findTotalProductSold(),
                 'total_revenue' => $this->transaction->findTotalRevenue(),
                 'graphic_day' => $this->transaction->filterDay(),
