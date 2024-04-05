@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProductImage extends Model
 {
     use SoftDeletes;
+    protected $guarded = ['id'];
 
     public function product()
     {
