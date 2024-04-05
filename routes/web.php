@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportRewardController;
 use App\Http\Controllers\ReportTransactionController;
@@ -60,6 +61,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/cashier', CashierController::class)->middleware('isAdmin');
     Route::resource('/category', CategoryController::class)->middleware('isAdmin');
     Route::resource('/product', ProductController::class)->middleware('isAdmin');
+    Route::get('/product/thumbnail-image/{id}', [ProductImageController::class, 'edit'])->middleware('isAdmin')->name('thumbnail-image');
+    Route::post('/product/thumbnail-image/{id}/create', [ProductImageController::class, 'store'])->middleware('isAdmin');
+    Route::post('/product/thumbnail-image/{id}/edit', [ProductImageController::class, 'update'])->middleware('isAdmin');
+    Route::post('/product/thumbnail-image/{id}/delete', [ProductImageController::class, 'destroy'])->middleware('isAdmin');
     Route::resource('/package', PackageController::class)->middleware('isAdmin');
     Route::resource('/reward', RewardController::class)->middleware('isAdminReseller');
     Route::resource('/transaction', TransactionController::class)->middleware('isAdminReseller');
