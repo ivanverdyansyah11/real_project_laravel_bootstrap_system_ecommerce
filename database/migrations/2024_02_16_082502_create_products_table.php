@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('categories_id');
             $table->string('name', 255);
-            $table->string('image', 255);
+            $table->string('image', 255)->nullable();
             $table->text('description');
             $table->enum('unit', ['box', 'pcs']);
             $table->integer('stock');
