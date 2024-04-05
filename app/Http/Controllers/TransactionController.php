@@ -14,7 +14,9 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route as FacadesRoute;
+use PDF;
 
 class TransactionController extends Controller
 {
@@ -26,7 +28,7 @@ class TransactionController extends Controller
     ) {
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             if (FacadesRoute::is('transaction-pending')) {
@@ -49,9 +51,19 @@ class TransactionController extends Controller
                     'transactions' => $this->transaction->findAllWherePayment(),
                 ]);
             } elseif (FacadesRoute::is('transaction-finish')) {
+                if ($request->has('start_date') && $request->has('end_date')) {
+                    $transactions = Transaction::where('status', 1)
+                        ->whereBetween('updated_at', [$request->start_date, $request->end_date])
+                        ->get();
+                    $request = $request->all();
+                } else {
+                    $transactions = $this->transaction->findAllWhereFinish();
+                    $request = null;
+                }
                 return view('transaction-finish.index', [
                     'title' => 'Halaman Transaksi Selesai',
-                    'transactions' => $this->transaction->findAllWhereFinish(),
+                    'transactions' => $transactions,
+                    'request' => $request,
                 ]);
             } elseif (FacadesRoute::is('report-transaction')) {
                 return view('report-transaction.index', [
@@ -83,6 +95,24 @@ class TransactionController extends Controller
             'transactions' => $transaction,
             'packages' => $packages,
         ]);
+    }
+
+    public function export(int $transaction_id)
+    {
+        $transaction = $this->transaction->findById($transaction_id);
+        $transaction = $this->transaction->findByInvois($transaction->invois);
+        $packages = [];
+        foreach ($transaction as $i => $transac) {
+            $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
+        }
+
+        $data = [
+            'transactions' => $transaction,
+            'packages' => $packages,
+        ];
+
+        $pdf = PDF::loadView('report-transaction.export.index', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 
     public function getProduct(int $id): JsonResponse
