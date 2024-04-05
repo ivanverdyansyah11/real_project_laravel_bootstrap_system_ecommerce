@@ -248,6 +248,14 @@ table td {
     font-size: 0.875rem !important;
 }
 
+a.form-label {
+    color: rgba(var(--primary-color), 1) !important;
+}
+
+a.form-label:hover {
+    text-decoration: underline !important;
+}
+
 .modal-header,
 .modal-footer {
     border: none !important;
