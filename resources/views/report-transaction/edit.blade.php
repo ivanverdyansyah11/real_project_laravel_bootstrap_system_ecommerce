@@ -58,10 +58,10 @@
                     @endforeach
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h6 class="card-body-title mb-4">Data Karyawan</h6>
+                            <h6 class="card-body-title mb-4">Data Reseller</h6>
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label for="resellers_id" class="form-label">Nama Karyawan</label>
+                                    <label for="resellers_id" class="form-label">Nama Reseller</label>
                                     <input readonly type="text" class="form-control" id="resellers_id"
                                         value="{{ $transaction->reseller ? $transaction->reseller->name : '-' }}">
                                 </div>
@@ -129,7 +129,7 @@
                     @enderror
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="resellers_id" class="form-label">Nama Karyawan</label>
+                    <label for="resellers_id" class="form-label">Nama Reseller</label>
                     <input readonly type="text" class="form-control" id="resellers_id" value="{{ $transaction->reseller ? $transaction->reseller->name : '-' }}">
                 </div>
                 <div class="col-md-6 mb-3">
