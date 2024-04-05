@@ -9,6 +9,10 @@
                 </div>
             @endif
         </div>
+        <div class="col-12 mb-2">
+            <a target="_blank" href="{{ route('export-invoice', $transactions[0]->id) }}"
+                class="button-primary text-nowrap">Cetak Invoice</a>
+        </div>
         <div class="col-12 pe-lg-0">
             <form class="row">
                 <div class="col-12">
