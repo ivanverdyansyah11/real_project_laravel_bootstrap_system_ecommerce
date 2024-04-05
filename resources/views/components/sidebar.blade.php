@@ -18,50 +18,34 @@
                 <img src="{{ asset('assets/images/sidebar/profile.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Profile</span>
             </a>
-            <button id="data_user" type="button"
-                class="link-item d-flex align-items-center {{ Route::is('reseller.index') || Route::is('customer.index') ? 'active' : '' }}">
-                <img src="{{ asset('assets/images/sidebar/user.png') }}" alt="Sidebar Icon" class="img-fluid">
-                <span>Pengguna</span>
-            </button>
-            <div class="w-100 item-child {{ Route::is('reseller.index') || Route::is('customer.index') ? 'active' : '' }}"
-                id="child_data_user">
-                <a href="{{ route('reseller.index') }}"
-                    class="{{ Route::is('reseller.index') ? 'active' : '' }}">Karyawan</a>
-            </div>
             <a href="{{ route('cashier.index') }}"
                 class="link-item d-flex align-items-center {{ Route::is('cashier.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/cashier.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Kasir</span>
             </a>
-            <a href="{{ route('category.index') }}"
-                class="link-item d-flex align-items-center {{ Route::is('category.index') ? 'active' : '' }}">
-                <img src="{{ asset('assets/images/sidebar/category.png') }}" alt="Sidebar Icon" class="img-fluid">
-                <span>Kategori</span>
-            </a>
-            <a href="{{ route('product.index') }}"
-                class="link-item d-flex align-items-center {{ Route::is('product.index') ? 'active' : '' }}">
+            <button id="data_user" type="button"
+                class="link-item d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/product.png') }}" alt="Sidebar Icon" class="img-fluid">
-                <span>Produk</span>
-            </a>
-            <a href="{{ route('package.index') }}"
-                class="link-item d-flex align-items-center {{ Route::is('package.index') ? 'active' : '' }}">
-                <img src="{{ asset('assets/images/sidebar/package.png') }}" alt="Sidebar Icon" class="img-fluid">
-                <span>Paket</span>
-            </a>
-        @endif
-        <a href="{{ route('reward.index') }}"
-            class="link-item d-flex align-items-center {{ Route::is('reward.index') ? 'active' : '' }}">
-            <img src="{{ asset('assets/images/sidebar/reward.png') }}" alt="Sidebar Icon" class="img-fluid">
-            <span>Penghargaan</span>
-        </a>
-        @if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin')
+                <span>Data Master</span>
+            </button>
+            <div class="w-100 item-child {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') ? 'active' : '' }}"
+                id="child_data_user">
+                <a href="{{ route('product.index') }}" class="{{ Route::is('product.index') ? 'active' : '' }}">Data
+                    Produk</a>
+                <a href="{{ route('package.index') }}" class="{{ Route::is('package.index') ? 'active' : '' }}">Data
+                    Paket</a>
+                <a href="{{ route('reseller.index') }}" class="{{ Route::is('reseller.index') ? 'active' : '' }}">Data
+                    Reseller</a>
+                <a href="{{ route('reward.index') }}" class="{{ Route::is('reward.index') ? 'active' : '' }}">Data
+                    Penghargaan</a>
+            </div>
             <button id="data_transaction" type="button"
                 class="link-item d-flex align-items-center {{ Route::is('transaction-pending') || Route::is('transaction-payment') || Route::is('transaction-finish') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/transaction.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Penjualan</span>
             </button>
             <div id="child_data_transaction"
-                class="item-child {{ Route::is('transaction-pending') || Route::is('transaction-finish') ? 'active' : '' }}">
+                class="item-child {{ Route::is('transaction-pending') || Route::is('transaction-payment') || Route::is('transaction-finish') ? 'active' : '' }}">
                 <a href="{{ route('transaction-pending') }}"
                     class="{{ Route::is('transaction-pending') ? 'active' : '' }}">Transaksi Tertunda</a>
                 <a href="{{ route('transaction-payment') }}"
@@ -69,6 +53,18 @@
                 <a href="{{ route('transaction-finish') }}"
                     class="{{ Route::is('transaction-finish') ? 'active' : '' }}">Transaksi Selesai</a>
             </div>
+            {{-- <a href="{{ route('category.index') }}"
+                class="link-item d-flex align-items-center {{ Route::is('category.index') ? 'active' : '' }}">
+                <img src="{{ asset('assets/images/sidebar/category.png') }}" alt="Sidebar Icon" class="img-fluid">
+                <span>Kategori</span>
+            </a> --}}
+        @endif
+        @if (auth()->user()->role == 'reseller')
+            <a href="{{ route('reward.index') }}"
+                class="link-item d-flex align-items-center {{ Route::is('reward.index') ? 'active' : '' }}">
+                <img src="{{ asset('assets/images/sidebar/reward.png') }}" alt="Sidebar Icon" class="img-fluid">
+                <span>Penghargaan</span>
+            </a>
         @endif
         <button id="data_report" type="button"
             class="link-item d-flex align-items-center {{ Route::is('report-reward.index') || Route::is('report-transaction') ? 'active' : '' }}">
