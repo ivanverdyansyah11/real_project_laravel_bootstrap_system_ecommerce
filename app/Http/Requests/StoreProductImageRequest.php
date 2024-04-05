@@ -23,7 +23,7 @@ class StoreProductImageRequest extends FormRequest
     {
         return [
             'products_id' => 'required|integer',
-            'image' => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|integer',
         ];
     }
