@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -15,9 +17,11 @@ class DashboardController extends Controller
         protected readonly PackageRepositories $package,
         protected readonly ResellerRepositories $reseller,
         protected readonly TransactionRepositories $transaction,
-    ) {}
+    ) {
+    }
 
-    public function index() : View {
+    public function index(): View
+    {
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('dashboard.index', [
                 'title' => 'Halaman Dashboard',
@@ -39,6 +43,8 @@ class DashboardController extends Controller
                 'graphic_day' => $this->transaction->filterDayByReseller(auth()->user()->id),
                 'graphic_week' => $this->transaction->filterWeekByReseller(auth()->user()->id),
                 'graphic_month' => $this->transaction->filterMonthByReseller(auth()->user()->id),
+                'products' => $this->product->findAll(),
+                'total_acumulation' => $this->transaction->totalAculmulationProduct(auth()->user()->id),
             ]);
         }
     }
