@@ -12,8 +12,13 @@
                     {{ session('failed') }}
                 </div>
             @endif
-            <button type="button" class="d-none d-md-inline-block button-primary mb-2" data-bs-toggle="modal"
-                data-bs-target="#addModal">Tambah Gambar</button>
+            <div class="wrapper d-flex justify-content-end gap-2">
+                <button type="button" class="d-none d-md-inline-block button-primary mb-2" data-bs-toggle="modal"
+                    data-bs-target="#addModal">Tambah Gambar</button>
+                <a href="{{ route('product.edit', $product_images[0]->products_id) }}" class="button-dark"
+                    style="height: fit-content;">Kembali ke
+                    Halaman</a>
+            </div>
             <div class="wrapper-table">
                 <table id="table_category" class="table display responsive nowrap table-striped" style="width:100%">
                     <thead>
@@ -38,8 +43,8 @@
                                     <td>{{ $i + 1 }}</td>
                                     <td>
                                         <img src="{{ file_exists('assets/images/product/' . $product_image->image) ? asset('assets/images/product/' . $product_image->image) : asset('assets/images/other/img-not-found.jpg') }}"
-                                            alt="Image Not Found" class="rounded mb-2 img-preview" width="100"
-                                            height="100" style="object-fit: cover;">
+                                            alt="Image Not Found" class="rounded mb-2" width="100" height="100"
+                                            style="object-fit: cover;">
                                     </td>
                                     <td>{{ $product_image->status == 1 ? 'Aktif' : 'Tidak Aktif' }}</td>
                                     <td>
@@ -72,6 +77,13 @@
     @include('partials.product-image')
     @push('js')
         <script>
+            const tagImage = document.querySelector('.img-preview');
+            const inputImage = document.querySelector('.input-file');
+
+            inputImage.addEventListener('change', function() {
+                tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            });
+
             $(document).on('click', '[data-bs-target="#thumbnailModal"]', function() {
                 let id = $(this).data('id');
                 $('#buttonEditProductImage').attr('action', '/product/thumbnail-image/' + id + '/edit');
