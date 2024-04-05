@@ -73,7 +73,7 @@
         <button id="data_report" type="button"
             class="link-item d-flex align-items-center {{ Route::is('report-reward.index') || Route::is('report-transaction') ? 'active' : '' }}">
             <img src="{{ asset('assets/images/sidebar/report.png') }}" alt="Sidebar Icon" class="img-fluid">
-            <span>Report Laporan</span>
+            <span>Riwayat Transaksi</span>
         </button>
         <div id="child_data_report"
             class="item-child {{ Route::is('report-reward.index') || Route::is('report-transaction') ? 'active' : '' }}">
