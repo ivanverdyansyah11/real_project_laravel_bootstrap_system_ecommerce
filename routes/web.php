@@ -59,6 +59,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/reseller', ResellerController::class)->middleware('isAdmin');
     Route::put('/reseller/approved/{id}', [ResellerController::class, 'approved'])->middleware('isAdmin');
     Route::resource('/cashier', CashierController::class)->middleware('isAdmin');
+    Route::get('/cashier/product/{id}', [CashierController::class, 'show'])->middleware('isAdmin');
+    Route::get('/create-cashier/payment', [CashierController::class, 'createPayment'])->middleware('isAdmin')->name('create-payment');
+    Route::post('/create-cashier/payment', [CashierController::class, 'storePayment'])->middleware('isAdmin')->name('store-payment');
     Route::resource('/category', CategoryController::class)->middleware('isAdmin');
     Route::resource('/product', ProductController::class)->middleware('isAdmin');
     Route::get('/product/thumbnail-image/{id}', [ProductImageController::class, 'edit'])->middleware('isAdmin')->name('thumbnail-image');
