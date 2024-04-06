@@ -17,8 +17,6 @@ class ProductImageController extends Controller
     public function store(StoreProductImageRequest $request)
     {
         try {
-            // $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], "assets/images/product");
-            // dd($request);
             $this->productImage->store($request->validated());
             return redirect()->back()->with('success', 'Berhasil ganti thumbnail gambar produk!');
         } catch (\Exception $e) {
