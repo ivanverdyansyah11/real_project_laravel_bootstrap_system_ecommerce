@@ -3,57 +3,25 @@
 @section('content-dashboard')
     <div class="row me-lg-4 pb-4 d-none d-md-inline-block" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
-            @if(session()->has('failed'))
+            @if (session()->has('success'))
+                <div class="alert alert-success w-100 mb-4" role="alert">
+                    {{ session('success') }}
+                </div>
+            @elseif(session()->has('failed'))
                 <div class="alert alert-danger w-100 mb-4" role="alert">
                     {{ session('failed') }}
                 </div>
             @endif
         </div>
-        <div class="col-12 pe-lg-0">
-            <form class="row" action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
+        <div class="col-12 pe-lg-0 mb-4">
+            <form class="row" action="{{ route('cashier.store') }}" method="POST">
                 @csrf
-                <input type="hidden" value="1" name="status">
-                <div class="col-12 mb-3 d-flex flex-column">
-                    <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
-                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found" class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
-                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror" name="proof_of_payment" id="proof_of_payment">
-                    @error('proof_of_payment')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                {{-- <div class="col-md-6 mb-3">
-                    <label for="customers_id" class="form-label">Nama Pelanggan</label>
-                    <select required class="form-control @error('customers_id') is-invalid @enderror" id="customers_id" name="customers_id">
-                        <option value="">Pilih pelanggan</option>
-                        @foreach ($customers as $customer)
-                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('customers_id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div> --}}
-                <div class="col-md-6 mb-3">
-                    <label for="resellers_id" class="form-label">Nama Reseller</label>
-                    <select class="form-control @error('resellers_id') is-invalid @enderror" id="resellers_id" name="resellers_id">
-                        <option value="">Pilih reseller</option>
-                        @foreach ($resellers as $reseller)
-                            <option value="{{ $reseller->id }}">{{ $reseller->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('resellers_id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="col-md-6 mb-3">
+                <input type="hidden" value="{{ rand() }}" name="invois">
+                <input type="hidden" value="0" name="status">
+                <div class="col-md-4 mb-3">
                     <label for="products_id" class="form-label">Nama Produk</label>
-                    <select required class="form-control @error('products_id') is-invalid @enderror" id="products_id" name="products_id">
+                    <select required class="form-control @error('products_id') is-invalid @enderror" id="products_id"
+                        name="products_id">
                         <option value="">Pilih produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -65,90 +33,110 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="stock" class="form-label">Sisa Stock</label>
                     <input readonly type="number" class="form-control" id="stock" data-value="stock">
                 </div>
-                <div class="col-12">
-                    <p class="text-mention"></p>
+                <div class="col-md-4 mb-3">
+                    <label for="price_per_unit" class="form-label">Harga Satuan</label>
+                    <input required type="number" class="form-control" id="price_per_unit" data-value="price_per_unit"
+                        name="selling_price">
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-1">
                     <label for="quantity" class="form-label">Kuantitas Dibeli</label>
-                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="{{ old('quantity') }}" min="1">
+                    <input required type="number" class="form-control @error('quantity') is-invalid @enderror"
+                        id="quantity" name="quantity" value="{{ old('quantity') }}" min="1">
                     @error('quantity')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="price_per_unit" class="form-label">Harga Satuan</label>
-                    <input readonly type="number" class="form-control" id="price_per_unit" data-value="price_per_unit">
-                </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-1">
                     <label for="total" class="form-label">Total</label>
-                    <input required type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}" readonly>
-                    @error('total')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                    <input type="number" class="form-control @error('total') is-invalid @enderror" id="total">
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="total_payment" class="form-label">Total Bayar</label>
-                    <input required type="number" class="form-control @error('total_payment') is-invalid @enderror" id="total_payment" name="total_payment" value="{{ old('total_payment') }}">
-                    @error('total_payment')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                <div class="col-12 mb-3">
+                    <p class="text-mention"></p>
                 </div>
-                <div class="col">
-                    <button type="submit" class="button-primary">Tambah Transaksi</button>
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="button-primary">Tambah ke Kasir</button>
                 </div>
             </form>
         </div>
+        <hr>
+        <div class="col-12 mt-4">
+            <div class="wrapper-table">
+                <table id="table_category" class="table display responsive nowrap table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Produk</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah Barang</th>
+                            <th>Total Harga</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (count($cashiers) == 0)
+                            <tr>
+                                <td>Data produk di kasir ini tidak ditemukan!</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @else
+                            @foreach ($cashiers as $i => $cashier)
+                                <tr>
+                                    <td>{{ $i + 1 }}</td>
+                                    <td>{{ $cashier->product->name }}</td>
+                                    <td>{{ $cashier->selling_price }}</td>
+                                    <td>{{ $cashier->quantity }}</td>
+                                    <td>{{ $cashier->quantity * $cashier->selling_price }}</td>
+                                    <td class="wrapper d-flex gap-2">
+                                        <button type="button"
+                                            class="button-delete d-none d-md-flex align-items-center justify-content-center"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            data-id="{{ $cashier->id }}">
+                                            <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon"
+                                                class="img-fluid" width="16">
+                                            </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            @if (count($cashiers) != 0)
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('create-payment') }}" class="button-primary ">Lanjutkan Pembayaran</a>
+                </div>
+            @endif
+        </div>
     </div>
 
+    @include('partials.cashier')
     @push('js')
         <script>
-            const tagImage = document.querySelector('.img-preview');
-            const inputImage = document.querySelector('.input-file');
-
-            inputImage.addEventListener('change', function() {
-                tagImage.src = URL.createObjectURL(inputImage.files[0]);
-            });
-
             let productPrice;
             $(document).on('change', '#products_id', function() {
                 let id = $(this).val();
-                $('#total').val('');
-                if (id != '') {
-                    $.ajax({
-                        type: 'get',
-                        url: '/transaction/get_product/' + id,
-                        success: function(product) {
-                            if (product.status == 'success') {
-                                $('#stock').val(product.data.stock);
-                                $('#price_per_unit').val(product.data.selling_price);
-                                productPrice = product.data.selling_price;
-                                if (product.data.stock == 0) {
-                                    $('.text-mention').html('Stok pada produk ini telah habis!');
-                                    $('#quantity').val('');
-                                    $('#quantity').attr('readonly', 'readonly');
-                                } else {
-                                    $('.text-mention').html('');
-                                    $('#quantity').removeAttr('readonly', 'readonly');
-                                    $('#quantity').attr('max', product.data.stock);
-                                }
-                            }
+                console.log(id);
+                $.ajax({
+                    type: 'get',
+                    url: '/cashier/product/' + id,
+                    success: function(product) {
+                        if (product.status == 'success') {
+                            $('[data-value="stock"]').val(product.data.stock);
+                            $('[data-value="price_per_unit"]').val(product.data.selling_price);
+                            productPrice = product.data.selling_price;
                         }
-                    });
-                } else {
-                    $('#stock').val('');
-                    $('#price_per_unit').val('');
-                    $('#quantity').val('');
-                }
+                    }
+                });
             });
 
             $(document).on('change', '#quantity', function() {
@@ -160,9 +148,12 @@
                         url: '/transaction/get_package/' + quantity + '/' + productsId,
                         success: function(package) {
                             if (package.status == 'success') {
+                                console.log(package);
                                 if (package.data != null) {
                                     $('#price_per_unit').val(package.data.selling_price);
-                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' + package.data.selling_price + ' karena membeli diatas ' + package.data.quantity + ' kuantitas produk');
+                                    $('.text-mention').html('Kamu mendapatkan potongan sebesar Rp. ' +
+                                        package.data.selling_price + ' karena membeli diatas ' + package
+                                        .data.quantity + ' kuantitas produk');
                                 } else {
                                     $('#price_per_unit').val(productPrice);
                                     $('.text-mention').html('');
@@ -172,8 +163,14 @@
                         }
                     });
                 } else {
+                    $('#price_per_unit').val(productPrice);
                     $('#total').val('');
                 }
+            });
+
+            $(document).on('click', '[data-bs-target="#deleteModal"]', function() {
+                let id = $(this).data('id');
+                $('#buttonDeleteCashier').attr('action', '/cashier/' + id);
             });
         </script>
     @endpush
