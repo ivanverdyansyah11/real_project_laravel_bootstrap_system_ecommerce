@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Repositories\CategoryRepositories;
 use App\Repositories\ProductImageRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class ProductController extends Controller
         protected readonly ProductRepositories $product,
         protected readonly ProductImageRepositories $productImage,
         protected readonly CategoryRepositories $category,
+        protected readonly TransactionRepositories $transaction,
     ) {
     }
 
@@ -26,6 +28,8 @@ class ProductController extends Controller
             'title' => 'Halaman Produk',
             'products' => $this->product->findAllPaginate(),
             'product_limits' => $this->product->findAllLimit(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
@@ -35,6 +39,8 @@ class ProductController extends Controller
             'title' => 'Halaman Detail Produk',
             'product' => $this->product->findById($product->id),
             'product_images' => $this->productImage->findAllWhereByproductId($product->id),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
@@ -43,6 +49,8 @@ class ProductController extends Controller
         return view('product.add', [
             'title' => 'Halaman Tambah Produk',
             'categories' => $this->category->findAll(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
@@ -64,6 +72,8 @@ class ProductController extends Controller
             'product' => $this->product->findById($product->id),
             'categories' => $this->category->findAll(),
             'product_images' => $this->productImage->findAllWhereByproductId($product->id),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
