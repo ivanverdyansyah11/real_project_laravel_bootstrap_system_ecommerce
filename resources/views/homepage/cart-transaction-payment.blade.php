@@ -107,12 +107,16 @@
                                             value="{{ $transaction[0]->shipping_price }}">
                                     </div>
                                     @if ($transaction[0]->shipping_price == null)
-                                        <div class="col-12 mt-3">
+                                        <div class="col-12 mt-1">
                                             <p class="text-mention">Silahkan menunggu konfirmasi total pengiriman dari
                                                 admin!</p>
                                         </div>
                                     @endif
                                 @endif
+                                <div class="col-12 mt-3">
+                                    <label for="total_change" class="form-label">Total Kembalian</label>
+                                    <input readonly type="number" class="form-control" id="total_change">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,6 +157,24 @@
 
             inputImage.addEventListener('change', function() {
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            });
+
+            $(document).on('change', '#total_payment', function() {
+                if ($('#shipping_price').length > 0) {
+                    if (parseInt($('#total').val()) + parseInt($('#shipping_price').val()) < parseInt($(
+                            '#total_payment').val())) {
+                        let total = parseInt($('#total').val()) + parseInt($('#shipping_price').val())
+                        $('#total_change').val(parseInt($('#total_payment').val()) - total)
+                    } else {
+                        $('#total_change').val('0')
+                    }
+                } else {
+                    if (parseInt($('#total').val()) < parseInt($('#total_payment').val())) {
+                        $('#total_change').val(parseInt($('#total_payment').val()) - parseInt($('#total').val()))
+                    } else {
+                        $('#total_change').val('0')
+                    }
+                }
             });
 
             $(document).on('change', '#payments_id', function() {
