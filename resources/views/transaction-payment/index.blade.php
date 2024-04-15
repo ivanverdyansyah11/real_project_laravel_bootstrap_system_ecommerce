@@ -11,7 +11,6 @@
             }
         }
     @endphp
-
     <div class="row me-lg-4" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
             @if (session()->has('success'))
@@ -23,6 +22,22 @@
                     {{ session('failed') }}
                 </div>
             @endif
+            <form method="GET" class="d-flex gap-2 align-items-end w-100">
+                <div class="wrapper d-flex flex-column">
+                    <label for="start_date" class="form-label">Tanggal Mulai</label>
+                    <input type="date" class="input-search" name="start_date" id="start_date"
+                        value="{{ $request ? $request['start_date'] : '' }}">
+                </div>
+                <div class="wrapper d-flex flex-column">
+                    <label for="end_date" class="form-label">Tanggal Akhir</label>
+                    <input type="date" class="input-search" name="end_date" id="end_date"
+                        value="{{ $request ? $request['end_date'] : '' }}">
+                </div>
+                <button class="button-primary" style="width: 46px; height: 46px;">
+                    <img src="{{ asset('assets/images/icons/search-light.png') }}" alt="Search Light" width="16"
+                        height="16">
+                </button>
+            </form>
             <div class="wrapper-table">
                 <table id="table_transaction" class="table display responsive nowrap table-striped" style="width:100%">
                     <thead>
