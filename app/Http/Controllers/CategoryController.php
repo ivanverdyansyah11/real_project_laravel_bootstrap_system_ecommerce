@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Repositories\CategoryRepositories;
+use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -14,16 +15,22 @@ class CategoryController extends Controller
 {
     public function __construct(
         protected readonly CategoryRepositories $category,
-    ) {}
+        protected readonly TransactionRepositories $transaction,
+    ) {
+    }
 
-    public function index() : View {
+    public function index(): View
+    {
         return view('category.index', [
             'title' => 'Halaman Kategori',
             'categories' => $this->category->findAllPaginate(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
-    public function show(Category $category) : JsonResponse {
+    public function show(Category $category): JsonResponse
+    {
         try {
             return response()->json([
                 'status' => 'success',
@@ -37,7 +44,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function store(StoreCategoryRequest $request) : RedirectResponse {
+    public function store(StoreCategoryRequest $request): RedirectResponse
+    {
         try {
             $this->category->store($request->validated());
             return redirect(route('category.index'))->with('success', 'Berhasil menambahkan kategori baru!');
@@ -47,7 +55,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function update(UpdateCategoryRequest $request, Category $category) : RedirectResponse {
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
+    {
         try {
             $this->category->update($request->validated(), $category);
             return redirect(route('category.index'))->with('success', 'Berhasil edit kategori!');
@@ -56,7 +65,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy(Category $category) : RedirectResponse {
+    public function destroy(Category $category): RedirectResponse
+    {
         try {
             $this->category->delete($category);
             return redirect(route('category.index'))->with('success', 'Berhasil hapus kategori!');
