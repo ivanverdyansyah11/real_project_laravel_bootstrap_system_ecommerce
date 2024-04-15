@@ -8,6 +8,7 @@ use App\Models\Cashier;
 use App\Repositories\CashierRepositories;
 use App\Repositories\PaymentRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,7 @@ class CashierController extends Controller
         protected readonly ProductRepositories $product,
         protected readonly CashierRepositories $cashier,
         protected readonly PaymentRepositories $payment,
+        protected readonly TransactionRepositories $transaction,
     ) {
     }
 
@@ -26,8 +28,9 @@ class CashierController extends Controller
     {
         return view('cashier.index', [
             'title' => 'Halaman Kasir',
-            'products' => $this->product->findAll(),
             'cashiers' => $this->cashier->findAll(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
@@ -46,6 +49,17 @@ class CashierController extends Controller
         }
     }
 
+    public function create(): View
+    {
+        return view('cashier.create', [
+            'title' => 'Halaman Kasir',
+            'products' => $this->product->findAll(),
+            'cashiers' => $this->cashier->findAll(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
+        ]);
+    }
+
     public function store(StoreCashierRequest $request): RedirectResponse
     {
         try {
@@ -53,7 +67,7 @@ class CashierController extends Controller
             return redirect(route('cashier.index'))->with('success', 'Berhasil menambahkan produk baru!');
         } catch (\Exception $e) {
             logger($e->getMessage());
-            return redirect(route('cashier.index'))->with('failed', 'Gagal menambahkan produk baru!');
+            return redirect()->back()->with('failed', 'Gagal menambahkan produk baru!');
         }
     }
 
@@ -63,6 +77,8 @@ class CashierController extends Controller
             'title' => 'Halaman Pembayaran Kasir',
             'cashiers' => $this->cashier->findAll(),
             'payments' => $this->payment->findAll(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
