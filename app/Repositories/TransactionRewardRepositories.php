@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\TransactionReward;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class TransactionRewardRepositories
@@ -11,11 +12,17 @@ class TransactionRewardRepositories
         protected readonly TransactionReward $transaction,
         protected readonly ResellerRepositories $reseller,
         protected readonly RewardRepositories $reward,
-    ) {}
+    ) {
+    }
 
     public function findAll()
     {
         return $this->transaction->with(['reward', 'reseller'])->latest()->get();
+    }
+
+    public function findAllFilter(Request $request)
+    {
+        return $this->transaction->with(['reward', 'reseller'])->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
     }
 
     public function findAllByReseller(int $users_id)
