@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Transaction;
-use App\Models\User;
+use Illuminate\Http\Request;
 use App\Utils\UploadFile;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -21,7 +21,12 @@ class TransactionRepositories
 
     public function findAll()
     {
-        return $this->transaction->whereIn('status', [0, 1])->latest()->get();
+        return $this->transaction->with(['product'])->whereIn('status', [0, 1])->latest()->get();
+    }
+
+    public function findAllFilter(Request $request)
+    {
+        return $this->transaction->whereIn('status', [0, 1])->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
     }
 
     public function findAllWithNotification()
@@ -32,10 +37,8 @@ class TransactionRepositories
                 ->whereNotNull('resellers_id')
                 ->where('updated_at', '>=', $today);
         })
-            ->orWhere(function ($query) {
-                $query->whereRaw('created_at <> updated_at')
-                    ->where('status', 2);
-            })
+            ->orWhere('status', 2)->where('shipping', 'ekspedisi')
+            ->whereNotNull('resellers_id')
             ->get();
     }
 
@@ -50,9 +53,19 @@ class TransactionRepositories
         return $this->transaction->where('status', 0)->latest()->get();
     }
 
+    public function findAllWherePendingFilter(Request $request)
+    {
+        return $this->transaction->where('status', 0)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
+    }
+
     public function findAllWherePayment()
     {
         return $this->transaction->where('status', 2)->latest()->get();
+    }
+
+    public function findAllWherePaymentFilter(Request $request)
+    {
+        return $this->transaction->where('status', 2)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
     }
 
     public function findAllWherePaymentByReseller(int $users_id)
@@ -70,6 +83,11 @@ class TransactionRepositories
     public function findAllWhereFinish()
     {
         return $this->transaction->where('status', 1)->latest()->get();
+    }
+
+    public function findAllWhereFinishFilter(Request $request)
+    {
+        return $this->transaction->where('status', 1)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
     }
 
     public function findAllWhereFinishByReseller(int $users_id)
@@ -108,6 +126,11 @@ class TransactionRepositories
     public function findById(int $transaction_id): Transaction
     {
         return $this->transaction->where('id', $transaction_id)->first();
+    }
+
+    public function findLatest(): Transaction
+    {
+        return $this->transaction->latest()->first();
     }
 
     public function findByInvois($invois)
