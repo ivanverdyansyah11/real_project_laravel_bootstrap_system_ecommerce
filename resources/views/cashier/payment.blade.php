@@ -34,8 +34,7 @@
                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
                     <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
                         class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
-                    <input required type="file"
-                        class="form-control input-file @error('proof_of_payment') is-invalid @enderror"
+                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror"
                         name="proof_of_payment" id="proof_of_payment">
                     @error('proof_of_payment')
                         <div class="invalid-feedback">
@@ -43,40 +42,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-12 mb-3">
-                    <label for="shipping" class="form-label">Pengiriman Barang</label>
-                    <select required class="form-control @error('shipping') is-invalid @enderror" id="shipping"
-                        name="shipping">
-                        <option value="">Pilih Pengiriman</option>
-                        <option value="ekspedisi">Ekspedisi</option>
-                        <option value="offline">Ambil ke Kantor Dewantari</option>
-                    </select>
-                    @error('shipping')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="col-12 mb-3 d-none" id="formShippingPrice">
-                    <label for="shipping_price" class="form-label">Harga Pengiriman</label>
-                    <input type="number" class="form-control @error('shipping_price') is-invalid @enderror"
-                        id="shipping_price" name="shipping_price">
-                    @error('shipping_price')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="col-12 mb-3 d-none" id="formShippingAddress">
-                    <label for="shipping_address" class="form-label">Alamat Pengiriman</label>
-                    <input type="text" class="form-control @error('shipping_address') is-invalid @enderror"
-                        id="shipping_address" name="shipping_address">
-                    @error('shipping_address')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                <input type="hidden" class="form-control" id="shipping" name="shipping" value="offline">
                 <div class="col-md-4 mb-3">
                     <label for="payments_id" class="form-label">Pembayaran</label>
                     <select required name="payments_id" id="payments_id" class="form-control"
@@ -100,7 +66,7 @@
                     <label for="account_number" class="form-label">Nomor Rekening</label>
                     <input readonly type="text" class="form-control" id="account_number">
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="total" class="form-label">Total Pembelian Barang</label>
                     <input readonly type="text" class="form-control @error('total') is-invalid @enderror" id="total"
                         name="total" value="{{ $total }}">
@@ -110,7 +76,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="total_payment" class="form-label">Total Bayar</label>
                     <input required type="number" class="form-control @error('total_payment') is-invalid @enderror"
                         id="total_payment" name="total_payment" value="{{ old('total_payment') }}"
@@ -120,6 +86,10 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="total_change" class="form-label">Total Kembalian</label>
+                    <input readonly type="number" class="form-control" id="total_change">
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="button-primary">Lakukan Pembayaran</button>
@@ -138,19 +108,13 @@
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
 
-            $(document).on('change', '#shipping', function() {
-                if ($('#shipping').val() == 'ekspedisi') {
-                    $('#formShippingAddress').removeClass('d-none')
-                    $('#formShippingPrice').removeClass('d-none')
-                    $('#shipping_address').prop('required', true);
-                    $('#shipping_price').prop('required', true);
+            $(document).on('change', '#total_payment', function() {
+                if ($('#total').val() < $('#total_payment').val()) {
+                    $('#total_change').val($('#total_payment').val() - $('#total').val())
                 } else {
-                    $('#formShippingAddress').addClass('d-none')
-                    $('#formShippingPrice').addClass('d-none')
-                    $('#shipping_address').prop('required', false);
-                    $('#shipping_price').prop('required', false);
+                    $('#total_change').val('0')
                 }
-            })
+            });
 
             $(document).on('change', '#payments_id', function() {
                 let id = $(this).val();
