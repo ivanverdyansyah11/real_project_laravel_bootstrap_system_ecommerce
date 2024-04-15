@@ -43,8 +43,10 @@
                                     <td>{{ $transaction->reward->points_required }}</td>
                                     <td>{{ Carbon\Carbon::parse($transaction->created_at)->format('l, d F Y') }}</td>
                                     <td class="wrapper d-flex gap-2">
-                                        <a href="{{ route('report-reward.show', $transaction->id) }}" class="button-detail d-flex align-items-center justify-content-center">
-                                            <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
+                                        <a href="{{ route('report-reward.show', $transaction->id) }}"
+                                            class="button-detail d-flex align-items-center justify-content-center">
+                                            <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon"
+                                                class="img-fluid" width="16">
                                         </a>
                                     </td>
                                 </tr>
@@ -58,10 +60,10 @@
 
     @push('js')
         <script>
-            if(@json($transactions->count())){
-                $('#table_report').DataTable( {
+            if (@json($transactions->count())) {
+                $('#table_report').DataTable({
                     responsive: true
-                } );
+                });
             }
         </script>
     @endpush
