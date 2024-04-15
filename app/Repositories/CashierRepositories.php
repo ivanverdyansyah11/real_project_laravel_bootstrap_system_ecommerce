@@ -56,7 +56,9 @@ class CashierRepositories
     {
         $cashiers = $this->findAll();
         $request['invois'] = $cashiers[0]->invois;
-        $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+        if (!empty($request['proof_of_payment'])) {
+            $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
+        }
         foreach ($cashiers as $cashier) {
             $request['products_id'] = $cashier->products_id;
             $request['quantity'] = $cashier->quantity;
