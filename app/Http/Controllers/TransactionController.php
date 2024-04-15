@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionsExport;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateShippingRequest;
 use App\Http\Requests\UpdateTransactionRequest;
@@ -17,6 +18,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route as FacadesRoute;
 use PDF;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
 {
@@ -32,12 +34,30 @@ class TransactionController extends Controller
     {
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             if (FacadesRoute::is('transaction-pending')) {
+                if ($request->has('start_date') && $request->has('end_date')) {
+                    $transactions = $this->transaction->findAllWherePendingFilter($request);
+                    $request = $request->all();
+                } else {
+                    $transactions = $this->transaction->findAllWherePending();
+                    $request = null;
+                }
+
                 return view('transaction-pending.index', [
                     'title' => 'Halaman Transaksi Pesanan',
-                    'transactions' => $this->transaction->findAllWherePending(),
+                    'transactions' => $transactions,
+                    'request' => $request,
+                    'transaction_pendings' => $this->transaction->findAllWherePending(),
+                    'transaction_payments' => $this->transaction->findAllWherePayment(),
                 ]);
             } elseif (FacadesRoute::is('transaction-payment')) {
-                $transactions = $this->transaction->findAllWherePayment();
+                if ($request->has('start_date') && $request->has('end_date')) {
+                    $transactions = $this->transaction->findAllWherePaymentFilter($request);
+                    $request = $request->all();
+                } else {
+                    $transactions = $this->transaction->findAllWherePayment();
+                    $request = null;
+                }
+
                 foreach ($transactions as $transaction) {
                     $transactionDayLimit = Carbon::parse($transaction->updated_at)->addDay();
                     $product = $this->product->findById($transaction->products_id);
@@ -46,15 +66,17 @@ class TransactionController extends Controller
                         $transaction->delete();
                     }
                 }
+
                 return view('transaction-payment.index', [
                     'title' => 'Halaman Transaksi Menunggu Pembayaran',
-                    'transactions' => $this->transaction->findAllWherePayment(),
+                    'transactions' => $transactions,
+                    'request' => $request,
+                    'transaction_pendings' => $this->transaction->findAllWherePending(),
+                    'transaction_payments' => $this->transaction->findAllWherePayment(),
                 ]);
             } elseif (FacadesRoute::is('transaction-finish')) {
                 if ($request->has('start_date') && $request->has('end_date')) {
-                    $transactions = Transaction::where('status', 1)
-                        ->whereBetween('updated_at', [$request->start_date, $request->end_date])
-                        ->get();
+                    $transactions = $this->transaction->findAllWhereFinishFilter($request);
                     $request = $request->all();
                 } else {
                     $transactions = $this->transaction->findAllWhereFinish();
@@ -64,11 +86,24 @@ class TransactionController extends Controller
                     'title' => 'Halaman Transaksi Selesai',
                     'transactions' => $transactions,
                     'request' => $request,
+                    'transaction_pendings' => $this->transaction->findAllWherePending(),
+                    'transaction_payments' => $this->transaction->findAllWherePayment(),
                 ]);
             } elseif (FacadesRoute::is('report-transaction')) {
+                if ($request->has('start_date') && $request->has('end_date')) {
+                    $transactions = $this->transaction->findAllFilter($request);
+                    $request = $request->all();
+                } else {
+                    $transactions = $this->transaction->findAll();
+                    $request = null;
+                }
+
                 return view('report-transaction.index', [
                     'title' => 'Halaman Rekap Transaksi',
-                    'transactions' => $this->transaction->findAll(),
+                    'transactions' => $transactions,
+                    'request' => $request,
+                    'transaction_pendings' => $this->transaction->findAllWherePending(),
+                    'transaction_payments' => $this->transaction->findAllWherePayment(),
                 ]);
             }
         } else {
@@ -78,6 +113,8 @@ class TransactionController extends Controller
                 'transactionPending' => $this->transaction->findAllWherePendingByReseller(auth()->user()->id),
                 'transactionFinish' => $this->transaction->findAllWhereFinishByReseller(auth()->user()->id),
                 'transactionConfirmation' => $this->transaction->findAllWherePaymentByReseller(auth()->user()->id),
+                'transaction_pendings' => $this->transaction->findAllWherePending(),
+                'transaction_payments' => $this->transaction->findAllWherePayment(),
             ]);
         }
     }
@@ -94,7 +131,14 @@ class TransactionController extends Controller
             'title' => 'Halaman Detail Transaksi',
             'transactions' => $transaction,
             'packages' => $packages,
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new TransactionsExport, 'transactions.xlsx');
     }
 
     public function export(int $transaction_id)
@@ -187,6 +231,8 @@ class TransactionController extends Controller
             'title' => 'Halaman Edit Transaksi',
             'transactions' => $this->transaction->findByInvois($transaction->invois),
             'transactionId' => $transaction->id,
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
