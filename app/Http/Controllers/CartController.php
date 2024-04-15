@@ -148,6 +148,7 @@ class CartController extends Controller
             return view($view, [
                 'title' => 'Halaman Transaksi Keranjang',
                 'cart' => $cart,
+                'carts' => $this->cart->findAll(),
                 'reseller' => $this->reseller->findByUserId(auth()->user()->id),
                 'package' => $packages,
                 'transactions' => $transactions,
@@ -156,6 +157,7 @@ class CartController extends Controller
             return view($view, [
                 'title' => 'Halaman Transaksi Keranjang',
                 'cart' => $cart,
+                'carts' => $this->cart->findAll(),
                 'resellers' => $this->reseller->findAll(),
                 'package' => $packages,
                 'transactions' => $transactions,
@@ -274,6 +276,7 @@ class CartController extends Controller
         return view($view, [
             'title' => 'Halaman Transaksi Pembayaran Keranjang',
             'cart' => $cart,
+            'carts' => $this->cart->findAll(),
             'transaction' => $transaction,
             'package' => $package,
             'payments' => $this->payment->findAll(),
