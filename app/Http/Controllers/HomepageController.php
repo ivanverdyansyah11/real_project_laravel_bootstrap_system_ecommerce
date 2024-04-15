@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
 use App\Repositories\ProductImageRepositories;
 use App\Repositories\ProductRepositories;
@@ -19,6 +20,7 @@ class HomepageController extends Controller
         protected readonly ProductImageRepositories $productImage,
         protected readonly CustomerRepositories $customer,
         protected readonly TransactionRepositories $transaction,
+        protected readonly CartRepositories $cart,
     ) {
     }
 
@@ -48,6 +50,7 @@ class HomepageController extends Controller
                 ->orderByDesc('total_quantity')
                 ->get(),
             'transactions' => $transactions,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -81,6 +84,7 @@ class HomepageController extends Controller
             'products' => $products,
             'transactions' => $transactions,
             'request' => $request,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -106,6 +110,7 @@ class HomepageController extends Controller
             'product' => $this->product->findById($id),
             'transactions' => $transactions,
             'product_images' => $this->productImage->findAllWhereByproductId($id),
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -129,6 +134,7 @@ class HomepageController extends Controller
         return view('homepage.testimonial', [
             'title' => 'Halaman Kontak',
             'transactions' => $transactions,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -152,6 +158,7 @@ class HomepageController extends Controller
         return view('homepage.contact', [
             'title' => 'Halaman Kontak',
             'transactions' => $transactions,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -176,6 +183,7 @@ class HomepageController extends Controller
             'title' => 'Halaman Profil',
             'profile' => $this->customer->findByUserId(auth()->user()->id),
             'transactions' => $transactions,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 
@@ -199,6 +207,7 @@ class HomepageController extends Controller
         return view('homepage.order-completed', [
             'title' => 'Halaman Order Berhasil',
             'transactions' => $transactions,
+            'carts' => $this->cart->findAll(),
         ]);
     }
 }
