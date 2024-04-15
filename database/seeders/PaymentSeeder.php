@@ -14,6 +14,12 @@ class PaymentSeeder extends Seeder
     public function run(): void
     {
         Payment::create([
+            'bank_name' => 'Cash',
+            'owner_name' => '',
+            'account_number' => '',
+        ]);
+
+        Payment::create([
             'bank_name' => 'Bank Mandiri',
             'owner_name' => 'PT ADIGOEROE SIWA AMBARA',
             'account_number' => '145-00-1560890-0',
