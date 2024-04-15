@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductImageRequest;
 use App\Repositories\ProductImageRepositories;
+use App\Repositories\TransactionRepositories;
 use App\Utils\UploadFile;
 
 class ProductImageController extends Controller
 {
     public function __construct(
         protected readonly ProductImageRepositories $productImage,
+        protected readonly TransactionRepositories $transaction,
         protected readonly UploadFile $uploadFile,
     ) {
     }
@@ -29,6 +31,8 @@ class ProductImageController extends Controller
         return view('product.product-image.index', [
             'title' => 'Halaman Edit Thumbnail Produk',
             'product_images' => $this->productImage->findAllWhereByproductId($id),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
