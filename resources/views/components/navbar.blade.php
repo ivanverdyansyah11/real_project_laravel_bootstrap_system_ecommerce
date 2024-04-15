@@ -31,25 +31,36 @@
             </div>
         </div>
         <div class="wrapper d-none d-lg-flex gap-2 align-items-center">
-            <a href="{{ route('cart.index') }}" class="wrapper-icon d-flex align-items-center justify-content-center">
+            <a href="{{ route('cart.index') }}"
+                class="wrapper-icon d-flex align-items-center justify-content-center {{ count($carts) != 0 ? 'notification' : '' }}">
                 <div class="icon-cart"></div>
             </a>
             <div class="wrapper-popup position-relative">
                 <button
-                    class="wrapper-icon d-flex align-items-center justify-content-center position-relative button-notification">
+                    class="wrapper-icon d-flex align-items-center justify-content-center position-relative button-notification {{ count($uniqueTransactions) != 0 ? 'notification' : '' }}">
                     <div class="icon-notification"></div>
                 </button>
                 <div class="popup-notification">
                     @if ($uniqueTransactions != [])
                         @foreach ($uniqueTransactions as $transaction)
                             @if ($transaction->status == 2)
-                                <div class="notification-item">
-                                    <p>Admin baru saja menambahakan jumlah pengiriman, lanjutkan pembayaran!</p>
-                                    <div class="wrapper d-flex justify-content-between align-items-center mt-1">
-                                        <span>{{ $transaction->updated_at }}</span>
-                                        <a href="{{ route('transaction.show', $transaction->id) }}">See detail</a>
+                                @if ($transaction->shipping_price != null)
+                                    <div class="notification-item">
+                                        <p>Admin baru saja menambahakan jumlah pengiriman, lanjutkan pembayaran!</p>
+                                        <div class="wrapper d-flex justify-content-between align-items-center mt-1">
+                                            <span>{{ $transaction->updated_at }}</span>
+                                            <a href="{{ route('transaction.show', $transaction->id) }}">See detail</a>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="notification-item">
+                                        <p>Silahkan tunggu update jumlah pengiriman produk!</p>
+                                        <div class="wrapper d-flex justify-content-between align-items-center mt-1">
+                                            <span>{{ $transaction->updated_at }}</span>
+                                            <a href="{{ route('transaction.show', $transaction->id) }}">See detail</a>
+                                        </div>
+                                    </div>
+                                @endif
                             @elseif($transaction->status == 1)
                                 <div class="notification-item">
                                     <p>Admin baru saja menyetujui transaksi anda!</p>
@@ -67,7 +78,8 @@
                     @endif
                 </div>
             </div>
-            <button class="wrapper-icon d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#searchingModal">
+            <button class="wrapper-icon d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+                data-bs-target="#searchingModal">
                 <div class="icon-search"></div>
             </button>
             @if (auth()->user() == null)
