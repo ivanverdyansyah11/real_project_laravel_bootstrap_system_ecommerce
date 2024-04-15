@@ -378,6 +378,39 @@ nav.navbar .wrapper-icon {
     border: 1px solid rgba(var(--dark-color), 0.12);
 }
 
+.link-item.notification,
+.item-child .notification,
+nav.navbar .wrapper-icon.notification {
+    position: relative;
+}
+
+.link-item.notification::before,
+.item-child .notification::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 36px;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: red;
+}
+
+.link-item.notification::before {
+    left: 10px;
+}
+
+nav.navbar .wrapper-icon.notification::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: red;
+}
+
 nav.navbar .wrapper-icon .icon-cart,
 nav.navbar .wrapper-icon .icon-notification,
 nav.navbar .wrapper-icon .icon-search,
