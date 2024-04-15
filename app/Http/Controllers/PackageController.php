@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePackageRequest;
 use App\Models\Package;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,17 +17,23 @@ class PackageController extends Controller
     public function __construct(
         protected readonly PackageRepositories $package,
         protected readonly ProductRepositories $product,
-    ) {}
+        protected readonly TransactionRepositories $transaction,
+    ) {
+    }
 
-    public function index() : View {
+    public function index(): View
+    {
         return view('package.index', [
             'title' => 'Halaman Paket',
             'packages' => $this->package->findAllPaginate(),
             'products' => $this->product->findAll(),
+            'transaction_pendings' => $this->transaction->findAllWherePending(),
+            'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
-    public function show(Package $package) : JsonResponse {
+    public function show(Package $package): JsonResponse
+    {
         try {
             return response()->json([
                 'status' => 'success',
@@ -41,7 +48,8 @@ class PackageController extends Controller
         }
     }
 
-    public function store(StorePackageRequest $request) : RedirectResponse {
+    public function store(StorePackageRequest $request): RedirectResponse
+    {
         try {
             $this->package->store($request->validated());
             return redirect(route('package.index'))->with('success', 'Berhasil menambahkan paket baru!');
@@ -51,7 +59,8 @@ class PackageController extends Controller
         }
     }
 
-    public function update(UpdatePackageRequest $request, Package $package) : RedirectResponse {
+    public function update(UpdatePackageRequest $request, Package $package): RedirectResponse
+    {
         try {
             $this->package->update($request->validated(), $package);
             return redirect(route('package.index'))->with('success', 'Berhasil edit paket!');
@@ -60,7 +69,8 @@ class PackageController extends Controller
         }
     }
 
-    public function destroy(Package $package) : RedirectResponse {
+    public function destroy(Package $package): RedirectResponse
+    {
         try {
             $this->package->delete($package);
             return redirect(route('package.index'))->with('success', 'Berhasil hapus paket!');
