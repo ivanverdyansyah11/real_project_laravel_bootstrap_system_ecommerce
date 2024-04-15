@@ -70,6 +70,7 @@
             <tr>
                 @php
                     $packageName = '-';
+                    $packages = array_filter($packages);
                     if (count($packages) != 0 && count($transactions) != 1) {
                         foreach ($packages as $package) {
                             if ($package->products_id == $transaction->product->id) {
