@@ -9,9 +9,9 @@
                 </div>
             @endif
         </div>
-        <div class="col-12 mb-2">
+        <div class="col-12 mb-2 d-flex gap-2">
             <a target="_blank" href="{{ route('export-invoice', $transactions[0]->id) }}"
-                class="button-primary text-nowrap">Cetak Invoice</a>
+                class="button-primary text-nowrap">Cetak Invoice PDF</a>
         </div>
         <div class="col-12 pe-lg-0">
             <form class="row">
@@ -36,6 +36,7 @@
                                         <label for="package_name" class="form-label">Nama Paket</label>
                                         @php
                                             $packageName = '-';
+                                            $packages = array_filter($packages);
                                             if (count($packages) != 0 && count($transactions) != 1) {
                                                 foreach ($packages as $package) {
                                                     if ($package->products_id == $transaction->product->id) {
@@ -157,19 +158,29 @@
                                         <label for="total" class="form-label">Total</label>
                                         <input readonly type="text" class="form-control" id="total"
                                             value="Rp. {{ number_format($transaction->total, 2, ',', '.') }}">
+                                        <input type="hidden" class="form-control" id="total_value"
+                                            value="{{ $transaction->total }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="total_payment" class="form-label">Total Bayar</label>
                                         <input readonly type="text" class="form-control" id="total_payment"
                                             value="Rp. {{ number_format($transaction->total_payment, 2, ',', '.') }}">
+                                        <input type="hidden" class="form-control" id="total_payment_value"
+                                            value="{{ $transaction->total_payment }}">
                                     </div>
                                     @if ($transaction->shipping == 'ekspedisi')
                                         <div class="col-12">
                                             <label for="shipping_price" class="form-label">Total Pengiriman</label>
                                             <input readonly type="text" class="form-control" id="shipping_price"
                                                 value="Rp. {{ number_format($transaction->shipping_price, 2, ',', '.') }}">
+                                            <input type="hidden" class="form-control" id="shipping_price_value"
+                                                value="{{ $transaction->shipping_price }}">
                                         </div>
                                     @endif
+                                    <div class="col-12 {{ $transaction->shipping == 'ekspedisi' ? 'mt-3' : '' }}">
+                                        <label for="total_change" class="form-label">Total Kembalian</label>
+                                        <input readonly type="text" class="form-control" id="total_change">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -205,6 +216,25 @@
         <script>
             function history_back() {
                 window.history.back();
+            }
+
+            if ($('#shipping_price_value').val() != '') {
+                if ($('#total_value').val() + $('#shipping_price_value').val() < $('#total_payment_value').val()) {
+                    let total = parseInt($('#total_value').val()) + parseInt($('#shipping_price_value').val())
+                    $('#total_change').val(
+                        `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - total)}`
+                    )
+                } else {
+                    $('#total_change').val('Rp. 0')
+                }
+            } else {
+                if ($('#total_value').val() < $('#total_payment_value').val()) {
+                    $('#total_change').val(
+                        `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - parseInt($('#total_value').val()))}`
+                    )
+                } else {
+                    $('#total_change').val('Rp. 0')
+                }
             }
         </script>
     @endpush
