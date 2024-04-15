@@ -33,6 +33,8 @@ class DashboardController extends Controller
                 'graphic_day' => $this->transaction->filterDay(),
                 'graphic_week' => $this->transaction->filterWeek(),
                 'graphic_month' => $this->transaction->filterMonth(),
+                'transaction_pendings' => $this->transaction->findAllWherePending(),
+                'transaction_payments' => $this->transaction->findAllWherePayment(),
             ]);
         } else {
             return view('dashboard.index', [
