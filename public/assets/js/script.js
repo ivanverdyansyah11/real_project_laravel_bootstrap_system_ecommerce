@@ -1,7 +1,9 @@
 const buttonDataUser = document.querySelector('#data_user');
+const buttonDataCashier = document.querySelector('#data_cashier');
 const buttonDataReport = document.querySelector('#data_report');
 const buttonDataTransaction = document.querySelector('#data_transaction');
 const childDataUser = document.querySelector('#child_data_user');
+const childDataCashier = document.querySelector('#child_data_cashier');
 const childDataReport = document.querySelector('#child_data_report');
 const childDataTransaction = document.querySelector('#child_data_transaction');
 const buttonNotification = document.querySelector('.button-notification');
@@ -15,6 +17,13 @@ if (buttonDataUser) {
     buttonDataUser.addEventListener('click', function() {
         buttonDataUser.classList.toggle('active');
         childDataUser.classList.toggle('active');
+    });
+}
+
+if (buttonDataCashier) {
+    buttonDataCashier.addEventListener('click', function() {
+        buttonDataCashier.classList.toggle('active');
+        childDataCashier.classList.toggle('active');
     });
 }
 
