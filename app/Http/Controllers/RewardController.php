@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRewardRequest;
 use App\Models\Reward;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\RewardRepositories;
+use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,7 @@ class RewardController extends Controller
     public function __construct(
         protected readonly RewardRepositories $reward,
         protected readonly ResellerRepositories $reseller,
+        protected readonly TransactionRepositories $transaction,
     ) {
     }
 
@@ -25,12 +27,16 @@ class RewardController extends Controller
             return view('reward.index', [
                 'title' => 'Halaman Penghargaan',
                 'rewards' => $this->reward->findAllPaginate(),
+                'transaction_pendings' => $this->transaction->findAllWherePending(),
+                'transaction_payments' => $this->transaction->findAllWherePayment(),
             ]);
         } elseif (auth()->user()->role == 'reseller') {
             return view('reward.index-reseller', [
                 'title' => 'Halaman Penghargaan',
                 'rewards' => $this->reward->findAllPaginate(),
                 'total_poin' => $this->reseller->findByUserId(auth()->user()->id)->poin,
+                'transaction_pendings' => $this->transaction->findAllWherePending(),
+                'transaction_payments' => $this->transaction->findAllWherePayment(),
             ]);
         }
     }
