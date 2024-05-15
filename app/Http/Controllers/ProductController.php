@@ -10,7 +10,6 @@ use App\Repositories\ProductImageRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -83,7 +82,7 @@ class ProductController extends Controller
             $this->product->update($request->validated(), $product);
             return redirect()->route('product.index')->with('success', 'Berhasil edit produk');
         } catch (\Exception $e) {
-            return redirect()->route('product.edit')->with('error', 'Gagal edit produk');
+            return redirect()->back()->with('error', 'Gagal edit produk');
         }
     }
 
