@@ -19,7 +19,7 @@
                 <span>Profile</span>
             </a>
             <button id="data_user" type="button"
-                class="link-item d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') ? 'active' : '' }}">
+                class="link-item d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') || Route::is('shipping*') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/product.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Data Master</span>
             </button>
@@ -33,6 +33,8 @@
                     Reseller</a>
                 <a href="{{ route('reward.index') }}" class="{{ Route::is('reward.index') ? 'active' : '' }}">Data
                     Penghargaan</a>
+                <a href="{{ route('shipping.index') }}" class="{{ Route::is('shipping.index') ? 'active' : '' }}">Data
+                    Pengiriman</a>
             </div>
             <button id="data_cashier" type="button"
                 class="link-item d-flex align-items-center {{ Route::is('cashier.index') || Route::is('cashier.create') ? 'active' : '' }}">
@@ -81,11 +83,13 @@
             <span>Report Laporan</span>
         </button>
         <div id="child_data_report"
-            class="item-child {{ Route::is('report-reward.index') || Route::is('report-transaction') ? 'active' : '' }}">
+            class="item-child {{ Route::is('report-reward.index') || Route::is('report-transaction') || Route::is('report-product') ? 'active' : '' }}">
             <a href="{{ route('report-reward.index') }}"
                 class="{{ Route::is('report-reward.index') ? 'active' : '' }}">Rekap Point</a>
             <a href="{{ route('report-transaction') }}"
                 class="{{ Route::is('report-transaction') ? 'active' : '' }}">Rekap Transaksi</a>
+            <a href="{{ route('report-product') }}" class="{{ Route::is('report-product') ? 'active' : '' }}">Rekap
+                Produk</a>
         </div>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
