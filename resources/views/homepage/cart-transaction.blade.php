@@ -128,12 +128,15 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="col-12 mb-3 d-none" id="formShippingAddress">
-                                    <label for="shipping_address" class="form-label">Alamat Pengiriman</label>
-                                    <input type="text"
-                                        class="form-control @error('shipping_address') is-invalid @enderror"
-                                        id="shipping_address" name="shipping_address">
-                                    @error('shipping_address')
+                                <div class="col-12 mb-3" id="formMap">
+                                    <div id="map" style="height: 400px; width: 100%;"></div>
+                                </div>
+                                <div class="col-12 mb-3 d-none" id="formAddress">
+                                    <label for="address" class="form-label">Alamat</label>
+                                    <input required type="text"
+                                        class="form-control @error('address') is-invalid @enderror" id="address"
+                                        name="address" readonly required>
+                                    @error('address')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -154,16 +157,47 @@
     </div>
 
     @push('js')
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script>
             $(document).on('change', '#shipping', function() {
                 if ($('#shipping').val() == 'ekspedisi') {
-                    $('#formShippingAddress').removeClass('d-none')
-                    $('#shipping_address').prop('required', true);
+                    $('#formAddress').removeClass('d-none')
+                    $('#address').prop('required', true);
                 } else {
-                    $('#formShippingAddress').addClass('d-none')
-                    $('#shipping_address').prop('required', false);
+                    $('#formAddress').addClass('d-none')
+                    $('#address').prop('required', false);
                 }
             })
+
+            function getAddressFromLatLng(latitude, longitude) {
+                let url =
+                    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyADJk8ffwFqsJC3hlxAgv-p2uaEeY47HAc`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'OK') {
+                            let address = data.results[0].formatted_address;
+                            $('#address').val(address);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            let map = L.map('map').setView([-8.630072702457348, 115.20958478281852], 13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            function onMapClick(e) {
+                $('#longitude').val(e.latlng.lat);
+                $('#latitude').val(e.latlng.lng);
+                getAddressFromLatLng(e.latlng.lat, e.latlng.lng)
+            }
+            map.on('click', onMapClick);
 
             let productPrice = $('#selling_price_product').val();
             $(document).on('change', '#quantity', function() {
