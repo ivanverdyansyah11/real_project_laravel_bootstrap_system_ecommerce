@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ReportProduct;
 use App\Models\Transaction;
 use App\Utils\UploadFile;
 use Carbon\Carbon;
@@ -13,11 +14,13 @@ class CartRepositories
 {
     public function __construct(
         protected readonly Cart $cart,
+        protected readonly ShippingRepositories $shipping,
         protected readonly ProductRepositories $product,
         protected readonly ResellerRepositories $reseller,
         protected readonly TransactionRepositories $transactionRepo,
         protected readonly Transaction $transaction,
         protected readonly UploadFile $uploadFile,
+        protected readonly ReportProduct $reportProduct,
     ) {
     }
 
@@ -113,6 +116,16 @@ class CartRepositories
                     $request['proof_of_payment'] = $this->uploadFile->uploadSingleFile($request['proof_of_payment'], "assets/images/transaction");
                 }
                 $product = $this->product->findById($cartSelected->products_id);
+                if ($product->stock - $cartSelected->quantity == 0) {
+                    $status = 1;
+                } else {
+                    $status = 2;
+                }
+                $this->reportProduct->create([
+                    'products_id' => $product->id,
+                    'stock' => $product->stock - $cartSelected->quantity,
+                    'status' => $status,
+                ]);
                 $request['stock'] = $product->stock - $cartSelected->quantity;
                 if (auth()->user()->role == 'reseller') {
                     $request['status'] = 0;
