@@ -10,10 +10,12 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportProductController;
 use App\Http\Controllers\ReportRewardController;
 use App\Http\Controllers\ReportTransactionController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionRewardController;
 use App\Http\Controllers\UserController;
@@ -70,6 +72,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/product/thumbnail-image/{id}/delete', [ProductImageController::class, 'destroy'])->middleware('isAdmin');
     Route::resource('/package', PackageController::class)->middleware('isAdmin');
     Route::resource('/reward', RewardController::class)->middleware('isAdminReseller');
+    Route::get('/shipping', [ShippingController::class, 'index'])->name('shipping.index')->middleware('isAdminReseller');
+    Route::get('/shipping/detail', [ShippingController::class, 'show'])->name('shipping.show')->middleware('isAdminReseller');
+    Route::get('/shipping/edit', [ShippingController::class, 'edit'])->name('shipping.edit')->middleware('isAdminReseller');
+    Route::post('/shipping/edit', [ShippingController::class, 'update'])->name('shipping.update')->middleware('isAdminReseller');
     Route::resource('/transaction', TransactionController::class)->middleware('isAdminReseller');
     Route::get('/transaction/get_product/{id}', [TransactionController::class, 'getProduct'])->middleware('isAdmin');
     Route::get('/transaction/get_package/{quantity}/{id}', [TransactionController::class, 'getPackage']);
@@ -83,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction-finish/{id}/export-invoice', [TransactionController::class, 'export'])->name('export-invoice')->middleware('isAdminReseller');
     Route::resource('/report-reward', TransactionRewardController::class)->middleware('isAdminReseller');
     Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction')->middleware('isAdminReseller');
+    Route::get('/report-product', [ReportProductController::class, 'index'])->name('report-product')->middleware('isAdminReseller');
 
     Route::resource('/homepage/cart', CartController::class);
     Route::get('/homepage/getPayment/{id}', [CartController::class, 'getPayment'])->name('get-payment');
