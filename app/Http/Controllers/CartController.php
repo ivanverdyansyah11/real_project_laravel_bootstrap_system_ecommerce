@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Cart;
-use App\Models\Payment;
+use App\Models\ReportProduct;
 use App\Models\Transaction;
 use App\Repositories\CartRepositories;
 use App\Repositories\CustomerRepositories;
@@ -13,6 +13,7 @@ use App\Repositories\PackageRepositories;
 use App\Repositories\PaymentRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\ResellerRepositories;
+use App\Repositories\ShippingRepositories;
 use App\Repositories\TransactionRepositories;
 use App\Utils\UploadFile;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,7 @@ class CartController extends Controller
 {
     public function __construct(
         protected readonly CartRepositories $cart,
+        protected readonly ShippingRepositories $shipping,
         protected readonly TransactionRepositories $transaction,
         protected readonly CustomerRepositories $customer,
         protected readonly ProductRepositories $product,
@@ -32,6 +34,7 @@ class CartController extends Controller
         protected readonly ResellerRepositories $reseller,
         protected readonly PaymentRepositories $payment,
         protected readonly UploadFile $uploadFile,
+        protected readonly ReportProduct $reportProduct,
     ) {
     }
 
@@ -173,7 +176,8 @@ class CartController extends Controller
                 $requestTemporary = [];
                 $requestTemporary['invois'] = $request->invois;
                 $requestTemporary['shipping'] = $request->shipping;
-                $requestTemporary['shipping_address'] = ($request->shipping_address != null) ? $request->shipping_address : null;
+                $requestTemporary['shipping_price'] = $request->shipping_price;
+                $requestTemporary['address'] = ($request->address != null) ? $request->address : null;
                 for ($i = 0; $i < count($cartIdSelect); $i++) {
                     $requestTemporary['status'] = 2;
                     $requestTemporary['products_id'] = $request['products_id'][$i];
@@ -196,6 +200,16 @@ class CartController extends Controller
                     $cartSelected = $this->cart->findById($cartId);
                     $cartSelectedArray[] = $cartSelected;
                     $product = $this->product->findById($cartSelected->products_id);
+                    if ($product->stock - $cartSelected->quantity == 0) {
+                        $status = 1;
+                    } else {
+                        $status = 2;
+                    }
+                    $this->reportProduct->create([
+                        'products_id' => $product->id,
+                        'stock' => $product->stock - $cartSelected->quantity,
+                        'status' => $status,
+                    ]);
                     $request['stock'] = $product->stock - $cartSelected->quantity;
                     $transactions = $this->transaction->findByInvois($cartSelected->invois);
                     if (auth()->user()->role == 'reseller') {
@@ -273,15 +287,57 @@ class CartController extends Controller
             $transaction = $this->transaction->findByInvois($cart->invois);
             $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
         }
+        $shipping_price = (int)str_replace('.', '', number_format($this->calculateDistance($transaction[0]->address, $this->shipping->findFirst()->address), 1)) * $this->shipping->findFirst()->shipping_price / 10;
+        foreach ($transaction as $transac) {
+            $transac->update(['shipping_price' => $shipping_price]);
+        }
+
         return view($view, [
             'title' => 'Halaman Transaksi Pembayaran Keranjang',
             'cart' => $cart,
             'carts' => $this->cart->findAll(),
+            'shipping' => $this->shipping->findFirst(),
             'transaction' => $transaction,
             'package' => $package,
             'payments' => $this->payment->findAll(),
             'transactions' => $transactionNotification,
         ]);
+    }
+
+    function calculateDistance($originAddress, $destinationAddress)
+    {
+        $originGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($originAddress) . "&key=AIzaSyADJk8ffwFqsJC3hlxAgv-p2uaEeY47HAc";
+        $originResponse = file_get_contents($originGeocodeUrl);
+        $originData = json_decode($originResponse, true);
+
+        if ($originData['status'] != 'OK') {
+            return "Failed to geocode origin address. Status: {$originData['status']}";
+        }
+
+        $originLat = $originData['results'][0]['geometry']['location']['lat'];
+        $originLng = $originData['results'][0]['geometry']['location']['lng'];
+
+        $destinationGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($destinationAddress) . "&key=AIzaSyADJk8ffwFqsJC3hlxAgv-p2uaEeY47HAc";
+        $destinationResponse = file_get_contents($destinationGeocodeUrl);
+        $destinationData = json_decode($destinationResponse, true);
+
+        if ($destinationData['status'] != 'OK') {
+            return "Failed to geocode destination address. Status: {$destinationData['status']}";
+        }
+
+        $destinationLat = $destinationData['results'][0]['geometry']['location']['lat'];
+        $destinationLng = $destinationData['results'][0]['geometry']['location']['lng'];
+
+        $directionsUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLng&destination=$destinationLat,$destinationLng&key=AIzaSyADJk8ffwFqsJC3hlxAgv-p2uaEeY47HAc";
+        $directionsResponse = file_get_contents($directionsUrl);
+        $directionsData = json_decode($directionsResponse, true);
+
+        if ($directionsData['status'] != 'OK') {
+            return "Failed to get directions. Status: {$directionsData['status']}";
+        }
+
+        $distance = $directionsData['routes'][0]['legs'][0]['distance']['value'];
+        return $distance / 1000;
     }
 
     public function getPayment(int $payment_id): JsonResponse
