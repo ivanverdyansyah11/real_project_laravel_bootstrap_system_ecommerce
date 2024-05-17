@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Models\ProductImage;
-use App\Models\ReportProduct;
 use App\Utils\UploadFile;
 use Illuminate\Support\Arr;
 
@@ -12,7 +11,6 @@ class ProductRepositories
 {
     public function __construct(
         protected readonly Product $product,
-        protected readonly ReportProduct $reportProduct,
         protected readonly ProductImage $productImage,
         protected readonly UploadFile $uploadFile,
         protected readonly ProductImageRepositories $productImageRepositories,
@@ -58,11 +56,6 @@ class ProductRepositories
     {
         $this->product->create(Arr::except($request, ['image']));
         $product = $this->findLatest();
-        $this->reportProduct->create([
-            'products_id' => $product->id,
-            'stock' => $product->stock,
-            'status' => 4,
-        ]);
         foreach ($request['image'] as $image) {
             $request['products_id'] = $product->id;
             $request['image'] = $this->uploadFile->uploadSingleFile($image, "assets/images/product");
@@ -83,11 +76,6 @@ class ProductRepositories
         } elseif ((int)$request['stock'] < $product->stock) {
             $status = 2;
         }
-        $this->reportProduct->create([
-            'products_id' => $product->id,
-            'stock' => (int)$request['stock'],
-            'status' => $status,
-        ]);
         if (isset($request["image"])) {
             $this->uploadFile->deleteExistFile("assets/images/product/" . $product->image);
             $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], 'assets/images/product');
@@ -99,10 +87,6 @@ class ProductRepositories
 
     public function delete($product): bool
     {
-        $reportProducts = $this->reportProduct->where('products_id', $product->id)->get();
-        foreach ($reportProducts as $reportProduct) {
-            $reportProduct->delete();
-        }
         $this->uploadFile->deleteExistFile("assets/images/product/" . $product->image);
         return $product->delete();
     }
