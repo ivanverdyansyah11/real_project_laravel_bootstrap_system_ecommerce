@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Cart;
+use App\Models\ManagementProduct;
 use App\Models\ReportProduct;
 use App\Models\Transaction;
 use App\Repositories\CartRepositories;
@@ -34,7 +35,7 @@ class CartController extends Controller
         protected readonly ResellerRepositories $reseller,
         protected readonly PaymentRepositories $payment,
         protected readonly UploadFile $uploadFile,
-        protected readonly ReportProduct $reportProduct,
+        protected readonly ManagementProduct $managementProduct,
     ) {
     }
 
@@ -200,15 +201,10 @@ class CartController extends Controller
                     $cartSelected = $this->cart->findById($cartId);
                     $cartSelectedArray[] = $cartSelected;
                     $product = $this->product->findById($cartSelected->products_id);
-                    if ($product->stock - $cartSelected->quantity == 0) {
-                        $status = 1;
-                    } else {
-                        $status = 2;
-                    }
-                    $this->reportProduct->create([
+                    $this->managementProduct->create([
                         'products_id' => $product->id,
-                        'stock' => $product->stock - $cartSelected->quantity,
-                        'status' => $status,
+                        'type' => 'purchased',
+                        'quantity' => $cartSelected->quantity,
                     ]);
                     $request['stock'] = $product->stock - $cartSelected->quantity;
                     $transactions = $this->transaction->findByInvois($cartSelected->invois);
@@ -287,11 +283,12 @@ class CartController extends Controller
             $transaction = $this->transaction->findByInvois($cart->invois);
             $package = $this->package->findWhereProduct($cart->quantity, $cart->products_id);
         }
-        $shipping_price = (int)str_replace('.', '', number_format($this->calculateDistance($transaction[0]->address, $this->shipping->findFirst()->address), 1)) * $this->shipping->findFirst()->shipping_price / 10;
-        foreach ($transaction as $transac) {
-            $transac->update(['shipping_price' => $shipping_price]);
+        if ($transaction[0]->shipping == 'ekspedisi') {
+            $shipping_price = (int)str_replace('.', '', number_format($this->calculateDistance($transaction[0]->address, $this->shipping->findFirst()->address), 1)) * $this->shipping->findFirst()->shipping_price / 10;
+            foreach ($transaction as $transac) {
+                $transac->update(['shipping_price' => $shipping_price]);
+            }
         }
-
         return view($view, [
             'title' => 'Halaman Transaksi Pembayaran Keranjang',
             'cart' => $cart,
