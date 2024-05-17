@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomepageController;
+use App\Http\Controllers\ManagementProductController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
@@ -72,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/product/thumbnail-image/{id}/delete', [ProductImageController::class, 'destroy'])->middleware('isAdmin');
     Route::resource('/package', PackageController::class)->middleware('isAdmin');
     Route::resource('/reward', RewardController::class)->middleware('isAdminReseller');
+    Route::resource('/management-product', ManagementProductController::class)->middleware('isAdminReseller');
     Route::get('/shipping', [ShippingController::class, 'index'])->name('shipping.index')->middleware('isAdminReseller');
     Route::get('/shipping/detail', [ShippingController::class, 'show'])->name('shipping.show')->middleware('isAdminReseller');
     Route::get('/shipping/edit', [ShippingController::class, 'edit'])->name('shipping.edit')->middleware('isAdminReseller');
@@ -89,7 +91,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction-finish/{id}/export-invoice', [TransactionController::class, 'export'])->name('export-invoice')->middleware('isAdminReseller');
     Route::resource('/report-reward', TransactionRewardController::class)->middleware('isAdminReseller');
     Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction')->middleware('isAdminReseller');
-    Route::get('/report-product', [ReportProductController::class, 'index'])->name('report-product')->middleware('isAdminReseller');
 
     Route::resource('/homepage/cart', CartController::class);
     Route::get('/homepage/getPayment/{id}', [CartController::class, 'getPayment'])->name('get-payment');
