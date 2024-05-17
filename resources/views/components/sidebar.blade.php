@@ -19,7 +19,7 @@
                 <span>Profile</span>
             </a>
             <button id="data_user" type="button"
-                class="link-item d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') || Route::is('shipping*') ? 'active' : '' }}">
+                class="link-item d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') || Route::is('shipping*') || Route::is('management-product*') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/product.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Data Master</span>
             </button>
@@ -35,6 +35,7 @@
                     Penghargaan</a>
                 <a href="{{ route('shipping.index') }}" class="{{ Route::is('shipping.index') ? 'active' : '' }}">Data
                     Pengiriman</a>
+                <a href="{{ route('management-product.index') }}" class="{{ Route::is('management-product.index') ? 'active' : '' }}">Managemen Produk</a>
             </div>
             <button id="data_cashier" type="button"
                 class="link-item d-flex align-items-center {{ Route::is('cashier.index') || Route::is('cashier.create') ? 'active' : '' }}">
@@ -64,11 +65,6 @@
                 <a href="{{ route('transaction-finish') }}"
                     class="{{ Route::is('transaction-finish') ? 'active' : '' }}">Transaksi Selesai</a>
             </div>
-            {{-- <a href="{{ route('category.index') }}"
-                class="link-item d-flex align-items-center {{ Route::is('category.index') ? 'active' : '' }}">
-                <img src="{{ asset('assets/images/sidebar/category.png') }}" alt="Sidebar Icon" class="img-fluid">
-                <span>Kategori</span>
-            </a> --}}
         @endif
         @if (auth()->user()->role == 'reseller')
             <a href="{{ route('reward.index') }}"
@@ -88,8 +84,6 @@
                 class="{{ Route::is('report-reward.index') ? 'active' : '' }}">Rekap Point</a>
             <a href="{{ route('report-transaction') }}"
                 class="{{ Route::is('report-transaction') ? 'active' : '' }}">Rekap Transaksi</a>
-            <a href="{{ route('report-product') }}" class="{{ Route::is('report-product') ? 'active' : '' }}">Rekap
-                Produk</a>
         </div>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
