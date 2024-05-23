@@ -160,8 +160,6 @@
                                         <label for="total" class="form-label">Total Pembelian Barang</label>
                                         <input readonly type="text" class="form-control" id="total"
                                             value="Rp. {{ number_format($transaction->total, 2, ',', '.') }}">
-                                        <input type="hidden" class="form-control" id="total_value"
-                                            value="{{ $transaction->total }}">
                                     </div>
                                     @if ($transaction->shipping == 'ekspedisi')
                                         <div class="col-md-6 mb-3">
@@ -176,6 +174,8 @@
                                         <label for="total_all" class="form-label">Total Keseluruhan</label>
                                         <input readonly type="text" class="form-control" id="total_all"
                                             value="Rp. {{ $transaction->shipping == 'ekspedisi' ? number_format($transaction->total + $transaction->shipping_price, 2, ',', '.') : number_format($transaction->total, 2, ',', '.') }}">
+                                        <input type="hidden" class="form-control" id="total_price_all"
+                                            value="{{ $transaction->shipping == 'ekspedisi' ? $transaction->total + $transaction->shipping_price : $transaction->total }}">
                                     </div>
                                     <div class="{{ $transaction->shipping == 'ekspedisi' ? 'col-md-6' : 'col-12' }} mb-3">
                                         <label for="total_payment" class="form-label">Total Bayar</label>
@@ -226,24 +226,14 @@
             }
 
             if ($('#shipping_price_value').length != 0) {
-                if ($('#total_value').val() + $('#shipping_price_value').val() < $('#total_payment_value').val()) {
-                    let total = parseInt($('#total_value').val()) + parseInt($('#shipping_price_value').val())
-                    $('#total_change').val(
-                        `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - total)}`
-                    )
-                } else {
-                    $('#total_change').val('Rp. 0')
-                }
-                console.log($('#total_value').val());
-                console.log($('#total_payment_value').val());
+                let total = parseInt($('#total_price_all').val()) + parseInt($('#shipping_price_value').val())
+                $('#total_change').val(
+                    `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - total)}`
+                )
             } else {
-                if ($('#total_value').val() < $('#total_payment_value').val()) {
-                    $('#total_change').val(
-                        `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - parseInt($('#total_value').val()))}`
-                    )
-                } else {
-                    $('#total_change').val('Rp. 0')
-                }
+                $('#total_change').val(
+                    `${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(parseInt($('#total_payment_value').val()) - parseInt($('#total_price_all').val()))}`
+                )
             }
         </script>
     @endpush
