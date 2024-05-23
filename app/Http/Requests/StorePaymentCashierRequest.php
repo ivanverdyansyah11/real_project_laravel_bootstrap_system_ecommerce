@@ -25,6 +25,7 @@ class StorePaymentCashierRequest extends FormRequest
             'products_id' => 'nullable|integer',
             'payments_id' => 'required|integer',
             'proof_of_payment' => 'nullable|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
+            'buyers_name' => 'required|string',
             'invois' => 'nullable',
             'quantity' => 'nullable|integer',
             'shipping' => 'required|string',
