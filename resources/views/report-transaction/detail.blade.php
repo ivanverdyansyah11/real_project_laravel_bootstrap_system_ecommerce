@@ -90,12 +90,14 @@
                     @endforeach
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h6 class="card-body-title mb-4">Data Reseller</h6>
+                            <h6 class="card-body-title mb-4">Data
+                                {{ $transaction->buyers_name == null ? 'Reseller' : 'Pembeli' }}</h6>
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label for="resellers_id" class="form-label">Nama Reseller</label>
+                                    <label for="resellers_id" class="form-label">Nama
+                                        {{ $transaction->buyers_name == null ? 'Reseller' : 'Pembeli' }}</label>
                                     <input readonly type="text" class="form-control" id="resellers_id"
-                                        value="{{ $transaction->reseller ? $transaction->reseller->name : '-' }}">
+                                        value="{{ $transaction->buyers_name == null ? ($transaction->reseller ? $transaction->reseller->name : '-') : $transaction->buyers_name }}">
                                 </div>
                             </div>
                         </div>
@@ -223,7 +225,7 @@
                 window.history.back();
             }
 
-            if ($('#shipping_price_value').val() != '') {
+            if ($('#shipping_price_value').length != 0) {
                 if ($('#total_value').val() + $('#shipping_price_value').val() < $('#total_payment_value').val()) {
                     let total = parseInt($('#total_value').val()) + parseInt($('#shipping_price_value').val())
                     $('#total_change').val(
@@ -232,6 +234,8 @@
                 } else {
                     $('#total_change').val('Rp. 0')
                 }
+                console.log($('#total_value').val());
+                console.log($('#total_payment_value').val());
             } else {
                 if ($('#total_value').val() < $('#total_payment_value').val()) {
                     $('#total_change').val(
