@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCashierRequest;
 use App\Http\Requests\StorePaymentCashierRequest;
 use App\Models\Cashier;
+use App\Repositories\AdminRepositories;
 use App\Repositories\CashierRepositories;
+use App\Repositories\PackageRepositories;
 use App\Repositories\PaymentRepositories;
 use App\Repositories\ProductRepositories;
 use App\Repositories\TransactionRepositories;
@@ -13,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use PDF;
 
 class CashierController extends Controller
 {
@@ -21,6 +24,8 @@ class CashierController extends Controller
         protected readonly CashierRepositories $cashier,
         protected readonly PaymentRepositories $payment,
         protected readonly TransactionRepositories $transaction,
+        protected readonly AdminRepositories $admin,
+        protected readonly PackageRepositories $package,
     ) {
     }
 
@@ -77,16 +82,30 @@ class CashierController extends Controller
             'title' => 'Halaman Pembayaran Kasir',
             'cashiers' => $this->cashier->findAll(),
             'payments' => $this->payment->findAll(),
+            'profile' => $this->admin->findById(auth()->user()->admin->id),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
     }
 
-    public function storePayment(StorePaymentCashierRequest $request): RedirectResponse
+    public function storePayment(StorePaymentCashierRequest $request)
     {
         try {
             $this->cashier->storePayment($request->validated());
-            return redirect(route('cashier.index'))->with('success', 'Berhasil melakukan pembayaran transaksi!');
+            $transaction = $this->transaction->findLatest();
+            $transaction = $this->transaction->findByInvois($transaction->invois);
+            $packages = [];
+            foreach ($transaction as $i => $transac) {
+                $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
+            }
+            $data = [
+                'transactions' => $transaction,
+                'packages' => $packages,
+            ];
+            $pdf = PDF::loadView('report-transaction.export.index', $data)->setPaper('a4', 'landscape');
+            $pdfPath = storage_path('app/temp_payment-report.pdf');
+            $pdf->save($pdfPath);
+            return response()->download($pdfPath, 'payment-report.pdf')->deleteFileAfterSend(true);
         } catch (\Exception $e) {
             logger($e->getMessage());
             return redirect(route('cashier.index'))->with('failed', 'Gagal melakukan pembayaran transaksi!');
