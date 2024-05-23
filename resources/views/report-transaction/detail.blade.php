@@ -43,7 +43,7 @@
                                                         $packageName = $package->name;
                                                     }
                                                 }
-                                            } else {
+                                            } elseif (count($packages) != 0) {
                                                 if ($packages[0] != null) {
                                                     $packageName = $packages[0]->name;
                                                 }
@@ -61,7 +61,7 @@
                                                         $packagePrice = $package->selling_price;
                                                     }
                                                 }
-                                            } else {
+                                            } elseif (count($packages) != 0) {
                                                 if ($packages[0] != null) {
                                                     $packagePrice = $packages[0]->selling_price;
                                                 }
@@ -75,7 +75,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="total_payment" class="form-label">Total Per Produk</label>
                                             <input readonly type="text" class="form-control" id="total_payment"
-                                                value="Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ',', '.') : number_format($transaction->total_per_product, 2, ',', '.') }}">
+                                                value="Rp. {{ $transaction->total_per_product == null ? number_format($transaction->total, 2, ',', '.') : number_format($transaction->total_per_product, 2, ',', '.') }}">
                                         </div>
                                     @endif
                                     <div class="{{ $transaction->payments_id == null ? 'col-6' : 'col-12' }} mb-3">
@@ -155,21 +155,14 @@
                                 <h6 class="card-body-title mb-4">Total Pembelian</h6>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="total" class="form-label">Total</label>
+                                        <label for="total" class="form-label">Total Pembelian Barang</label>
                                         <input readonly type="text" class="form-control" id="total"
                                             value="Rp. {{ number_format($transaction->total, 2, ',', '.') }}">
                                         <input type="hidden" class="form-control" id="total_value"
                                             value="{{ $transaction->total }}">
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="total_payment" class="form-label">Total Bayar</label>
-                                        <input readonly type="text" class="form-control" id="total_payment"
-                                            value="Rp. {{ number_format($transaction->total_payment, 2, ',', '.') }}">
-                                        <input type="hidden" class="form-control" id="total_payment_value"
-                                            value="{{ $transaction->total_payment }}">
-                                    </div>
                                     @if ($transaction->shipping == 'ekspedisi')
-                                        <div class="col-12">
+                                        <div class="col-md-6 mb-3">
                                             <label for="shipping_price" class="form-label">Total Pengiriman</label>
                                             <input readonly type="text" class="form-control" id="shipping_price"
                                                 value="Rp. {{ number_format($transaction->shipping_price, 2, ',', '.') }}">
@@ -177,7 +170,19 @@
                                                 value="{{ $transaction->shipping_price }}">
                                         </div>
                                     @endif
-                                    <div class="col-12 {{ $transaction->shipping == 'ekspedisi' ? 'mt-3' : '' }}">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="total_all" class="form-label">Total Keseluruhan</label>
+                                        <input readonly type="text" class="form-control" id="total_all"
+                                            value="Rp. {{ $transaction->shipping == 'ekspedisi' ? number_format($transaction->total + $transaction->shipping_price, 2, ',', '.') : number_format($transaction->total, 2, ',', '.') }}">
+                                    </div>
+                                    <div class="{{ $transaction->shipping == 'ekspedisi' ? 'col-md-6' : 'col-12' }} mb-3">
+                                        <label for="total_payment" class="form-label">Total Bayar</label>
+                                        <input readonly type="text" class="form-control" id="total_payment"
+                                            value="Rp. {{ number_format($transaction->total_payment, 2, ',', '.') }}">
+                                        <input type="hidden" class="form-control" id="total_payment_value"
+                                            value="{{ $transaction->total_payment }}">
+                                    </div>
+                                    <div class="col-12">
                                         <label for="total_change" class="form-label">Total Kembalian</label>
                                         <input readonly type="text" class="form-control" id="total_change">
                                     </div>
