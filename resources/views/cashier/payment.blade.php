@@ -96,7 +96,7 @@
                     <input readonly type="number" class="form-control" id="total_change">
                 </div>
                 <div class="col-12 d-flex justify-content-end">
-                    <button type="submit" class="button-primary">Lakukan Pembayaran</button>
+                    <button id="button-submit" type="submit" disabled class="button-primary">Lakukan Pembayaran</button>
                 </div>
             </form>
         </div>
@@ -114,7 +114,13 @@
 
             $("#total_payment").keyup(function() {
                 let totalChange = $('#total_payment').val() - $('#total').val()
-                totalChange = totalChange < 0 ? 0 : totalChange
+                if (totalChange < 0) {
+                    totalChange = 0
+                    $("#button-submit").attr("disabled", true)
+                } else {
+                    totalChange = totalChange
+                    $("#button-submit").attr("disabled", false)
+                }
                 $('#total_change').val(totalChange)
             });
 
