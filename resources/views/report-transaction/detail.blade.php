@@ -137,7 +137,7 @@
                                     <div class="col-12 mb-3" id="formShippingAddress">
                                         <label for="shipping_address" class="form-label">Alamat Pengiriman</label>
                                         <input readonly type="text" class="form-control" id="shipping_address"
-                                            value="{{ $transaction->shipping_address }}">
+                                            value="{{ $transaction->address }}">
                                     </div>
                                 @endif
                                 @if ($transaction->payments_id == null)
