@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('resellers_id')->nullable();
             $table->bigInteger('payments_id')->nullable();
             $table->string('proof_of_payment')->nullable();
+            $table->string('buyers_name')->nullable();
             $table->string('invois');
             $table->integer('quantity');
             $table->enum('shipping', ['ekspedisi', 'offline']);
