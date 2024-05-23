@@ -93,19 +93,20 @@ class CashierController extends Controller
         try {
             $this->cashier->storePayment($request->validated());
             $transaction = $this->transaction->findLatest();
-            $transaction = $this->transaction->findByInvois($transaction->invois);
-            $packages = [];
-            foreach ($transaction as $i => $transac) {
-                $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
-            }
-            $data = [
-                'transactions' => $transaction,
-                'packages' => $packages,
-            ];
-            $pdf = PDF::loadView('report-transaction.export.index', $data)->setPaper('a4', 'landscape');
-            $pdfPath = storage_path('app/temp_payment-report.pdf');
-            $pdf->save($pdfPath);
-            return response()->download($pdfPath, 'payment-report.pdf')->deleteFileAfterSend(true);
+            // $transaction = $this->transaction->findByInvois($transaction->invois);
+            // $packages = [];
+            // foreach ($transaction as $i => $transac) {
+            //     $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
+            // }
+            // $data = [
+            //     'transactions' => $transaction,
+            //     'packages' => $packages,
+            // ];
+            // $pdf = PDF::loadView('report-transaction.export.index', $data)->setPaper('a4', 'landscape');
+            // $pdfPath = storage_path('app/temp_payment-report.pdf');
+            // $pdf->save($pdfPath);
+            // return response()->download($pdfPath, 'payment-report.pdf')->deleteFileAfterSend(true);
+            return redirect(route('transaction.show', $transaction->id))->with('success', 'Berhasil melakukan pembayaran transaksi!');
         } catch (\Exception $e) {
             logger($e->getMessage());
             return redirect(route('cashier.index'))->with('failed', 'Gagal melakukan pembayaran transaksi!');
