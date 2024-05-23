@@ -63,7 +63,20 @@
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
-                                    <td>{{ $transaction->product->name }}</td>
+                                    <td>
+                                        @php
+                                            $productNames = [];
+                                        @endphp
+                                        @foreach ($transactions as $transac)
+                                            @if ($transaction->invois == $transac->invois)
+                                                @php
+                                                    $productNames[] =
+                                                        $transac->product->name . ' (' . $transac->quantity . 'x)';
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                        {{ implode(', ', $productNames) }}
+                                    </td>
                                     <td class="text-capitalize ">{{ $transaction->shipping }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         @if ($transaction->shipping == 'ekspedisi' && $transaction->shipping_price == null)
