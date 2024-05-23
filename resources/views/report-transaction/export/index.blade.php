@@ -78,7 +78,7 @@
                                 $packageName = $package->name;
                             }
                         }
-                    } else {
+                    } elseif (count($packages) != 0) {
                         if ($packages[0] != null) {
                             $packageName = $packages[0]->name;
                         }
@@ -91,7 +91,7 @@
                                 $packagePrice = $package->selling_price;
                             }
                         }
-                    } else {
+                    } elseif (count($packages) != 0) {
                         if ($packages[0] != null) {
                             $packagePrice = $packages[0]->selling_price;
                         }
