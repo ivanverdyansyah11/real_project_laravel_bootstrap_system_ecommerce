@@ -14,8 +14,7 @@
             @endif
         </div>
         <div class="col-12 pe-lg-0 mb-4">
-            <form id="payment-form" class="row" action="{{ route('store-payment') }}" method="POST"
-                enctype="multipart/form-data">
+            <form class="row" action="{{ route('store-payment') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @php
                     $totalPerProduct = [];
@@ -97,8 +96,7 @@
                     <input readonly type="number" class="form-control" id="total_change">
                 </div>
                 <div class="col-12 d-flex justify-content-end">
-                    <button type="button" id="submit-payment" class="button-primary">Lakukan Pembayaran</button>
-                    {{-- <button type="submit" class="button-primary">Lakukan Pembayaran</button> --}}
+                    <button type="submit" class="button-primary">Lakukan Pembayaran</button>
                 </div>
             </form>
         </div>
@@ -114,12 +112,10 @@
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
 
-            $(document).on('change', '#total_payment', function() {
-                if ($('#total').val() < $('#total_payment').val()) {
-                    $('#total_change').val($('#total_payment').val() - $('#total').val())
-                } else {
-                    $('#total_change').val('0')
-                }
+            $("#total_payment").keyup(function() {
+                let totalChange = $('#total_payment').val() - $('#total').val()
+                totalChange = totalChange < 0 ? 0 : totalChange
+                $('#total_change').val(totalChange)
             });
 
             $(document).on('change', '#payments_id', function() {
@@ -141,35 +137,35 @@
                 }
             });
 
-            document.getElementById('submit-payment').addEventListener('click', function(event) {
-                event.preventDefault();
-                const form = document.getElementById('payment-form');
-                const formData = new FormData(form);
-                fetch(form.action, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.blob();
-                        } else {
-                            throw new Error('Gagal membuat PDF');
-                        }
-                    })
-                    .then(blob => {
-                        const link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = 'payment-report.pdf';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        window.location.href = "{{ route('cashier.index') }}";
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Gagal melakukan pembayaran transaksi!');
-                    });
-            });
+            // document.getElementById('submit-payment').addEventListener('click', function(event) {
+            //     event.preventDefault();
+            //     const form = document.getElementById('payment-form');
+            //     const formData = new FormData(form);
+            //     fetch(form.action, {
+            //             method: 'POST',
+            //             body: formData
+            //         })
+            //         .then(response => {
+            //             if (response.ok) {
+            //                 return response.blob();
+            //             } else {
+            //                 throw new Error('Gagal membuat PDF');
+            //             }
+            //         })
+            //         .then(blob => {
+            //             const link = document.createElement('a');
+            //             link.href = window.URL.createObjectURL(blob);
+            //             link.download = 'payment-report.pdf';
+            //             document.body.appendChild(link);
+            //             link.click();
+            //             document.body.removeChild(link);
+            //             window.location.href = "{{ route('cashier.index') }}";
+            //         })
+            //         .catch(error => {
+            //             console.error('Error:', error);
+            //             alert('Gagal melakukan pembayaran transaksi!');
+            //         });
+            // });
         </script>
     @endpush
 @endsection
