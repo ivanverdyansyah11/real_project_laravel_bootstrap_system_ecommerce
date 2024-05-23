@@ -18,6 +18,7 @@ class TransactionRewardController extends Controller
         protected readonly TransactionRepositories $transactions,
         protected readonly ResellerRepositories $reseller,
         protected readonly RewardRepositories $reward,
+        protected readonly TransactionRepositories $transactionRepositories,
     ) {
     }
 
@@ -45,6 +46,8 @@ class TransactionRewardController extends Controller
         return view('report-reward.detail', [
             'title' => 'Halaman Detail Rekap Poin',
             'transaction' => $this->transaction->findById($transaction_id),
+            'transaction_pendings' => $this->transactionRepositories->findAllWherePending(),
+            'transaction_payments' => $this->transactionRepositories->findAllWherePayment(),
         ]);
     }
 
