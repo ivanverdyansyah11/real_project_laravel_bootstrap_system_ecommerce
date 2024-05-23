@@ -26,4 +26,9 @@ class AdminRepositories
     {
         return $this->admin->with(['user'])->where('id', $admin_id)->first();
     }
+
+    public function findFirst(): admin
+    {
+        return $this->admin->with(['user'])->first();
+    }
 }
