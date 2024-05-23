@@ -63,9 +63,22 @@
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
-                                    <td>{{ $transaction->product->name }}</td>
+                                    <td>
+                                        @php
+                                            $productNames = [];
+                                        @endphp
+                                        @foreach ($transactions as $transac)
+                                            @if ($transaction->invois == $transac->invois)
+                                                @php
+                                                    $productNames[] =
+                                                        $transac->product->name . ' (' . $transac->quantity . 'x)';
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                        {{ implode(', ', $productNames) }}
+                                    </td>
                                     <td>Rp.
-                                        {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ',', '.') : number_format($transaction->total_per_product, 2, ',', '.') }}
+                                        {{ number_format($transaction->total, 2, ',', '.') }}
                                     </td>
                                     <td class="wrapper d-flex gap-2">
                                         <a href="{{ route('transaction.show', $transaction->id) }}"
