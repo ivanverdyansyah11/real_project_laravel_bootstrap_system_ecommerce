@@ -14,7 +14,8 @@
             @endif
         </div>
         <div class="col-12 pe-lg-0 mb-4">
-            <form class="row" action="{{ route('store-payment') }}" method="POST" enctype="multipart/form-data">
+            <form id="payment-form" class="row" action="{{ route('store-payment') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @php
                     $totalPerProduct = [];
@@ -30,6 +31,10 @@
                     );
                 @endphp
                 <input type="hidden" name="status" value="1">
+                <div class="col-12 mb-3">
+                    <label for="buyers_name" class="form-label">Nama Pembeli</label>
+                    <input required type="text" class="form-control" id="buyers_name" name="buyers_name">
+                </div>
                 <div class="col-12 mb-3 d-flex flex-column">
                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
                     <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
@@ -92,7 +97,8 @@
                     <input readonly type="number" class="form-control" id="total_change">
                 </div>
                 <div class="col-12 d-flex justify-content-end">
-                    <button type="submit" class="button-primary">Lakukan Pembayaran</button>
+                    <button type="button" id="submit-payment" class="button-primary">Lakukan Pembayaran</button>
+                    {{-- <button type="submit" class="button-primary">Lakukan Pembayaran</button> --}}
                 </div>
             </form>
         </div>
@@ -133,6 +139,36 @@
                     $('#owner_name').val('');
                     $('#account_number').val('');
                 }
+            });
+
+            document.getElementById('submit-payment').addEventListener('click', function(event) {
+                event.preventDefault();
+                const form = document.getElementById('payment-form');
+                const formData = new FormData(form);
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.blob();
+                        } else {
+                            throw new Error('Gagal membuat PDF');
+                        }
+                    })
+                    .then(blob => {
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'payment-report.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.location.href = "{{ route('cashier.index') }}";
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Gagal melakukan pembayaran transaksi!');
+                    });
             });
         </script>
     @endpush
