@@ -35,7 +35,8 @@
                     Penghargaan</a>
                 <a href="{{ route('shipping.index') }}" class="{{ Route::is('shipping.index') ? 'active' : '' }}">Data
                     Pengiriman</a>
-                <a href="{{ route('management-product.index') }}" class="{{ Route::is('management-product.index') ? 'active' : '' }}">Managemen Produk</a>
+                <a href="{{ route('management-product.index') }}"
+                    class="{{ Route::is('management-product.index') ? 'active' : '' }}">Managemen Produk</a>
             </div>
             <button id="data_cashier" type="button"
                 class="link-item d-flex align-items-center {{ Route::is('cashier.index') || Route::is('cashier.create') ? 'active' : '' }}">
@@ -44,10 +45,10 @@
             </button>
             <div class="w-100 item-child {{ Route::is('cashier.index') || Route::is('cashier.create') ? 'active' : '' }}"
                 id="child_data_cashier">
-                <a href="{{ route('cashier.index') }}" class="{{ Route::is('cashier.index') ? 'active' : '' }}">Daftar
-                    Transaksi</a>
                 <a href="{{ route('cashier.create') }}"
                     class="{{ Route::is('cashier.create') ? 'active' : '' }}">Tambah Transaksi</a>
+                <a href="{{ route('cashier.index') }}" class="{{ Route::is('cashier.index') ? 'active' : '' }}">Daftar
+                    Transaksi</a>
             </div>
             <button id="data_transaction" type="button"
                 class="link-item {{ count($transaction_pendings) != 0 || count($transaction_payments) != 0 ? 'notification' : '' }} d-flex align-items-center {{ Route::is('transaction-pending') || Route::is('transaction-payment') || Route::is('transaction-finish') ? 'active' : '' }}">
