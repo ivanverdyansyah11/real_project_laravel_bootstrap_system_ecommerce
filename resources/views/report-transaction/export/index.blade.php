@@ -56,7 +56,8 @@
         </tr>
     </table>
 
-    <p style="text-transform: uppercase; margin-top: 42px;">Nama: Ni Luh Sri Antari</p>
+    <p style="text-transform: uppercase; margin-top: 42px;">Nama:
+        {{ $transactions[0]->buyers_name ? $transactions[0]->buyers_name : '-' }}</p>
 
     <table class="border-table" style="width: 100%; margin-top: 6px;">
         <tr>
