@@ -40,8 +40,8 @@
                             height="16">
                     </button>
                 </form>
-                <a target="_blank" href="{{ route('export-invoice-excel') }}"
-                    class="button-primary text-nowrap" style="height: fit-content;">Cetak Invoice Excel</a>
+                <a target="_blank" href="{{ route('export-invoice-excel') }}" class="button-primary text-nowrap"
+                    style="height: fit-content;">Cetak Invoice Excel</a>
             </div>
             <div class="wrapper-table">
                 <table id="table_report" class="table display responsive nowrap table-striped" style="width:100%">
@@ -68,9 +68,22 @@
                                 <tr>
                                     <td>{{ $transaction->invois }}</td>
                                     <td>{{ $transaction->reseller ? $transaction->reseller->name : '-' }}</td>
-                                    <td>{{ $transaction->product->name }}</td>
+                                    <td>
+                                        @php
+                                            $productNames = [];
+                                        @endphp
+                                        @foreach ($transactions as $transac)
+                                            @if ($transaction->invois == $transac->invois)
+                                                @php
+                                                    $productNames[] =
+                                                        $transac->product->name . ' (' . $transac->quantity . 'x)';
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                        {{ implode(', ', $productNames) }}
+                                    </td>
                                     <td>Rp.
-                                        {{ $transaction->total_per_product == null ? number_format($transaction->total_payment, 2, ',', '.') : number_format($transaction->total_per_product, 2, ',', '.') }}
+                                        {{ number_format($transaction->total, 2, ',', '.') }}
                                     </td>
                                     <td class="wrapper d-flex gap-2">
                                         <a href="{{ route('transaction.show', $transaction->id) }}"
