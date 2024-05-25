@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePackageRequest;
 use App\Models\Package;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 class PackageController extends Controller
 {
     public function __construct(
+        protected readonly ResellerRepositories $reseller,
         protected readonly PackageRepositories $package,
         protected readonly ProductRepositories $product,
         protected readonly TransactionRepositories $transaction,
@@ -25,6 +27,7 @@ class PackageController extends Controller
     {
         return view('package.index', [
             'title' => 'Halaman Paket',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'packages' => $this->package->findAllPaginate(),
             'products' => $this->product->findAll(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
