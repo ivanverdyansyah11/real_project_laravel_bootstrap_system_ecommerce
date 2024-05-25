@@ -46,6 +46,7 @@
                             <th>Nama Reseller</th>
                             <th>Nama Produk</th>
                             <th>Pengiriman</th>
+                            <th>Tanggal & Waktu</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -53,6 +54,7 @@
                         @if (count($uniqueTransactions) == 0)
                             <tr>
                                 <td>Data transaksi menunggu pembayaran tidak ditemukan!</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -78,6 +80,7 @@
                                         {{ implode(', ', $productNames) }}
                                     </td>
                                     <td class="text-capitalize ">{{ $transaction->shipping }}</td>
+                                    <td>{{ $transaction->created_at }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         @if ($transaction->shipping == 'ekspedisi' && $transaction->shipping_price == null)
                                             <button type="button"
@@ -107,7 +110,10 @@
     @push('js')
         <script>
             $('#table_transaction').DataTable({
-                responsive: true
+                responsive: true,
+                order: [
+                    [4, 'desc']
+                ]
             });
 
             $(document).on('click', '[data-bs-target="#approveModal"]', function() {
