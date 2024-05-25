@@ -129,10 +129,14 @@
 
     @if (auth()->user()->role == 'reseller')
         <div class="product-name d-none">
-            @foreach ($total_acumulation as $total){{ $total->name . ',' }}@endforeach
+            @foreach ($total_acumulation as $total)
+                {{ $total->name . ',' }}
+            @endforeach
         </div>
         <div class="product-quantity d-none">
-            @foreach ($total_acumulation as $total){{ $total->total_quantity . ',' }}@endforeach
+            @foreach ($total_acumulation as $total)
+                {{ $total->total_quantity . ',' }}
+            @endforeach
         </div>
     @endif
 
