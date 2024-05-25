@@ -27,6 +27,7 @@ class TransactionRewardController extends Controller
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('report-reward.index', [
                 'title' => 'Halaman Rekap Poin',
+                'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                 'transactions' => $this->transaction->findAll(),
                 'transaction_pendings' => $this->transactions->findAllWherePending(),
                 'transaction_payments' => $this->transactions->findAllWherePayment(),
@@ -45,6 +46,7 @@ class TransactionRewardController extends Controller
     {
         return view('report-reward.detail', [
             'title' => 'Halaman Detail Rekap Poin',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'transaction' => $this->transaction->findById($transaction_id),
             'transaction_pendings' => $this->transactionRepositories->findAllWherePending(),
             'transaction_payments' => $this->transactionRepositories->findAllWherePayment(),
