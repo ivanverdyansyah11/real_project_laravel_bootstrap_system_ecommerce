@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateManagementProductRequest;
 use App\Models\ManagementProduct;
 use App\Repositories\ManagementProductRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,7 @@ use Illuminate\View\View;
 class ManagementProductController extends Controller
 {
     public function __construct(
+        protected readonly ResellerRepositories $reseller,
         protected readonly ManagementProductRepositories $managementProduct,
         protected readonly ProductRepositories $product,
         protected readonly TransactionRepositories $transaction,
@@ -25,6 +27,7 @@ class ManagementProductController extends Controller
     {
         return view('management-product.index', [
             'title' => 'Halaman Managemen Produk',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'products' => $this->product->findAll(),
             'management_products' => $this->managementProduct->findAllPaginate(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
