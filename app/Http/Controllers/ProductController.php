@@ -8,12 +8,14 @@ use App\Models\Product;
 use App\Repositories\CategoryRepositories;
 use App\Repositories\ProductImageRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 
 class ProductController extends Controller
 {
     public function __construct(
+        protected readonly ResellerRepositories $reseller,
         protected readonly ProductRepositories $product,
         protected readonly ProductImageRepositories $productImage,
         protected readonly CategoryRepositories $category,
@@ -25,6 +27,7 @@ class ProductController extends Controller
     {
         return view('product.index', [
             'title' => 'Halaman Produk',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'products' => $this->product->findAllPaginate(),
             'product_limits' => $this->product->findAllLimit(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -36,6 +39,7 @@ class ProductController extends Controller
     {
         return view('product.detail', [
             'title' => 'Halaman Detail Produk',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'product' => $this->product->findById($product->id),
             'product_images' => $this->productImage->findAllWhereByproductId($product->id),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -47,6 +51,7 @@ class ProductController extends Controller
     {
         return view('product.add', [
             'title' => 'Halaman Tambah Produk',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'categories' => $this->category->findAll(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
@@ -68,6 +73,7 @@ class ProductController extends Controller
     {
         return view('product.edit', [
             'title' => 'Halaman Edit Produk',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'product' => $this->product->findById($product->id),
             'categories' => $this->category->findAll(),
             'product_images' => $this->productImage->findAllWhereByproductId($product->id),
