@@ -46,6 +46,7 @@
                             <th>Nama Reseller</th>
                             <th>Nama Produk</th>
                             <th>Total</th>
+                            <th>Tanggal & Waktu</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -53,6 +54,7 @@
                         @if (count($uniqueTransactions) == 0)
                             <tr>
                                 <td>Data transaksi selesai tidak ditemukan!</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -80,6 +82,7 @@
                                     <td>Rp.
                                         {{ number_format($transaction->total, 2, ',', '.') }}
                                     </td>
+                                    <td>{{ $transaction->created_at }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         <a href="{{ route('transaction.show', $transaction->id) }}"
                                             class="button-detail d-flex align-items-center justify-content-center">
@@ -106,7 +109,10 @@
     @push('js')
         <script>
             $('#table_transaction').DataTable({
-                responsive: true
+                responsive: true,
+                order: [
+                    [4, 'desc']
+                ]
             });
         </script>
     @endpush
