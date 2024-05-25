@@ -21,6 +21,7 @@ class ResellerController extends Controller
     {
         return view('reseller.index', [
             'title' => 'Halaman Reseller',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'resellers' => $this->reseller->findAll(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
@@ -31,6 +32,7 @@ class ResellerController extends Controller
     {
         return view('reseller.detail', [
             'title' => 'Halaman Detail Reseller',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'reseller' => $this->reseller->findById($reseller->id),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
@@ -51,6 +53,7 @@ class ResellerController extends Controller
     {
         return view('reseller.add', [
             'title' => 'Halaman Tambah Reseller',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
         ]);
@@ -70,6 +73,7 @@ class ResellerController extends Controller
     {
         return view('reseller.edit', [
             'title' => 'Halaman Edit Reseller',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'reseller' => $this->reseller->findById($reseller->id),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
