@@ -20,7 +20,7 @@
                             <th>Nama Reseller</th>
                             <th>Nama Penghargaan</th>
                             <th>Poin Dibutuhkan</th>
-                            <th>Tanggal Ditukarnya</th>
+                            <th>Tanggal & Waktu</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,7 +41,7 @@
                                     <td>{{ $transaction->reseller->name }}</td>
                                     <td>{{ $transaction->reward->name }}</td>
                                     <td>{{ $transaction->reward->points_required }}</td>
-                                    <td>{{ Carbon\Carbon::parse($transaction->created_at)->format('l, d F Y') }}</td>
+                                    <td>{{ $transaction->created_at }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         <a href="{{ route('report-reward.show', $transaction->id) }}"
                                             class="button-detail d-flex align-items-center justify-content-center">
@@ -62,7 +62,10 @@
         <script>
             if (@json($transactions->count())) {
                 $('#table_report').DataTable({
-                    responsive: true
+                    responsive: true,
+                    order: [
+                        [4, 'desc']
+                    ]
                 });
             }
         </script>
