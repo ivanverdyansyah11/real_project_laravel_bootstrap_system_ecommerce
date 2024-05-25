@@ -25,6 +25,7 @@ class DashboardController extends Controller
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('dashboard.index', [
                 'title' => 'Halaman Dashboard',
+                'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                 'total_product' => count($this->product->findAll()),
                 'total_package' => count($this->package->findAll()),
                 'total_reseller' => count($this->reseller->findAll()),
