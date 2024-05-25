@@ -26,6 +26,7 @@ class RewardController extends Controller
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('reward.index', [
                 'title' => 'Halaman Penghargaan',
+                'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                 'rewards' => $this->reward->findAllPaginate(),
                 'transaction_pendings' => $this->transaction->findAllWherePending(),
                 'transaction_payments' => $this->transaction->findAllWherePayment(),
