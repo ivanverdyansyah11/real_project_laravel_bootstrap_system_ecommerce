@@ -14,11 +14,17 @@ class ResellerRepositories
         protected readonly User $user,
         protected readonly Reseller $reseller,
         protected readonly UploadFile $uploadFile,
-    ) {}
+    ) {
+    }
 
     public function findAll()
     {
         return $this->reseller->with(['user'])->latest()->get();
+    }
+
+    public function findAllWhereStatus()
+    {
+        return $this->user->where('role', 'reseller')->where('status', 0)->latest()->get();
     }
 
     public function findAllPaginate()
