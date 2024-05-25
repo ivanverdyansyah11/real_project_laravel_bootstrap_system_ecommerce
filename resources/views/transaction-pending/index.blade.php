@@ -47,6 +47,7 @@
                             <th>Nama Reseller</th>
                             <th>Nama Produk</th>
                             <th>Total</th>
+                            <th>Tanggal & Waktu</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -54,6 +55,7 @@
                         @if (count($uniqueTransactions) == 0)
                             <tr>
                                 <td>Data transaksi ditunda tidak ditemukan!</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -81,6 +83,7 @@
                                     <td>Rp.
                                         {{ number_format($transaction->total, 2, ',', '.') }}
                                     </td>
+                                    <td>{{ $transaction->created_at }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         <button type="button"
                                             class="button-approved d-flex align-items-center justify-content-center"
@@ -115,7 +118,10 @@
     @push('js')
         <script>
             $('#table_transaction').DataTable({
-                responsive: true
+                responsive: true,
+                order: [
+                    [4, 'desc']
+                ]
             });
 
             $(document).on('click', '[data-bs-target="#approveModal"]', function() {
