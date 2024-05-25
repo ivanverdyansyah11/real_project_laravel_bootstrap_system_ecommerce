@@ -10,6 +10,7 @@ use App\Repositories\CashierRepositories;
 use App\Repositories\PackageRepositories;
 use App\Repositories\PaymentRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use PDF;
 class CashierController extends Controller
 {
     public function __construct(
+        protected readonly ResellerRepositories $reseller,
         protected readonly ProductRepositories $product,
         protected readonly CashierRepositories $cashier,
         protected readonly PaymentRepositories $payment,
@@ -33,6 +35,7 @@ class CashierController extends Controller
     {
         return view('cashier.index', [
             'title' => 'Halaman Kasir',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'cashiers' => $this->cashier->findAll(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
             'transaction_payments' => $this->transaction->findAllWherePayment(),
@@ -58,6 +61,7 @@ class CashierController extends Controller
     {
         return view('cashier.create', [
             'title' => 'Halaman Kasir',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'products' => $this->product->findAll(),
             'cashiers' => $this->cashier->findAll(),
             'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -80,6 +84,7 @@ class CashierController extends Controller
     {
         return view('cashier.payment', [
             'title' => 'Halaman Pembayaran Kasir',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'cashiers' => $this->cashier->findAll(),
             'payments' => $this->payment->findAll(),
             'profile' => $this->admin->findById(auth()->user()->admin->id),
@@ -93,19 +98,6 @@ class CashierController extends Controller
         try {
             $this->cashier->storePayment($request->validated());
             $transaction = $this->transaction->findLatest();
-            // $transaction = $this->transaction->findByInvois($transaction->invois);
-            // $packages = [];
-            // foreach ($transaction as $i => $transac) {
-            //     $packages[] = $this->package->findWhereProduct($transac->quantity, $transac->products_id);
-            // }
-            // $data = [
-            //     'transactions' => $transaction,
-            //     'packages' => $packages,
-            // ];
-            // $pdf = PDF::loadView('report-transaction.export.index', $data)->setPaper('a4', 'landscape');
-            // $pdfPath = storage_path('app/temp_payment-report.pdf');
-            // $pdf->save($pdfPath);
-            // return response()->download($pdfPath, 'payment-report.pdf')->deleteFileAfterSend(true);
             return redirect(route('transaction.show', $transaction->id))->with('success', 'Berhasil melakukan pembayaran transaksi!');
         } catch (\Exception $e) {
             logger($e->getMessage());
