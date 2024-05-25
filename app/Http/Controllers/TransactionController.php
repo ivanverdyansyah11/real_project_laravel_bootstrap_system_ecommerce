@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use App\Repositories\CartRepositories;
 use App\Repositories\PackageRepositories;
 use App\Repositories\ProductRepositories;
+use App\Repositories\ResellerRepositories;
 use App\Repositories\TransactionRepositories;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -23,6 +24,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class TransactionController extends Controller
 {
     public function __construct(
+        protected readonly ResellerRepositories $reseller,
         protected readonly TransactionRepositories $transaction,
         protected readonly ProductRepositories $product,
         protected readonly PackageRepositories $package,
@@ -44,6 +46,7 @@ class TransactionController extends Controller
 
                 return view('transaction-pending.index', [
                     'title' => 'Halaman Transaksi Pesanan',
+                    'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                     'transactions' => $transactions,
                     'request' => $request,
                     'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -69,6 +72,7 @@ class TransactionController extends Controller
 
                 return view('transaction-payment.index', [
                     'title' => 'Halaman Transaksi Menunggu Pembayaran',
+                    'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                     'transactions' => $transactions,
                     'request' => $request,
                     'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -84,6 +88,7 @@ class TransactionController extends Controller
                 }
                 return view('transaction-finish.index', [
                     'title' => 'Halaman Transaksi Selesai',
+                    'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                     'transactions' => $transactions,
                     'request' => $request,
                     'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -100,6 +105,7 @@ class TransactionController extends Controller
 
                 return view('report-transaction.index', [
                     'title' => 'Halaman Rekap Transaksi',
+                    'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                     'transactions' => $transactions,
                     'request' => $request,
                     'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -129,6 +135,7 @@ class TransactionController extends Controller
         }
         return view('report-transaction.detail', [
             'title' => 'Halaman Detail Transaksi',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'transactions' => $transaction,
             'packages' => $packages,
             'transaction_pendings' => $this->transaction->findAllWherePending(),
@@ -229,6 +236,7 @@ class TransactionController extends Controller
         $transaction = $this->transaction->findById($transaction->id);
         return view('report-transaction.edit', [
             'title' => 'Halaman Edit Transaksi',
+            'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
             'transactions' => $this->transaction->findByInvois($transaction->invois),
             'transactionId' => $transaction->id,
             'transaction_pendings' => $this->transaction->findAllWherePending(),
