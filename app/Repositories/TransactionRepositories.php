@@ -55,17 +55,17 @@ class TransactionRepositories
 
     public function findAllWherePendingFilter(Request $request)
     {
-        return $this->transaction->where('status', 0)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
+        return $this->transaction->where('status', 0)->whereBetween('updated_at', [$request->start_date, $request->end_date])->latest()->get();
     }
 
     public function findAllWherePayment()
     {
-        return $this->transaction->where('status', 2)->latest()->get();
+        return $this->transaction->where('status', 2)->latest()->latest()->get();
     }
 
     public function findAllWherePaymentFilter(Request $request)
     {
-        return $this->transaction->where('status', 2)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
+        return $this->transaction->where('status', 2)->whereBetween('updated_at', [$request->start_date, $request->end_date])->latest()->get();
     }
 
     public function findAllWherePaymentByReseller(int $users_id)
@@ -87,7 +87,7 @@ class TransactionRepositories
 
     public function findAllWhereFinishFilter(Request $request)
     {
-        return $this->transaction->where('status', 1)->whereBetween('updated_at', [$request->start_date, $request->end_date])->get();
+        return $this->transaction->where('status', 1)->whereBetween('updated_at', [$request->start_date, $request->end_date])->latest()->get();
     }
 
     public function findAllWhereFinishByReseller(int $users_id)
