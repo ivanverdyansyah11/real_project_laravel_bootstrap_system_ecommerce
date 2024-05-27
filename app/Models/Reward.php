@@ -11,6 +11,6 @@ class Reward extends Model
     protected $guarded = ['id'];
 
     public function reward_transaction() {
-        return $this->hasMany(TransactionReward::class, 'id');
+        return $this->hasMany(TransactionReward::class, 'id')->withTrashed();
     }
 }
