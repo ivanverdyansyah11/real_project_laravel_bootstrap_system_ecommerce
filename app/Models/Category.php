@@ -11,6 +11,6 @@ class Category extends Model
     protected $guarded = ['id'];
 
     public function products() {
-        return $this->hasMany(Product::class, 'id');
+        return $this->hasMany(Product::class, 'id')->withTrashed();
     }
 }
