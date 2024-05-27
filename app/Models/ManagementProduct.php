@@ -11,6 +11,6 @@ class ManagementProduct extends Model
     protected $guarded = ['id'];
 
     public function product() {
-        return $this->belongsTo(Product::class, 'products_id');
+        return $this->belongsTo(Product::class, 'products_id')->withTrashed();
     }
 }
