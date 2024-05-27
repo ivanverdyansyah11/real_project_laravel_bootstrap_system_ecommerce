@@ -12,11 +12,11 @@ class ProductImage extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'products_id');
+        return $this->belongsTo(Product::class, 'products_id')->withTrashed();
     }
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class, 'id');
+        return $this->belongsTo(Cart::class, 'id')->withTrashed();
     }
 }
