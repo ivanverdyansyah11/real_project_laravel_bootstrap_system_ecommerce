@@ -12,16 +12,16 @@ class Transaction extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'products_id');
+        return $this->belongsTo(Product::class, 'products_id')->withTrashed();
     }
 
     public function reseller()
     {
-        return $this->belongsTo(Reseller::class, 'resellers_id');
+        return $this->belongsTo(Reseller::class, 'resellers_id')->withTrashed();
     }
 
     public function payment()
     {
-        return $this->belongsTo(Payment::class, 'payments_id');
+        return $this->belongsTo(Payment::class, 'payments_id')->withTrashed();
     }
 }
