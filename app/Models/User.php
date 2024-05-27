@@ -19,10 +19,10 @@ class User extends Authenticatable
     ];
 
     public function reseller() {
-        return $this->belongsTo(Reseller::class, 'id');
+        return $this->hasOne(Reseller::class, 'id')->withTrashed();
     }
 
     public function admin() {
-        return $this->belongsTo(Admin::class, 'id');
+        return $this->hasOne(Admin::class, 'id')->withTrashed();
     }
 }
