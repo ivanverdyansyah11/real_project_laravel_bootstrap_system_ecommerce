@@ -27,6 +27,7 @@ class ProfileController extends Controller
         if (auth()->user()->role == 'super_admin' || auth()->user()->role == 'admin') {
             return view('profile.index', [
                 'title' => 'Halaman Profil',
+                'total_reseller_unactive' => count($this->reseller->findAllWhereStatus()),
                 'profile' => $this->admin->findById(auth()->user()->admin->id),
                 'transaction_pendings' => $this->transaction->findAllWherePending(),
                 'transaction_payments' => $this->transaction->findAllWherePayment(),
