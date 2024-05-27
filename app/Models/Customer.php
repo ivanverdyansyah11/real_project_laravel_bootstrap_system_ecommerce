@@ -11,6 +11,6 @@ class Customer extends Model
     protected $guarded = ['id'];
 
     public function transaction() {
-        return $this->hasMany(Transaction::class, 'id');
+        return $this->hasMany(Transaction::class, 'id')->withTrashed();
     }
 }
