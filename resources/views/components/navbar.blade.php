@@ -28,6 +28,11 @@
                     href="{{ route('testimonial') }}">Testimoni</a>
                 <a class="nav-link {{ Route::is('contact*') ? 'active' : '' }}" href="{{ route('contact') }}">Kontak
                     Kami</a>
+                @if (auth()->user() == null)
+                    <a class="nav-link d-lg-none" href="{{ route('login') }}">Bergabung Member</a>
+                @elseif(auth()->check())
+                    <a class="nav-link d-lg-none" href="{{ route('dashboard.index') }}">Dashboard</a>
+                @endif
             </div>
         </div>
         <div class="wrapper d-none d-lg-flex gap-2 align-items-center">
@@ -83,7 +88,7 @@
                 <div class="icon-search"></div>
             </button>
             @if (auth()->user() == null)
-                <a href="{{ route('login') }}" class="button-primary">Join Member Now</a>
+                <a href="{{ route('login') }}" class="button-primary">Bergabung Member</a>
             @else
                 <div class="wrapper-popup position-relative">
                     <button class="d-inline-block position-relative button-profile"
