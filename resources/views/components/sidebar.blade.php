@@ -19,22 +19,22 @@
                 <span>Profile</span>
             </a>
             <button id="data_user" type="button"
-                class="link-item {{ auth()->check() && $total_reseller_unactive ? 'notification' : '' }} d-flex align-items-center {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') || Route::is('shipping*') || Route::is('management-product*') ? 'active' : '' }}">
+                class="link-item {{ auth()->check() && $total_reseller_unactive ? 'notification' : '' }} d-flex align-items-center {{ Route::is('product*') || Route::is('package.index') || Route::is('reseller*') || Route::is('reward.index') || Route::is('shipping*') || Route::is('management-product*') ? 'active' : '' }}">
                 <img src="{{ asset('assets/images/sidebar/product.png') }}" alt="Sidebar Icon" class="img-fluid">
                 <span>Data Master</span>
             </button>
-            <div class="w-100 item-child {{ Route::is('product.index') || Route::is('package.index') || Route::is('reseller.index') || Route::is('reward.index') ? 'active' : '' }}"
+            <div class="w-100 item-child {{ Route::is('product*') || Route::is('package.index') || Route::is('reseller*') || Route::is('reward.index') || Route::is('shipping*') || Route::is('reward.index') || Route::is('shipping*') || Route::is('management-product*') ? 'active' : '' }}"
                 id="child_data_user">
-                <a href="{{ route('product.index') }}" class="{{ Route::is('product.index') ? 'active' : '' }}">Data
+                <a href="{{ route('product.index') }}" class="{{ Route::is('product*') ? 'active' : '' }}">Data
                     Produk</a>
                 <a href="{{ route('package.index') }}" class="{{ Route::is('package.index') ? 'active' : '' }}">Data
                     Paket</a>
                 <a href="{{ route('reseller.index') }}"
-                    class="{{ auth()->check() && $total_reseller_unactive ? 'notification' : '' }} {{ Route::is('reseller.index') ? 'active' : '' }}">Data
+                    class="{{ auth()->check() && $total_reseller_unactive ? 'notification' : '' }} {{ Route::is('reseller*') ? 'active' : '' }}">Data
                     Reseller</a>
                 <a href="{{ route('reward.index') }}" class="{{ Route::is('reward.index') ? 'active' : '' }}">Data
                     Penghargaan</a>
-                <a href="{{ route('shipping.index') }}" class="{{ Route::is('shipping.index') ? 'active' : '' }}">Data
+                <a href="{{ route('shipping.index') }}" class="{{ Route::is('shipping.*') ? 'active' : '' }}">Data
                     Pengiriman</a>
                 <a href="{{ route('management-product.index') }}"
                     class="{{ Route::is('management-product.index') ? 'active' : '' }}">Managemen Produk</a>
