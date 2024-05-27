@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content-dashboard')
-    <div class="row me-lg-4 pb-4 d-none d-md-inline-block" style="margin-top: 32px;">
+    <div class="row me-lg-4 pb-4 d-inline-block" style="margin-top: 32px;">
         <div class="col-12 pe-lg-0">
             <form class="row row-cols-1">
                 <div class="col mb-3 d-flex flex-column">
