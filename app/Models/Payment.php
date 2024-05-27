@@ -11,6 +11,6 @@ class Payment extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'id');
+        return $this->belongsTo(Transaction::class, 'id')->withTrashed();
     }
 }
