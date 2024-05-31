@@ -27,17 +27,26 @@
                     <div class="title-line"></div>
                 </div>
             </div>
-            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 content-gap">
-                @foreach ($products as $transaction)
-                    <div class="col">
-                        <div class="card-product text-center ">
-                            <img src="{{ file_exists('assets/images/product/' . $transaction->product->image) && $transaction->product->image ? asset('assets/images/product/' . $transaction->product->image) : asset('assets/images/other/img-not-found.jpg') }}"
-                                alt="Product Image">
-                            <p class="product-name">{{ $transaction->product->name }}</p>
-                            <a href="{{ route('product', $transaction->product->id) }}">Lebih Detail</a>
-                        </div>
+            <div class="row content-gap">
+                @if(count($products) == 0)
+                    <div class="col-12 text-center my-3">
+                        <p class="text-not-found">Not found favorite product!</p>
                     </div>
-                @endforeach
+                @else
+                    @foreach ($products as $transaction)
+                        <div class="col-12 col-md-4 col-lg-3 mb-3">
+                            <div class="card-product text-center ">
+                                <img src="{{ file_exists('assets/images/product/' . $transaction->product->image) && $transaction->product->image ? asset('assets/images/product/' . $transaction->product->image) : asset('assets/images/other/img-not-found.jpg') }}"
+                                    alt="Product Image">
+                                <div class="wrapper d-flex align-items-center justify-content-between">
+                                    <p class="product-name">{{ $transaction->product->name }}</p>
+                                    <p class="product-name text-capitalize">{{ $transaction->total_quantity . ' ' . $transaction->product->unit }}</p>
+                                </div>
+                                <a href="{{ route('product', $transaction->product->id) }}">Lebih Detail</a>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </section>
