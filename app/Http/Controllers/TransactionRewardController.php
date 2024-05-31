@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PointExport;
 use App\Http\Requests\StoreTransactionRewardRequest;
 use App\Repositories\ResellerRepositories;
 use App\Repositories\RewardRepositories;
@@ -9,7 +10,7 @@ use App\Repositories\TransactionRepositories;
 use App\Repositories\TransactionRewardRepositories;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionRewardController extends Controller
 {
@@ -67,5 +68,10 @@ class TransactionRewardController extends Controller
             logger($e->getMessage());
             return redirect(route('reward.index'))->with('failed', 'Gagal menambahkan transaksi penghargaan baru!');
         }
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new PointExport, 'point-trade.xlsx');
     }
 }
