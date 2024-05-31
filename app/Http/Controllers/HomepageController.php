@@ -44,11 +44,16 @@ class HomepageController extends Controller
         return view('homepage.index', [
             'title' => 'Halaman Beranda',
             'products' => Transaction::where('status', 1)
-                ->with('product')
+                ->with(['product' => function($query) {
+                    $query->whereNull('deleted_at');
+                }])
                 ->selectRaw('products_id, SUM(quantity) as total_quantity')
                 ->groupBy('products_id')
                 ->orderByDesc('total_quantity')
-                ->get(),
+                ->get()
+                ->filter(function ($transaction) {
+                    return $transaction->product !== null;
+                }),
             'transactions' => $transactions,
             'carts' => $this->cart->findAll(),
         ]);
