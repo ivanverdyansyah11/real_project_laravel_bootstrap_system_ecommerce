@@ -57,13 +57,13 @@
                 <span>Penjualan</span>
             </button>
             <div id="child_data_transaction"
-                class="item-child {{ Route::is('transaction-pending') || Route::is('transaction-payment') || Route::is('transaction-finish') ? 'active' : '' }}">
-                <a href="{{ route('transaction-pending') }}"
-                    class="{{ count($transaction_pendings) != 0 ? 'notification' : '' }} {{ Route::is('transaction-pending') ? 'active' : '' }}">Transaksi
-                    Tertunda</a>
-                <a href="{{ route('transaction-payment') }}"
-                    class="{{ count($transaction_payments) != 0 ? 'notification' : '' }} {{ Route::is('transaction-payment') ? 'active' : '' }}">Transaksi
-                    Pembayaran</a>
+                class="item-child w-100 {{ Route::is('transaction-pending') || Route::is('transaction-payment') || Route::is('transaction-finish') ? 'active' : '' }}">
+{{--                <a href="{{ route('transaction-pending') }}"--}}
+{{--                    class="{{ count($transaction_pendings) != 0 ? 'notification' : '' }} {{ Route::is('transaction-pending') ? 'active' : '' }}">Transaksi--}}
+{{--                    Tertunda</a>--}}
+{{--                <a href="{{ route('transaction-payment') }}"--}}
+{{--                    class="{{ count($transaction_payments) != 0 ? 'notification' : '' }} {{ Route::is('transaction-payment') ? 'active' : '' }}">Transaksi--}}
+{{--                    Pembayaran</a>--}}
                 <a href="{{ route('transaction-finish') }}"
                     class="{{ Route::is('transaction-finish') ? 'active' : '' }}">Transaksi Selesai</a>
             </div>
