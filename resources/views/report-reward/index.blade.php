@@ -12,6 +12,10 @@
                     {{ session('failed') }}
                 </div>
             @endif
+            <div class="wrapper d-flex justify-content-end">
+                <a target="_blank" href="{{ route('export-point-excel') }}" class="button-primary text-nowrap"
+                   style="height: fit-content;">Export Excell</a>
+            </div>
             <div class="wrapper-table">
                 <table id="table_report" class="table display responsive nowrap table-striped" style="width:100%">
                     <thead>
