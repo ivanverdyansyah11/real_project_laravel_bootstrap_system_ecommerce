@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction-finish/export-invoice-excel', [TransactionController::class, 'exportExcel'])->name('export-invoice-excel')->middleware('isAdminReseller');
     Route::get('/transaction-finish/{id}/export-invoice', [TransactionController::class, 'export'])->name('export-invoice')->middleware('isAdminReseller');
     Route::resource('/report-reward', TransactionRewardController::class)->middleware('isAdminReseller');
+    Route::get('/report-reward/export/point-excel', [TransactionRewardController::class, 'exportExcel'])->name('export-point-excel')->middleware('isAdminReseller');
     Route::get('/report-transaction', [TransactionController::class, 'index'])->name('report-transaction')->middleware('isAdminReseller');
 
     Route::resource('/homepage/cart', CartController::class);
