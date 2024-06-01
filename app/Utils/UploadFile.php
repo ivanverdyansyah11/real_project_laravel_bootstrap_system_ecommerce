@@ -15,7 +15,7 @@ class UploadFile
     }
 
     $filename = time() . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-    $file->move(public_path("$path"), $filename);
+    $file->move($path, $filename);
     return $filename;
   }
 
