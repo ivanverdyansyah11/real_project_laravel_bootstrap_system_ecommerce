@@ -9,7 +9,7 @@ class TransactionsExport implements FromCollection
 {
     public function collection()
     {
-        $transactions = Transaction::with(['product', 'reseller', 'payment'])->whereIn('status', [0, 1])->get();
+        $transactions = Transaction::with(['product', 'reseller', 'payment'])->where('status', 1)->get();
         $transactionArray = [];
         $transactionArray[] = ['INVOIS', 'NAMA PRODUK', 'NAMA RESELLER', 'PEMBAYARAN BANK', 'NAMA PEMBELI', 'JUMLAH', 'PENGIRIMAN', 'ALAMAT', 'SATUAN', 'TOTAL BAYAR', 'TOTAL DIBAYAR', 'TANGGAL & WAKTU TRANSAKSI'];
         foreach ($transactions as $transaction) {
