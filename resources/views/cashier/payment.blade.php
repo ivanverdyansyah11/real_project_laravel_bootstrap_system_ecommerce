@@ -34,18 +34,18 @@
                     <label for="buyers_name" class="form-label">Nama Pembeli</label>
                     <input required type="text" class="form-control" id="buyers_name" name="buyers_name">
                 </div>
-                <div class="col-12 mb-3 d-flex flex-column">
-                    <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
-                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
-                        class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">
-                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror"
-                        name="proof_of_payment" id="proof_of_payment">
-                    @error('proof_of_payment')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+{{--                <div class="col-12 mb-3 d-flex flex-column">--}}
+{{--                    <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>--}}
+{{--                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"--}}
+{{--                        class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">--}}
+{{--                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror"--}}
+{{--                        name="proof_of_payment" id="proof_of_payment">--}}
+{{--                    @error('proof_of_payment')--}}
+{{--                        <div class="invalid-feedback">--}}
+{{--                            {{ $message }}--}}
+{{--                        </div>--}}
+{{--                    @enderror--}}
+{{--                </div>--}}
                 <input type="hidden" class="form-control" id="shipping" name="shipping" value="offline">
                 <div class="col-md-4 mb-3">
                     <label for="payments_id" class="form-label">Pembayaran</label>
@@ -105,12 +105,12 @@
     @include('partials.cashier')
     @push('js')
         <script>
-            const tagImage = document.querySelector('.img-preview');
-            const inputImage = document.querySelector('.input-file');
-
-            inputImage.addEventListener('change', function() {
-                tagImage.src = URL.createObjectURL(inputImage.files[0]);
-            });
+            // const tagImage = document.querySelector('.img-preview');
+            // const inputImage = document.querySelector('.input-file');
+            //
+            // inputImage.addEventListener('change', function() {
+            //     tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            // });
 
             $("#total_payment").keyup(function() {
                 let totalChange = $('#total_payment').val() - $('#total').val()
