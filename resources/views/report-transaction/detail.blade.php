@@ -133,7 +133,7 @@
                                 <div class="col-12 mb-3">
                                     <label for="shipping" class="form-label">Pengiriman Barang</label>
                                     <input readonly type="text" class="form-control text-capitalize" id="shipping"
-                                        value="{{ $transaction->shipping }}">
+                                        value="{{ $transaction->shipping == 'cashier' ? 'Langsung Kasir' : $transaction->shipping }}">
                                 </div>
                                 @if ($transaction->shipping == 'ekspedisi')
                                     <div class="col-12 mb-3" id="formShippingAddress">
