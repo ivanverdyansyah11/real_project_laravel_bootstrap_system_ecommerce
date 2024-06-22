@@ -184,10 +184,10 @@
                                         <input type="hidden" class="form-control" id="total_payment_value"
                                             value="{{ $transaction->total_payment }}">
                                     </div>
-                                    <div class="col-12">
-                                        <label for="total_change" class="form-label">Total Kembalian</label>
-                                        <input readonly type="text" class="form-control" id="total_change">
-                                    </div>
+{{--                                    <div class="col-12">--}}
+{{--                                        <label for="total_change" class="form-label">Total Kembalian</label>--}}
+{{--                                        <input readonly type="text" class="form-control" id="total_change">--}}
+{{--                                    </div>--}}
                                 </div>
                             </div>
                         </div>
