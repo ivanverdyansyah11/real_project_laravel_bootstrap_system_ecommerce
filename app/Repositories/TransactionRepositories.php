@@ -82,12 +82,12 @@ class TransactionRepositories
 
     public function findAllWhereFinish()
     {
-        return $this->transaction->where('status', 1)->latest()->get();
+        return $this->transaction->where('status', 1)->whereNot('shipping', 'cashier')->latest()->get();
     }
 
     public function findAllWhereFinishFilter(Request $request)
     {
-        return $this->transaction->where('status', 1)->whereBetween('updated_at', [$request->start_date, $request->end_date])->latest()->get();
+        return $this->transaction->where('status', 1)->whereNot('shipping', 'cashier')->whereBetween('updated_at', [$request->start_date, $request->end_date])->latest()->get();
     }
 
     public function findAllWhereFinishByReseller(int $users_id)
