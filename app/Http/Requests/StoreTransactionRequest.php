@@ -30,7 +30,7 @@ class StoreTransactionRequest extends FormRequest
             'shipping_price' => 'nullable|integer',
             'address' => 'nullable|string',
             'quantity' => 'nullable',
-            'proof_of_payment' => 'nullable|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
+            'proof_of_payment' => 'required_if:payments_id,!=,Cash|file|image|mimes:png,jpg,jpeg,gif,webp,svg|max:2048',
             'total' => 'nullable|integer',
             'price_per_product' => 'nullable',
             'total_payment' => 'nullable|integer',
