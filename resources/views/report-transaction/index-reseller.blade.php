@@ -125,10 +125,10 @@
                                                     {{ number_format($transaction->total, 2, ',', '.') }}
                                                 </h6>
                                                 <div class="wrapper d-flex gap-2">
-                                                    @if ($transaction->proof_of_payment == null)
-                                                        <a href="{{ route('transaction.edit', $transaction->id) }}"
-                                                            class="button-primary-reverse">Upload Bukti Pembayaran</a>
-                                                    @endif
+{{--                                                    @if ($transaction->proof_of_payment == null)--}}
+{{--                                                        <a href="{{ route('transaction.edit', $transaction->id) }}"--}}
+{{--                                                            class="button-primary-reverse">Upload Bukti Pembayaran</a>--}}
+{{--                                                    @endif--}}
                                                     <a href="{{ route('transaction.show', $transaction->id) }}"
                                                         class="button-primary">Detail Transaksi</a>
                                                 </div>

@@ -94,13 +94,13 @@
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon"
                                                 class="img-fluid" width="16">
                                         </a>
-                                        @if ($transaction->proof_of_payment == null)
-                                            <a href="{{ route('transaction.edit', $transaction->id) }}"
-                                                class="button-edit d-none d-md-flex align-items-center justify-content-center">
-                                                <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon"
-                                                    class="img-fluid" width="16">
-                                            </a>
-                                        @endif
+{{--                                        @if ($transaction->proof_of_payment == null)--}}
+{{--                                            <a href="{{ route('transaction.edit', $transaction->id) }}"--}}
+{{--                                                class="button-edit d-none d-md-flex align-items-center justify-content-center">--}}
+{{--                                                <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon"--}}
+{{--                                                    class="img-fluid" width="16">--}}
+{{--                                            </a>--}}
+{{--                                        @endif--}}
                                     </td>
                                 </tr>
                             @endforeach
