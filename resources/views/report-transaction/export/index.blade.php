@@ -32,7 +32,7 @@
 <body>
     <table style="width: 500px;">
         <tr>
-            <td><img src="{{ url('assets/images/brand/brand-logo.png') }}" alt="Brand Logo PNG" width="70">
+            <td><img src="{{ public_path('assets/images/brand/brand-logo.png') }}" alt="Brand Logo PNG" width="70">
             </td>
             <td style="padding-left: 16px;">
                 <p>Jalan. Ahmad Yani Utara Gg Sriti No. 9 Peguyangan, Kec. Denpasar Utara,
