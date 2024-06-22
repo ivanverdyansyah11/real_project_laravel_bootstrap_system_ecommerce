@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('buyers_name')->nullable();
             $table->string('invois');
             $table->integer('quantity');
-            $table->enum('shipping', ['ekspedisi', 'offline']);
+            $table->enum('shipping', ['ekspedisi', 'offline', 'cashier']);
             $table->integer('shipping_price')->nullable();
             $table->string('address')->nullable();
             $table->integer('price_per_product')->nullable();
