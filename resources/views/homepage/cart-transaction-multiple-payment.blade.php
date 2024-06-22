@@ -48,17 +48,22 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="payments_id" class="form-label">Pembayaran</label>
-                                    <select required name="payments_id" id="payments_id" class="form-control"
-                                        @error('payments_id') is-invalid @enderror>
+                                    <select required name="payments_id" id="payments_id" class="form-control @error('payments_id') is-invalid @enderror">
                                         <option value="">Pilih pembayaran</option>
                                         @foreach ($payments as $payment)
-                                            <option value="{{ $payment->id }}">{{ $payment->bank_name }}</option>
+                                            @if ($transaction[0]->shipping == 'ekspedisi')
+                                                @if ($payment->owner_name != '')
+                                                    <option value="{{ $payment->id }}">{{ $payment->bank_name }}</option>
+                                                @endif
+                                            @else
+                                                <option value="{{ $payment->id }}">{{ $payment->bank_name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     @error('payments_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -76,7 +81,7 @@
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Total Pembelian</h6>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12 mb-3">
                                     @php
                                         $totalPayment = 0;
                                         foreach ($transaction as $payment) {
@@ -92,24 +97,34 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    @php
-                                        $shippingPrice = 0;
-                                        if ($transaction[0]->shipping == 'ekspedisi') {
-                                            $shippingPrice = $transaction[0]->shipping_price;
-                                        }
-                                    @endphp
-                                    <label for="total_payment" class="form-label">Total Bayar</label>
-                                    <input required type="number"
-                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"
-                                        name="total_payment" value="{{ old('total_payment') }}"
-                                        min="{{ $totalPayment + $shippingPrice }}">
-                                    @error('total_payment')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                                @php
+                                    $shippingPrice = 0;
+                                    if ($transaction[0]->shipping == 'ekspedisi') {
+                                        $shippingPrice = $transaction[0]->shipping_price;
+                                    }
+                                @endphp
+                                <input required type="hidden"
+                                       class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"
+                                       name="total_payment"
+                                       value="{{ $totalPayment + $shippingPrice }}">
+{{--                                <div class="col-md-6 mb-3">--}}
+{{--                                    @php--}}
+{{--                                        $shippingPrice = 0;--}}
+{{--                                        if ($transaction[0]->shipping == 'ekspedisi') {--}}
+{{--                                            $shippingPrice = $transaction[0]->shipping_price;--}}
+{{--                                        }--}}
+{{--                                    @endphp--}}
+{{--                                    <label for="total_payment" class="form-label">Total Bayar</label>--}}
+{{--                                    <input required type="number"--}}
+{{--                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"--}}
+{{--                                        name="total_payment" value="{{ old('total_payment') }}"--}}
+{{--                                        min="{{ $totalPayment + $shippingPrice }}">--}}
+{{--                                    @error('total_payment')--}}
+{{--                                        <div class="invalid-feedback">--}}
+{{--                                            {{ $message }}--}}
+{{--                                        </div>--}}
+{{--                                    @enderror--}}
+{{--                                </div>--}}
                                 @if ($transaction[0]->shipping == 'ekspedisi')
                                     <div class="col-12">
                                         <label for="shipping_price" class="form-label">Total Pengiriman</label>
@@ -123,18 +138,18 @@
                                         </div>
                                     @endif
                                 @endif
-                                <div class="col-12 mt-3">
-                                    <label for="total_change" class="form-label">Total Kembalian</label>
-                                    <input readonly type="text" class="form-control" id="total_change">
-                                </div>
+{{--                                <div class="col-12 mt-3">--}}
+{{--                                    <label for="total_change" class="form-label">Total Kembalian</label>--}}
+{{--                                    <input readonly type="text" class="form-control" id="total_change">--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h6 class="card-body-title mb-4">Upload Bukti Pembayaran</h6>
+{{--                            <h6 class="card-body-title mb-4">Upload Bukti Pembayaran</h6>--}}
                             <div class="row">
-                                <div class="col-12 mb-3 d-flex flex-column">
+                                <div class="col-12 mb-3 d-flex flex-column" id="col-proof">
                                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
                                     <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"
                                         class="rounded mb-2 img-preview" width="100" height="100"
@@ -162,30 +177,23 @@
 
     @push('js')
         <script>
-            const tagImage = document.querySelector('.img-preview');
-            const inputImage = document.querySelector('.input-file');
-
-            inputImage.addEventListener('change', function() {
-                tagImage.src = URL.createObjectURL(inputImage.files[0]);
-            });
-
-            $(document).on('change', '#total_payment', function() {
-                if ($('#shipping_price').length > 0) {
-                    if (parseInt($('#total').val()) + parseInt($('#shipping_price').val()) < parseInt($(
-                            '#total_payment').val())) {
-                        let total = parseInt($('#total').val()) + parseInt($('#shipping_price').val())
-                        $('#total_change').val(parseInt($('#total_payment').val()) - total)
-                    } else {
-                        $('#total_change').val('0')
-                    }
-                } else {
-                    if (parseInt($('#total').val()) < parseInt($('#total_payment').val())) {
-                        $('#total_change').val(parseInt($('#total_payment').val()) - parseInt($('#total').val()))
-                    } else {
-                        $('#total_change').val('0')
-                    }
-                }
-            });
+            // $(document).on('change', '#total_payment', function() {
+            //     if ($('#shipping_price').length > 0) {
+            //         if (parseInt($('#total').val()) + parseInt($('#shipping_price').val()) < parseInt($(
+            //                 '#total_payment').val())) {
+            //             let total = parseInt($('#total').val()) + parseInt($('#shipping_price').val())
+            //             $('#total_change').val(parseInt($('#total_payment').val()) - total)
+            //         } else {
+            //             $('#total_change').val('0')
+            //         }
+            //     } else {
+            //         if (parseInt($('#total').val()) < parseInt($('#total_payment').val())) {
+            //             $('#total_change').val(parseInt($('#total_payment').val()) - parseInt($('#total').val()))
+            //         } else {
+            //             $('#total_change').val('0')
+            //         }
+            //     }
+            // });
 
             $(document).on('change', '#payments_id', function() {
                 let id = $(this).val();
@@ -195,20 +203,30 @@
                         url: '/homepage/getPayment/' + id,
                         success: function(payment) {
                             if (payment.status == 'success') {
+                                if (payment.data.bank_name != 'Cash') {
+                                    $('#col-proof').removeClass('d-none');
+                                    $('#proof_of_payment').attr('required', true);
+                                } else {
+                                    $('#col-proof').addClass('d-none');
+                                    $('#proof_of_payment').removeAttr('required');
+                                }
                                 $('#owner_name').val(payment.data.owner_name);
                                 $('#account_number').val(payment.data.account_number);
                             }
                         }
                     });
                 } else {
+                    $('#col-proof').addClass('d-none');
                     $('#owner_name').val('');
                     $('#account_number').val('');
                 }
             });
 
-            $(".readonly").on('keydown paste focus mousedown', function(e) {
-                if (e.keyCode != 9)
-                    e.preventDefault();
+            const tagImage = document.querySelector('.img-preview');
+            const inputImage = document.querySelector('.input-file');
+
+            inputImage.addEventListener('change', function() {
+                tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
         </script>
     @endpush
