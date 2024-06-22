@@ -81,7 +81,7 @@
                         <div class="card-body">
                             <h6 class="card-body-title mb-4">Total Pembelian</h6>
                             <div class="row">
-                                <div class="col-12 mb-3">
+                                <div class="col-md-6 mb-3">
                                     @php
                                         $totalPayment = 0;
                                         foreach ($transaction as $payment) {
@@ -103,6 +103,12 @@
                                         $shippingPrice = $transaction[0]->shipping_price;
                                     }
                                 @endphp
+                                <div class="col-md-6 mb-3">
+                                    <label for="total_price" class="form-label">Total Keseluruhan Harga</label>
+                                    <input required type="number"
+                                           class="form-control" id="total_price"
+                                           value="{{ $totalPayment + $shippingPrice }}">
+                                </div>
                                 <input required type="hidden"
                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"
                                        name="total_payment"

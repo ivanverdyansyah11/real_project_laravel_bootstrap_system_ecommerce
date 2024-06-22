@@ -171,7 +171,7 @@
                         <td style="text-transform: uppercase !important; border: none !important; padding: 0;">
                             Keterangan : </td>
                         <td style="border: none !important; padding: 0;">Pembayaran Transfer :
-                            {{ $transaction->payment->bank_name }}</td>
+                            {{ $transaction->payment ? $transaction->payment->bank_name : '-' }}</td>
                         <td style="border: none !important; padding: 0;">
                             <p style="opacity: 0;">hidden</p>
                         </td>
