@@ -46,7 +46,7 @@
 {{--                        </div>--}}
 {{--                    @enderror--}}
 {{--                </div>--}}
-                <input type="hidden" class="form-control" id="shipping" name="shipping" value="offline">
+                <input type="hidden" class="form-control" id="shipping" name="shipping" value="cashier">
                 <div class="col-md-4 mb-3">
                     <label for="payments_id" class="form-label">Pembayaran</label>
                     <select required name="payments_id" id="payments_id" class="form-control"
