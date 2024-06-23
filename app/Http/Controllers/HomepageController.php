@@ -41,6 +41,8 @@ class HomepageController extends Controller
             $transactions = [];
         }
 
+//        dd($transactions);
+
         return view('homepage.index', [
             'title' => 'Halaman Beranda',
             'products' => Transaction::where('status', 1)
