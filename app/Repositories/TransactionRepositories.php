@@ -31,25 +31,13 @@ class TransactionRepositories
 
     public function findAllWithNotification()
     {
-        $today = Carbon::now()->subDay();
         if (auth()->user()->role == 'admin') {
-            return $this->transaction->where(function ($query) use ($today) {
-                $query->where('status', 1)
-                    ->whereNotNull('resellers_id')
-                    ->where('updated_at', '>=', $today);
-            })
-                ->orWhere('status', 2)->where('shipping', 'ekspedisi')
+            return $this->transaction->where('status', 2)->where('shipping', 'ekspedisi')
                 ->whereNotNull('resellers_id')
                 ->get();
         } elseif (auth()->user()->role == 'reseller') {
             $reseller = $this->reseller->findByUserId(auth()->user()->id);
-            return $this->transaction->where(function ($query) use ($today, $reseller) {
-                $query->where('status', 1)
-                    ->whereNotNull('resellers_id')
-                    ->where('resellers_id', $reseller->id)
-                    ->where('updated_at', '>=', $today);
-            })
-                ->orWhere('status', 2)->where('shipping', 'ekspedisi')
+            return $this->transaction->where('status', 2)->where('shipping', 'ekspedisi')
                 ->where('resellers_id', $reseller->id)
                 ->whereNotNull('resellers_id')
                 ->get();
