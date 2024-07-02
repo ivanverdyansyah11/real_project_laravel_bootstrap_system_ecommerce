@@ -34,18 +34,6 @@
                     <label for="buyers_name" class="form-label">Nama Pembeli</label>
                     <input required type="text" class="form-control" id="buyers_name" name="buyers_name">
                 </div>
-{{--                <div class="col-12 mb-3 d-flex flex-column">--}}
-{{--                    <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>--}}
-{{--                    <img src="{{ asset('assets/images/other/img-not-found.jpg') }}" alt="Image Not Found"--}}
-{{--                        class="rounded mb-2 img-preview" width="100" height="100" style="object-fit: cover;">--}}
-{{--                    <input type="file" class="form-control input-file @error('proof_of_payment') is-invalid @enderror"--}}
-{{--                        name="proof_of_payment" id="proof_of_payment">--}}
-{{--                    @error('proof_of_payment')--}}
-{{--                        <div class="invalid-feedback">--}}
-{{--                            {{ $message }}--}}
-{{--                        </div>--}}
-{{--                    @enderror--}}
-{{--                </div>--}}
                 <input type="hidden" class="form-control" id="shipping" name="shipping" value="cashier">
                 <div class="col-md-4 mb-3">
                     <label for="payments_id" class="form-label">Pembayaran</label>
@@ -82,7 +70,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="total_payment" class="form-label">Total Bayar</label>
-                    <input required type="number" class="form-control @error('total_payment') is-invalid @enderror"
+                    <input required type="text" class="form-control @error('total_payment') is-invalid @enderror"
                         id="total_payment" name="total_payment" value="{{ old('total_payment') }}"
                         min="{{ $total }}">
                     @error('total_payment')
@@ -93,7 +81,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="total_change" class="form-label">Total Kembalian</label>
-                    <input readonly type="number" class="form-control" id="total_change">
+                    <input readonly type="text" class="form-control" id="total_change">
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button id="button-submit" type="submit" disabled class="button-primary">Lakukan Pembayaran</button>
@@ -105,15 +93,13 @@
     @include('partials.cashier')
     @push('js')
         <script>
-            // const tagImage = document.querySelector('.img-preview');
-            // const inputImage = document.querySelector('.input-file');
-            //
-            // inputImage.addEventListener('change', function() {
-            //     tagImage.src = URL.createObjectURL(inputImage.files[0]);
-            // });
-
             $("#total_payment").keyup(function() {
-                let totalChange = $('#total_payment').val() - $('#total').val()
+                let total = $('#total').val().replace('Rp. ', '')
+                total = total.replace(/\./g, '')
+                let total_payment = $('#total_payment').val().replace('Rp. ', '')
+                total_payment = total_payment.replace(/\./g, '')
+
+                let totalChange = total_payment - total
                 if (totalChange < 0) {
                     totalChange = 0
                     $("#button-submit").attr("disabled", true)
@@ -121,7 +107,23 @@
                     totalChange = totalChange
                     $("#button-submit").attr("disabled", false)
                 }
-                $('#total_change').val(totalChange)
+                $('#total_change').val(formatRupiah(totalChange, 'Rp. '));
+
+                function formatRupiah(angka, prefix) {
+                    angka = angka.toString();
+                    let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? '.' : '';
+                        rupiah += separator + ribuan.join('.');
+                    }
+                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                    return prefix == undefined ? rupiah : (rupiah ? prefix + rupiah : '');
+                }
             });
 
             $(document).on('change', '#payments_id', function() {
@@ -143,35 +145,31 @@
                 }
             });
 
-            // document.getElementById('submit-payment').addEventListener('click', function(event) {
-            //     event.preventDefault();
-            //     const form = document.getElementById('payment-form');
-            //     const formData = new FormData(form);
-            //     fetch(form.action, {
-            //             method: 'POST',
-            //             body: formData
-            //         })
-            //         .then(response => {
-            //             if (response.ok) {
-            //                 return response.blob();
-            //             } else {
-            //                 throw new Error('Gagal membuat PDF');
-            //             }
-            //         })
-            //         .then(blob => {
-            //             const link = document.createElement('a');
-            //             link.href = window.URL.createObjectURL(blob);
-            //             link.download = 'payment-report.pdf';
-            //             document.body.appendChild(link);
-            //             link.click();
-            //             document.body.removeChild(link);
-            //             window.location.href = "{{ route('cashier.index') }}";
-            //         })
-            //         .catch(error => {
-            //             console.error('Error:', error);
-            //             alert('Gagal melakukan pembayaran transaksi!');
-            //         });
-            // });
+            let total = document.getElementById('total')
+            total.value = formatRupiah(total.value, 'Rp. ');
+
+            let totalPayment = document.getElementById('total_payment')
+            totalPayment.addEventListener('keyup', function(e)
+            {
+                totalPayment.value = formatRupiah(this.value, 'Rp. ');
+            });
+
+            function formatRupiah(angka, prefix)
+            {
+                let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split    = number_string.split(','),
+                    sisa     = split[0].length % 3,
+                    rupiah     = split[0].substr(0, sisa),
+                    ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
         </script>
     @endpush
 @endsection
