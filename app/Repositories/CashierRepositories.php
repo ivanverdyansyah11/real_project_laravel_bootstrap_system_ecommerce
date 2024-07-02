@@ -54,6 +54,10 @@ class CashierRepositories
 
     public function storePayment($request)
     {
+        $request['total'] = str_replace('Rp. ', '', $request['total']);
+        $request['total'] = (int) str_replace('.', '', $request['total']);
+        $request['total_payment'] = str_replace('Rp. ', '', $request['total_payment']);
+        $request['total_payment'] = (int) str_replace('.', '', $request['total_payment']);
         $cashiers = $this->findAll();
         $request['invois'] = $cashiers[0]->invois;
         if (!empty($request['proof_of_payment'])) {
