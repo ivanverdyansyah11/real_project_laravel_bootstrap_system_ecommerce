@@ -103,10 +103,14 @@ class CartRepositories
                 $reseller = $this->reseller->findById($request['resellers_id']);
                 $request['resellers_id'] = $reseller->id;
             }
+            $request['price_per_product'] = str_replace('Rp. ', '', $request['price_per_product']);
+            $request['price_per_product'] = (int) str_replace('.', '', $request['price_per_product']);
             $request['status'] = 2;
             $cartSelected->update(Arr::only($request, ['quantity', 'invois', 'status']));
             return $this->transaction->create($request);
         } else {
+            $request['total'] = str_replace('Rp. ', '', $request['total']);
+            $request['total'] = (int) str_replace('.', '', $request['total']);
             $dateNow = Carbon::now();
             $dateDayLimit = Carbon::parse($cartSelected->updated_at)->addDay();
             $transactions = $this->transactionRepo->findByInvois($cartSelected->invois);
