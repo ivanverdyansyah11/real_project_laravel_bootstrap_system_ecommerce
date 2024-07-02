@@ -77,7 +77,7 @@
                                             $totalProduct = $cart->product->selling_price;
                                         }
                                     @endphp
-                                    <input readonly type="number" class="form-control @error('total') is-invalid @enderror"
+                                    <input readonly type="text" class="form-control @error('total') is-invalid @enderror"
                                         id="total" name="total" value="{{ $cart->quantity * $totalProduct }}">
                                     @error('total')
                                         <div class="invalid-feedback">
@@ -95,7 +95,7 @@
                                 @endphp
                                 <div class="col-md-6 mb-3">
                                     <label for="total_price" class="form-label">Total Keseluruhan Harga</label>
-                                    <input required type="number"
+                                    <input required type="text"
                                         class="form-control" id="total_price"
                                            value="{{ $cart->quantity * $totalProduct + $shippingPrice }}">
                                 </div>
@@ -103,22 +103,10 @@
                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"
                                        name="total_payment"
                                        value="{{ $cart->quantity * $totalProduct + $shippingPrice }}">
-{{--                                <div class="col-md-6 mb-3">--}}
-{{--                                    <label for="total_payment" class="form-label">Total Bayar</label>--}}
-{{--                                    <input required type="number"--}}
-{{--                                        class="form-control @error('total_payment') is-invalid @enderror" id="total_payment"--}}
-{{--                                        name="total_payment"--}}
-{{--                                        value="{{ $cart->quantity * $totalProduct + $shippingPrice }}">--}}
-{{--                                    @error('total_payment')--}}
-{{--                                        <div class="invalid-feedback">--}}
-{{--                                            {{ $message }}--}}
-{{--                                        </div>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
                                 @if ($transaction[0]->shipping == 'ekspedisi')
                                     <div class="col-12">
                                         <label for="shipping_price" class="form-label">Total Pengiriman</label>
-                                        <input required type="number" class="form-control readonly" id="shipping_price"
+                                        <input required type="text" class="form-control readonly" id="shipping_price"
                                             value="{{ $transaction[0]->shipping_price }}">
                                     </div>
                                     @if ($transaction[0]->shipping_price == null)
@@ -128,16 +116,11 @@
                                         </div>
                                     @endif
                                 @endif
-{{--                                <div class="col-12 mt-3">--}}
-{{--                                    <label for="total_change" class="form-label">Total Kembalian</label>--}}
-{{--                                    <input readonly type="number" class="form-control" id="total_change">--}}
-{{--                                </div>--}}
                             </div>
                         </div>
                     </div>
                     <div class="card mt-4">
                         <div class="card-body">
-{{--                            <h6 class="card-body-title mb-4">Upload Bukti Pembayaran</h6>--}}
                             <div class="row">
                                 <div class="col-12 mb-3 d-flex flex-column" id="col-proof">
                                     <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
@@ -167,24 +150,6 @@
 
     @push('js')
         <script>
-            // $(document).on('change', '#total_payment', function() {
-            //     if ($('#shipping_price').length > 0) {
-            //         if (parseInt($('#total').val()) + parseInt($('#shipping_price').val()) < parseInt($(
-            //                 '#total_payment').val())) {
-            //             let total = parseInt($('#total').val()) + parseInt($('#shipping_price').val())
-            //             $('#total_change').val(parseInt($('#total_payment').val()) - total)
-            //         } else {
-            //             $('#total_change').val('0')
-            //         }
-            //     } else {
-            //         if (parseInt($('#total').val()) < parseInt($('#total_payment').val())) {
-            //             $('#total_change').val(parseInt($('#total_payment').val()) - parseInt($('#total').val()))
-            //         } else {
-            //             $('#total_change').val('0')
-            //         }
-            //     }
-            // });
-
             $(document).on('change', '#payments_id', function() {
                 let id = $(this).val();
                 if (id != '') {
@@ -218,6 +183,30 @@
             inputImage.addEventListener('change', function() {
                 tagImage.src = URL.createObjectURL(inputImage.files[0]);
             });
+
+            let total = document.getElementById('total')
+            total.value = formatRupiah(total.value, 'Rp. ');
+            let totalPrice = document.getElementById('total_price')
+            totalPrice.value = formatRupiah(totalPrice.value, 'Rp. ');
+            let shippingPrice = document.getElementById('shipping_price')
+            shippingPrice.value = formatRupiah(shippingPrice.value, 'Rp. ');
+
+            function formatRupiah(angka, prefix)
+            {
+                let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split    = number_string.split(','),
+                    sisa     = split[0].length % 3,
+                    rupiah     = split[0].substr(0, sisa),
+                    ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
         </script>
     @endpush
 @endsection
