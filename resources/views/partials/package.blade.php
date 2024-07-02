@@ -42,7 +42,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="selling_price" class="form-label">Harga Per Botol</label>
-                        <input required type="text" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" value="{{ old('selling_price') }}">
+                        <input required type="number" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" value="{{ old('selling_price') }}">
                         @error('selling_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -134,7 +134,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="selling_price" class="form-label">Harga Per Botol</label>
-                        <input required type="text" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" data-value="selling_price">
+                        <input required type="number" class="form-control @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" data-value="selling_price">
                         @error('selling_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
