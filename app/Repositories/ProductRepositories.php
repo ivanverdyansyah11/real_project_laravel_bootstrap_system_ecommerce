@@ -54,6 +54,10 @@ class ProductRepositories
 
     public function store($request): bool
     {
+        $request['purchase_price'] = str_replace('Rp. ', '', $request['purchase_price']);
+        $request['purchase_price'] = (int) str_replace('.', '', $request['purchase_price']);
+        $request['selling_price'] = str_replace('Rp. ', '', $request['selling_price']);
+        $request['selling_price'] = (int) str_replace('.', '', $request['selling_price']);
         $this->product->create(Arr::except($request, ['image']));
         $product = $this->findLatest();
         foreach ($request['image'] as $image) {
@@ -76,6 +80,10 @@ class ProductRepositories
         } elseif ((int)$request['stock'] < $product->stock) {
             $status = 2;
         }
+        $request['purchase_price'] = str_replace('Rp. ', '', $request['purchase_price']);
+        $request['purchase_price'] = (int) str_replace('.', '', $request['purchase_price']);
+        $request['selling_price'] = str_replace('Rp. ', '', $request['selling_price']);
+        $request['selling_price'] = (int) str_replace('.', '', $request['selling_price']);
         if (isset($request["image"])) {
             $this->uploadFile->deleteExistFile("assets/images/product/" . $product->image);
             $request['image'] = $this->uploadFile->uploadSingleFile($request['image'], 'assets/images/product');
