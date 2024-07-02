@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-12 mb-1">
                     <label for="total" class="form-label">Total</label>
-                    <input type="number" class="form-control @error('total') is-invalid @enderror" id="total">
+                    <input type="text" class="form-control @error('total') is-invalid @enderror" id="total">
                 </div>
                 <div class="col-12 mb-3">
                     <p class="text-mention"></p>
@@ -86,7 +86,7 @@
                 });
             });
 
-            $(document).on('change', '#quantity', function() {
+            $(document).on('keyup', '#quantity', function() {
                 let quantity = $(this).val();
                 let productsId = $('#products_id').val();
                 if (quantity != '') {
@@ -105,7 +105,23 @@
                                     $('#price_per_unit').val(productPrice);
                                     $('.text-mention').html('');
                                 }
-                                $('#total').val(quantity * $('#price_per_unit').val());
+                                $('#total').val(formatRupiah(quantity * $('#price_per_unit').val(), 'Rp. '));
+
+                                function formatRupiah(angka, prefix) {
+                                    angka = angka.toString();
+                                    let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                                        split = number_string.split(','),
+                                        sisa = split[0].length % 3,
+                                        rupiah = split[0].substr(0, sisa),
+                                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                                    if (ribuan) {
+                                        separator = sisa ? '.' : '';
+                                        rupiah += separator + ribuan.join('.');
+                                    }
+                                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                                    return prefix == undefined ? rupiah : (rupiah ? prefix + rupiah : '');
+                                }
                             }
                         }
                     });
