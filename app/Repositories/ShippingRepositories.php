@@ -33,6 +33,8 @@ class ShippingRepositories
 
     public function update($request): bool
     {
+        $request['shipping_price'] = str_replace('Rp. ', '', $request['shipping_price']);
+        $request['shipping_price'] = (int) str_replace('.', '', $request['shipping_price']);
         $shipping = $this->findFirst();
         return $shipping->update($request);
     }
