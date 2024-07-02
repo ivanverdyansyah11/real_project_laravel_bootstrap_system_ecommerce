@@ -73,7 +73,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="purchase_price" class="form-label">Harga Beli</label>
-                    <input required type="number" class="form-control @error('purchase_price') is-invalid @enderror"
+                    <input required type="text" class="form-control @error('purchase_price') is-invalid @enderror"
                         id="purchase_price" name="purchase_price" value="{{ $product->purchase_price }}">
                     @error('purchase_price')
                         <div class="invalid-feedback">
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col mb-3">
                     <label for="selling_price" class="form-label">Harga Jual</label>
-                    <input required type="number" class="form-control @error('selling_price') is-invalid @enderror"
+                    <input required type="text" class="form-control @error('selling_price') is-invalid @enderror"
                         id="selling_price" name="selling_price" value="{{ $product->selling_price }}">
                     @error('selling_price')
                         <div class="invalid-feedback">
@@ -109,20 +109,38 @@
         </div>
     </div>
 
-    {{-- @include('partials.product-image') --}}
     @push('js')
         <script>
-            const tagImage = document.querySelector('.img-preview');
-            const inputImage = document.querySelector('.input-file');
-
-            inputImage.addEventListener('change', function() {
-                tagImage.src = URL.createObjectURL(inputImage.files[0]);
+            let purchasePrice = document.getElementById('purchase_price')
+            purchasePrice.value = formatRupiah(purchasePrice.value, 'Rp. ');
+            purchasePrice.addEventListener('keyup', function(e)
+            {
+                purchasePrice.value = formatRupiah(this.value, 'Rp. ');
             });
 
-            // $(document).on('click', '[data-bs-target="#productImageModal"]', function() {
-            //     let id = $(this).data('id');
-            //     $('#buttonEditProductImage').attr('action', '/product/thumbnail-image/' + id);
-            // });
+            let sellingPrice = document.getElementById('selling_price')
+            sellingPrice.value = formatRupiah(sellingPrice.value, 'Rp. ');
+            sellingPrice.addEventListener('keyup', function(e)
+            {
+                sellingPrice.value = formatRupiah(this.value, 'Rp. ');
+            });
+
+            function formatRupiah(angka, prefix)
+            {
+                let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split    = number_string.split(','),
+                    sisa     = split[0].length % 3,
+                    rupiah     = split[0].substr(0, sisa),
+                    ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
         </script>
     @endpush
 @endsection
