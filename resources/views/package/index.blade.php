@@ -46,13 +46,13 @@
                                     <td class="wrapper d-flex gap-2">
                                         <button type="button" class="button-detail d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#detailModal" data-id="{{ $package->id }}">
                                             <img src="{{ asset('assets/images/icons/detail.png') }}" alt="Detail Icon" class="img-fluid" width="16">
-                                        </a>
+                                        </button>
                                         <button type="button" class="button-edit d-none d-md-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#editModal" data-id="{{ $package->id }}">
                                             <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit Icon" class="img-fluid" width="16">
-                                        </a>
+                                        </button>
                                         <button type="button" class="button-delete d-none d-md-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $package->id }}">
                                             <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon" class="img-fluid" width="16">
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
