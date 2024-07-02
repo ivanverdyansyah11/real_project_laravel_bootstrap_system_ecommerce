@@ -37,11 +37,15 @@ class PackageRepositories
 
     public function store($request): Package
     {
+        $request['selling_price'] = str_replace('Rp. ', '', $request['selling_price']);
+        $request['selling_price'] = (int) str_replace('.', '', $request['selling_price']);
         return $this->package->create($request);
     }
 
     public function update($request, $package): bool
     {
+        $request['selling_price'] = str_replace('Rp. ', '', $request['selling_price']);
+        $request['selling_price'] = (int) str_replace('.', '', $request['selling_price']);
         return $package->update($request);
     }
 
