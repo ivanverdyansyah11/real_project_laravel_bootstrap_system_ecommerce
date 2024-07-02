@@ -23,7 +23,7 @@ class UpdateShippingLocationRequest extends FormRequest
     {
         return [
             'address' => 'required|string',
-            'shipping_price' => 'required|integer',
+            'shipping_price' => 'required|string',
         ];
     }
 }
