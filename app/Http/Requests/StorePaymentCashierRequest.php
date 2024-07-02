@@ -33,8 +33,8 @@ class StorePaymentCashierRequest extends FormRequest
             'shipping_address' => 'nullable|string',
             'price_per_product' => 'nullable|integer',
             'total_per_product' => 'nullable|integer',
-            'total' => 'required|integer',
-            'total_payment' => 'required|integer',
+            'total' => 'required|string',
+            'total_payment' => 'required|string',
             'status' => 'required|integer',
         ];
     }
