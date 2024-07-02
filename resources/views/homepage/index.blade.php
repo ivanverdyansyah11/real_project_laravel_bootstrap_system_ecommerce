@@ -2,8 +2,8 @@
 
 @section('content-homepage')
     <section class="hero d-flex justify-content-center align-items-center">
-        <img src="{{ asset('assets/images/homepage/background-hero-homepage.svg') }}" alt="Background Hero Homepage"
-            class="img-fluid">
+        <img src="{{ asset('assets/images/homepage/background-hero-homepage.jpg') }}" alt="Background Hero Homepage"
+            class="img-fluid w-100">
     </section>
     <section class="about justify-content-center align-items-center position-relative">
         <div class="container">
