@@ -28,8 +28,8 @@ class UpdateProductRequest extends FormRequest
             'description' => 'required|string',
             'unit' => 'required|string',
             'stock' => 'required|integer',
-            'purchase_price' => 'required|integer',
-            'selling_price' => 'required|integer',
+            'purchase_price' => 'required|string',
+            'selling_price' => 'required|string',
         ];
     }
 }
