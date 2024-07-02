@@ -12,7 +12,7 @@
                 @csrf
                 <div class="col-12 mb-3">
                     <label for="shipping_price" class="form-label">Harga Pengiriman</label>
-                    <input required type="number" class="form-control @error('shipping_price') is-invalid @enderror"
+                    <input required type="text" class="form-control @error('shipping_price') is-invalid @enderror"
                         id="shipping_price" name="shipping_price" value="{{ $shipping->shipping_price }}">
                     @error('shipping_price')
                         <div class="invalid-feedback">
@@ -45,6 +45,30 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script>
+            let shippingPrice = document.getElementById('shipping_price')
+            shippingPrice.value = formatRupiah(shippingPrice.value, 'Rp. ');
+            shippingPrice.addEventListener('keyup', function(e)
+            {
+                shippingPrice.value = formatRupiah(this.value, 'Rp. ');
+            });
+
+            function formatRupiah(angka, prefix)
+            {
+                let number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split    = number_string.split(','),
+                    sisa     = split[0].length % 3,
+                    rupiah     = split[0].substr(0, sisa),
+                    ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
+
             function getAddressFromLatLng(latitude, longitude) {
                 let url =
                     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyADJk8ffwFqsJC3hlxAgv-p2uaEeY47HAc`;
