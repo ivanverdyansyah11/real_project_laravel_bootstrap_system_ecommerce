@@ -191,6 +191,8 @@ class CartController extends Controller
                 return redirect(route('cart-transaction', $cart_id));
             } elseif (str_contains($cart_id, '+') && $request->total != null) {
                 $cartIdSelect = explode('+', $cart_id);
+                $request['total'] = str_replace('Rp. ', '', $request['total']);
+                $request['total'] = (int) str_replace('.', '', $request['total']);
                 if (!empty($request->proof_of_payment)) {
                     $image = $request->file('proof_of_payment');
                     $imageName = date("Ymdhis") . "_" . $image->getClientOriginalName();
