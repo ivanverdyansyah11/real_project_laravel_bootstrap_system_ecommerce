@@ -258,9 +258,9 @@ class TransactionController extends Controller
     {
         try {
             $this->transaction->approved($id);
-            return redirect(route('report-transaction'))->with('success', 'Berhasil menyetujui transaksi!');
+            return redirect(route('transaction-finish'))->with('success', 'Berhasil menyetujui transaksi!');
         } catch (\Exception $e) {
-            return redirect(route('report-transaction'))->with('failed', 'Gagal menyetujui transaksi!');
+            return redirect(route('transaction-finish'))->with('failed', 'Gagal menyetujui transaksi!');
         }
     }
 
