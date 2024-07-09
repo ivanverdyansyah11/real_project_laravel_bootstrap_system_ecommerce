@@ -225,7 +225,7 @@ class CartController extends Controller
                             'status' => $request['status'],
                         ]);
                     }
-                    if ($transactions[$id]->resellers_id != null) {
+                    if ($transactions[$id]->resellers_id != null && auth()->user()->role != 'reseller') {
                         $reseller = $this->reseller->findById($transactions[$id]->resellers_id);
                         $request['poin'] = $reseller->poin + $cartSelected->quantity;
                         $reseller->update(Arr::only($request->all(), 'poin'));
