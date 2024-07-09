@@ -330,8 +330,15 @@ class TransactionRepositories
 
     public function approved(int $id): bool
     {
-        $transaction = $this->findById($id);
-        $transactions = $this->findByInvois($transaction->invois);
+        $transactionSingle = $this->findById($id);
+        $transactions = $this->findByInvois($transactionSingle->invois);
+        foreach ($transactions as $transaction) {
+            if ($transaction->resellers_id != null) {
+                $reseller = $this->reseller->findById($transaction->resellers_id);
+                $request['poin'] = $reseller->poin + $transaction->quantity;
+                $reseller->update(Arr::only($request, 'poin'));
+            }
+        }
         $request['status'] = 1;
         foreach ($transactions as $transaction) {
             $transaction->update($request);
