@@ -130,7 +130,7 @@ class CartRepositories
                 } else {
                     $request['status'] = 1;
                 }
-                if ($transactions[0]->resellers_id != null) {
+                if ($transactions[0]->resellers_id != null && auth()->user()->role != 'reseller') {
                     $reseller = $this->reseller->findById($transactions[0]->resellers_id);
                     $request['poin'] = $reseller->poin + $cartSelected->quantity;
                     $reseller->update(Arr::only($request, 'poin'));
