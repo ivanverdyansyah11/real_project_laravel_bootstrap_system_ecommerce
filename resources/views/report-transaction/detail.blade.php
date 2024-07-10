@@ -197,9 +197,13 @@
                                 <div class="row">
                                     <div class="col-12 mb-3 d-flex flex-column">
                                         <label for="proof_of_payment" class="form-label">Foto Bukti Pembayaran</label>
-                                        <img src="{{ file_exists('assets/images/transaction/' . $transactions[0]->proof_of_payment) && $transactions[0]->proof_of_payment ? asset('assets/images/transaction/' . $transactions[0]->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}"
-                                            alt="Image Not Found" class="rounded mb-2" width="100" height="100"
-                                            style="object-fit: cover;">
+                                        <div class="wrapper" id="animated-thumbnails">
+                                            <a href="{{ file_exists('assets/images/transaction/' . $transactions[0]->proof_of_payment) && $transactions[0]->proof_of_payment ? asset('assets/images/transaction/' . $transactions[0]->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}">
+                                                <img src="{{ file_exists('assets/images/transaction/' . $transactions[0]->proof_of_payment) && $transactions[0]->proof_of_payment ? asset('assets/images/transaction/' . $transactions[0]->proof_of_payment) : asset('assets/images/other/img-not-found.jpg') }}"
+                                                    alt="Image Not Found" class="rounded mb-2" width="100" height="100"
+                                                    style="object-fit: cover;">
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="created_at" class="form-label">Transaksi Dilakukan</label>
