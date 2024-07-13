@@ -41,9 +41,9 @@
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $cashier->product->name }}</td>
-                                    <td>{{ $cashier->selling_price }}</td>
+                                    <td>Rp. {{ number_format($cashier->selling_price) }}</td>
                                     <td>{{ $cashier->quantity }}</td>
-                                    <td>{{ $cashier->quantity * $cashier->selling_price }}</td>
+                                    <td>Rp. {{ number_format($cashier->quantity * $cashier->selling_price) }}</td>
                                     <td class="wrapper d-flex gap-2">
                                         <button type="button"
                                             class="button-delete d-none d-md-flex align-items-center justify-content-center"
@@ -51,7 +51,7 @@
                                             data-id="{{ $cashier->id }}">
                                             <img src="{{ asset('assets/images/icons/delete.png') }}" alt="Delete Icon"
                                                 class="img-fluid" width="16">
-                                            </a>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
