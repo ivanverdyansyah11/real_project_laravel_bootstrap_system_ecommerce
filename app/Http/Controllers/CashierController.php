@@ -44,10 +44,18 @@ class CashierController extends Controller
 
     public function show(int $products_id): JsonResponse
     {
+        $cashierProduct = $this->cashier->findByProductId($products_id);
+        $quantity = 0;
+        if ($cashierProduct) {
+            $quantity = $this->product->findById($products_id)->stock - $cashierProduct->quantity;
+        } else {
+            $quantity = $this->product->findById($products_id)->stock;
+        }
         try {
             return response()->json([
                 'status' => 'success',
                 'data' => $this->product->findById($products_id),
+                'quantity' => $quantity,
             ]);
         } catch (\Throwable $th) {
             return response()->json([
