@@ -54,10 +54,10 @@
                 <div class="card-body">
                     <h6 class="card-body-title mb-4">Rincian Pembelian</h6>
                     <div class="wrapper d-flex">
-                        <button type="button" class="link-badge link-all active">Transaksi Semua</button>
-                        <button type="button" class="link-badge link-finish">Transaksi Selesai</button>
-                        <button type="button" class="link-badge link-pending">Transaksi Ditunda</button>
                         <button type="button" class="link-badge link-confirmation">Transaksi Menunggu Pembayaran</button>
+                        <button type="button" class="link-badge link-pending">Transaksi Ditunda</button>
+                        <button type="button" class="link-badge link-finish">Transaksi Selesai</button>
+                        <button type="button" class="link-badge link-all active">Transaksi Semua</button>
                     </div>
                     <div class="row position-relative">
                         <div class="col-12 col-card-all active">
