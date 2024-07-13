@@ -78,8 +78,9 @@
                     url: '/cashier/product/' + id,
                     success: function(product) {
                         if (product.status == 'success') {
-                            $('[data-value="stock"]').val(product.data.stock);
+                            $('[data-value="stock"]').val(product.quantity);
                             $('[data-value="price_per_unit"]').val(product.data.selling_price);
+                            $('#quantity').attr('max', product.quantity);
                             productPrice = product.data.selling_price;
                         }
                     }
